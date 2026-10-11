@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hands-Free Voice Selection</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+    body { background-color: #0b1325; color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 25px 20px; }
+    
+    .status-pill {
+      background: #152238; border: 2px solid #3b82f6; padding: 14px 32px; border-radius: 50px;
+      display: flex; align-items: center; gap: 14px; margin-bottom: 16px; cursor: pointer;
+      user-select: none; transition: 0.2s;
+    }
+    .status-pill:hover { border-color: #60a5fa; transform: scale(1.02); }
+    
+    /* Continuous listening animation */
+    .status-pill.recording { border-color: #10b981; background: #064e3b; cursor: default; pointer-events: none; }
+    .mic-dot { width: 18px; height: 18px; border-radius: 50%; background: #3b82f6; }
+    .status-pill.recording .mic-dot { background: #10b981; animation: pulse 1.5s infinite; }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1.3); box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    .transcript-box {
+      width: 100%; max-width: 600px; background: #060a14; border: 1px solid #1e293b;
+      border-radius: 12px; padding: 14px 20px; min-height: 52px; display: flex;
+      align-items: center; justify-content: center; text-align: center; margin-bottom: 25px;
+      font-size: 19px; color: #38bdf8; font-weight: 600;
+    }
+
+    .grid-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; width: 100%; max-width: 1000px; }
+    @media (max-width: 900px) { .grid-container { grid-template-columns: repeat(2, 1fr); } }
+
+    .lang-card {
+      background: #131d31; border: 1px solid #1f2e4d; border-radius: 16px; padding: 22px 18px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      transition: all 0.2s ease;
+    }
+    
+    .lang-card.selected {
+      background: #1e3a8a; border-color: #fbbf24; box-shadow: 0 0 25px rgba(251, 191, 36, 0.6);
+      transform: scale(1.05);
+    }
+    .native-text { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+    .english-text { font-size: 14px; color: #94a3b8; }
+  </style>
+</head>
+<body>
+
+  <!-- Status Pill Button -->
+  <div class="status-pill" id="mic-btn" onclick="startContinuousListening()">
+    <div class="mic-dot"></div>
+    <div>
+      <h4 id="btn-title" style="font-size:16px;">Click Once to Start</h4>
+      <p id="btn-sub" style="font-size:12px; color:#94a3b8;">Required once for mic permission</p>
+    </div>
+  </div>
+
+  <!-- Live Message Box -->
+  <div class="transcript-box" id="transcript-box">
+    Waiting to start...
+  </div>
+
+  <!-- Language Grid -->
+  <div class="grid-container" id="grid">
+    <div class="lang-card" id="card-ta-IN">
+      <span class="native-text">தமிழ்</span><span class="english-text">Tamil</span>
+    </div>
+    <div class="lang-card" id="card-hi-IN">
+      <span class="native-text">हिन्दी</span><span class="english-text">Hindi</span>
+    </div>
+    <div class="lang-card" id="card-te-IN">
+      <span class="native-text">తెలుగు</span><span class="english-text">Telugu</span>
+    </div>
+    <div class="lang-card" id="card-kn-IN">
+      <span class="native-text">ಕನ್ನಡ</span><span class="english-text">Kannada</span>
+    </div>
+    <div class="lang-card" id="card-ml-IN">
+      <span class="native-text">മലയാളം</span><span class="english-text">Malayalam</span>
+    </div>
+    <div class="lang-card" id="card-mr-IN">
+      <span class="native-text">मराठी</span><span class="english-text">Marathi</span>
+    </div>
+    <div class="lang-card" id="card-bn-IN">
+      <span class="native-text">বাংলা</span><span class="english-text">Bengali</span>
+    </div>
+    <div class="lang-card" id="card-en-IN">
+      <span class="native-text">English</span><span class="english-text">English (India)</span>
+    </div>
+  </div>
+
+  <script>
+    // Language dictionary for frontend recognition
+    const languageMap = {
+      "tamil": "ta-IN",
+      "hindi": "hi-IN",
+      "telugu": "te-IN",
+      "kannada": "kn-IN",
+      "malayalam": "ml-IN",
+      "marathi": "mr-IN",
+      "bengali": "bn-IN",
+      "english": "en-IN"
+    };
+
+    let recognition;
+    let isListening = false;
+
+    function startContinuousListening() {
+      // Check if browser supports speech recognition
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert("Your browser does not support voice recognition. Please use Google Chrome or Edge.");
+        return;
+      }
+
+      recognition = new SpeechRecognition();
+      recognition.continuous = true; // IMPORTANT: Makes it listen forever without stopping
+      recognition.interimResults = false; 
+      recognition.lang = 'en-IN'; // Listen for English words (like "Tamil", "Hindi")
+
+      recognition.onstart = () => {
+        isListening = true;
+        document.getElementById('mic-btn').classList.add('recording');
+        document.getElementById('btn-title').innerText = "Hands-Free Mode Active";
+        document.getElementById('btn-sub').innerText = "Just say a language name out loud!";
+        document.getElementById('transcript-box').innerText = "Listening continuously...";
+      };
+
+      recognition.onresult = (event) => {
+        // Get the latest word spoken
+        const latestResultIndex = event.results.length - 1;
+        const transcript = event.results[latestResultIndex][0].transcript.toLowerCase().trim();
+        
+        console.log("Heard:", transcript);
+        document.getElementById('transcript-box').innerText = `You said: "${transcript}"`;
+
+        // Check if they said a language
+        for (const [langName, langCode] of Object.entries(languageMap)) {
+          if (transcript.includes(langName)) {
+            confirmSelection(langCode);
+            break; // Stop checking once we find a match
+          }
+        }
+      };
+
+      recognition.onerror = (event) => {
+        console.warn("Speech recognition error:", event.error);
+        // If nothing was said for a while, it throws 'no-speech'. We can ignore it.
+      };
+
+      recognition.onend = () => {
+        // IMPORTANT: If the browser automatically stops listening, start it right back up!
+        if (isListening) {
+            recognition.start();
+        }
+      };
+
+      // Start the engine!
+      try {
+        recognition.start();
+      } catch (e) {
+        console.error("Mic already started.");
+      }
+    }
+
+    function confirmSelection(code) {
+      // Remove highlight from all cards
+      document.querySelectorAll('.lang-card').forEach(c => c.classList.remove('selected'));
+      
+      // Highlight the selected card
+      const target = document.getElementById('card-' + code);
+      if (target) target.classList.add('selected');
+
+      // Update UI Text
+      const successMsg = code === 'ta-IN' ? "தமிழ் தேர்ந்தெடுக்கப்பட்டது" : "Language Selected!";
+      document.getElementById('transcript-box').innerHTML = `<span style="color:#fbbf24">✅ ${successMsg}</span>`;
+
+      // Voice Feedback (Computer talks back)
+      const synth = window.speechSynthesis;
+      const utter = new SpeechSynthesisUtterance(successMsg);
+      utter.lang = code;
+      synth.speak(utter);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+const API_BASE_URL = "http://localhost:8000/api";
+
+export const transcribeAudio = async (audioBlob, language) => {
+  const formData = new FormData();
+  formData.append("audio", audioBlob, "recording.webm");
+  
+  // Groq Whisper only accepts 2-letter ISO-639-1 codes (e.g., 'ta', 'hi')
+  // but the frontend uses BCP-47 (e.g., 'ta-IN'). We must split and use the first part.
+  const whisperLang = language ? language.split('-')[0] : 'hi';
+  formData.append("language", whisperLang);
+
+  const response = await fetch(`${API_BASE_URL}/voice/transcribe`, {
+    method: "POST",
+    body: formData,
+  });
+  if (!response.ok) throw new Error("Transcription failed");
+  return response.json();
+};
+
+export const parseIntent = async (transcript, expectedEntity) => {
+  const response = await fetch(`${API_BASE_URL}/voice/parse-intent`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ transcript, expected_entity: expectedEntity }),
+  });
+  if (!response.ok) throw new Error("Intent parsing failed");
+  return response.json();
+};
+
+export const registerUser = async (userData) => {
+  const response = await fetch(`${API_BASE_URL}/auth/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(userData),
+  });
+  if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.detail || "Registration failed");
+  }
+  return response.json();
+};
+
+export const faceLogin = async (imageBase64) => {
+  const response = await fetch(`${API_BASE_URL}/auth/face-login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ image_base64: imageBase64 }),
+  });
+  if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.detail?.message || "Face did not match any registered users.");
+  }
+  return response.json();
+};
+
+export const playTTS = async (text, lang) => {
+  // Try browser TTS first
+  if ('speechSynthesis' in window) {
+      return new Promise((resolve) => {
+          const utterance = new SpeechSynthesisUtterance(text);
+          // Pass the exact BCP-47 lang code (ta-IN, hi-IN, en-US) so the browser uses the native voice
+          utterance.lang = lang || 'en-US'; 
+          utterance.rate = 0.9; // Slightly slower for clarity
+          utterance.onend = resolve;
+          utterance.onerror = resolve; // Resolve on error to avoid blocking
+          window.speechSynthesis.speak(utterance);
+      });
+  } else {
+      // Fallback to backend
+      const response = await fetch(`${API_BASE_URL}/voice/tts?text=${encodeURIComponent(text)}&lang=${lang}`);
+      const blob = await response.blob();
+      const audio = new Audio(URL.createObjectURL(blob));
+      return new Promise(resolve => {
+          audio.onended = resolve;
+          audio.onerror = resolve;
+          audio.play();
+      });
+  }
+};
+
+export const validateCommerceStep = async (step, transcript, language) => {
+  const response = await fetch(`${API_BASE_URL}/commerce/validate-step`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ step, transcript, language }),
+  });
+  if (!response.ok) throw new Error("Validation API failed");
+  return response.json();
+};
+
+export const saveSellerListing = async (listingData) => {
+  const response = await fetch(`${API_BASE_URL}/commerce/seller/save`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(listingData),
+  });
+  if (!response.ok) throw new Error("Saving listing failed");
+  return response.json();
+};
+
+export const searchBuyerListings = async (transcript, language) => {
+    const res = await fetch(`${API_BASE_URL}/commerce/buyer/search`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query_transcript: transcript, language: language })
+    });
+    
+    if (!res.ok) {
+        throw new Error('Search failed');
+    }
+    
+    return res.json();
+};
+
+export const expressBuyerInterest = async (buyerId, listingId) => {
+    const res = await fetch(`${API_BASE_URL}/commerce/buyer/interest`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ buyer_id: buyerId, listing_id: listingId })
+    });
+    
+    if (!res.ok) {
+        throw new Error('Expressing interest failed');
+    }
+    
+    return res.json();
+};
+
+export const getSellerListings = async (sellerId) => {
+  const response = await fetch(`${API_BASE_URL}/commerce/seller/listings/${sellerId}`);
+  if (!response.ok) throw new Error("Failed to fetch listings");
+  return response.json();
+};
