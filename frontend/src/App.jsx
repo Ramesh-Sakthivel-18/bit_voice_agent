@@ -8,6 +8,8 @@ import { FaceEnrollment } from './components/FaceEnrollment';
 import { FaceLogin } from './components/FaceLogin';
 import { BuyerDashboard } from './components/BuyerDashboard';
 import { SellerDashboard } from './components/SellerDashboard';
+import { SmartVoiceProvider } from './context/SmartVoiceContext';
+import { SmartVoiceDock } from './components/SmartVoiceDock';
 
 function App() {
     const navigate = useNavigate();
@@ -85,50 +87,54 @@ function App() {
     };
 
     return (
-        <div className={`min-h-screen flex flex-col items-center justify-center ${location.pathname !== '/' ? 'bg-[#0A192F] text-white p-4' : ''}`}>
-            
-            <Routes>
-                <Route path="/" element={<LanguageSelect onSelect={handleLanguageSelect} />} />
+        <SmartVoiceProvider language={language}>
+            <div className={`min-h-screen w-full flex flex-col items-center ${location.pathname !== '/' ? 'justify-start bg-[#0A192F] text-white p-4 pt-6 md:pt-10 pb-36 overflow-y-auto' : 'justify-center'}`}>
                 
-                <Route path="/action" element={<AuthActionSelect language={language} onSelect={handleActionSelect} />} />
-                <Route path="/role" element={<RoleSelect language={language} onSelect={handleRoleSelect} />} />
-                
-                <Route path="/onboarding" element={
-                    <VoiceOnboarding 
-                        language={language} 
-                        userData={userData} 
-                        onComplete={handleOnboardingComplete} 
-                    />
-                } />
-                
-                <Route path="/enrollment" element={
-                    <FaceEnrollment 
-                        language={language} 
-                        userData={userData} 
-                        onComplete={handleEnrollmentComplete} 
-                    />
-                } />
-                
-                <Route path="/login" element={
-                    <FaceLogin 
-                        language={language} 
-                        onComplete={handleLoginComplete} 
-                    />
-                } />
-                
-                <Route path="/buyer-dashboard" element={
-                    loggedInUser ? <BuyerDashboard language={language} user={loggedInUser} /> : <Navigate to="/login" replace />
-                } />
+                <Routes>
+                    <Route path="/" element={<LanguageSelect onSelect={handleLanguageSelect} />} />
+                    
+                    <Route path="/action" element={<AuthActionSelect language={language} onSelect={handleActionSelect} />} />
+                    <Route path="/role" element={<RoleSelect language={language} onSelect={handleRoleSelect} />} />
+                    
+                    <Route path="/onboarding" element={
+                        <VoiceOnboarding 
+                            language={language} 
+                            userData={userData} 
+                            onComplete={handleOnboardingComplete} 
+                        />
+                    } />
+                    
+                    <Route path="/enrollment" element={
+                        <FaceEnrollment 
+                            language={language} 
+                            userData={userData} 
+                            onComplete={handleEnrollmentComplete} 
+                        />
+                    } />
+                    
+                    <Route path="/login" element={
+                        <FaceLogin 
+                            language={language} 
+                            onComplete={handleLoginComplete} 
+                        />
+                    } />
+                    
+                    <Route path="/buyer-dashboard" element={
+                        loggedInUser ? <BuyerDashboard language={language} user={loggedInUser} /> : <Navigate to="/login" replace />
+                    } />
 
-                <Route path="/seller-dashboard" element={
-                    loggedInUser ? <SellerDashboard language={language} user={loggedInUser} /> : <Navigate to="/login" replace />
-                } />
+                    <Route path="/seller-dashboard" element={
+                        loggedInUser ? <SellerDashboard language={language} user={loggedInUser} /> : <Navigate to="/login" replace />
+                    } />
 
-                {/* Fallback route */}
-                <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-            
-        </div>
+                    {/* Fallback route */}
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+                
+                {/* Fixed prominent bottom-center microphone box across all screens */}
+                {location.pathname !== '/' && <SmartVoiceDock />}
+            </div>
+        </SmartVoiceProvider>
     );
 }
 

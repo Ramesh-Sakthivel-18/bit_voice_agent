@@ -299,3 +299,61 @@ def translate_dynamic_text(text: str, target_lang_code: Optional[str]) -> str:
     except Exception as e:
         logger.error(f"Dynamic translation failed for '{text}' to {target_lang_name}: {e}")
         return text
+
+def translate_to_english(text: str) -> str:
+    """
+    Translates or maps regional language voice input back to standard English tokens
+    prior to writing to the SQLite database.
+    Ensures all database rows, titles, and entries remain strictly in English.
+    """
+    if not text or not text.strip():
+        return text
+        
+    # Pre-compiled high-frequency agricultural commodity mapping for sub-millisecond response
+    COMMON_COMMODITY_MAP = {
+        "மலைத்தேன்": "Wild Forest Honey",
+        "தேன்": "Honey",
+        "மஞ்சள்": "Organic Turmeric",
+        "மிளகு": "Black Pepper",
+        "ஏலக்காய்": "Cardamom",
+        "காப்பி": "Coffee Beans",
+        "கோதுமை": "Wheat",
+        "அரிசி": "Rice",
+        "சீரகம்": "Cumin",
+        "கடுகு": "Mustard",
+        "இஞ்சி": "Ginger",
+        "பூண்டு": "Garlic",
+        "வெங்காயம்": "Onion",
+        "தக்காளி": "Tomato",
+        "शहद": "Honey",
+        "हल्दी": "Organic Turmeric",
+        "काली मिर्च": "Black Pepper",
+        "इलायची": "Cardamom",
+        "कॉफी": "Coffee Beans",
+        "गेहूं": "Wheat",
+        "चावल": "Rice",
+        "తేనె": "Honey",
+        "పసుపు": "Organic Turmeric",
+        "மஞ்சள் கிழங்கு": "Raw Turmeric Rhizome"
+    }
+    
+    clean_text = text.strip()
+    if clean_text in COMMON_COMMODITY_MAP:
+        return COMMON_COMMODITY_MAP[clean_text]
+        
+    prompt = f"""
+    The user is an Indian tribal farmer stating a product or voice term in a regional language: "{clean_text}".
+    Translate this into a clean, concise, standard English product title.
+    Return ONLY a JSON object: {{"english_text": "Standard English Title"}}
+    """
+    try:
+        completion = groq_client.chat.completions.create(
+            messages=[{"role": "user", "content": prompt}],
+            model="openai/gpt-oss-20b",
+            response_format={"type": "json_object"}
+        )
+        data = json.loads(completion.choices[0].message.content)
+        return data.get("english_text", clean_text)
+    except Exception as e:
+        logger.error(f"Translation to English failed for '{clean_text}': {e}")
+        return clean_text

@@ -1,9 +1,52 @@
 import React, { useEffect, useState } from 'react';
 import { getSellerListings } from '../services/api';
+import { useSmartVoice } from '../context/SmartVoiceContext';
+import { isHomeIntent, isNewSaleIntent } from '../utils/voiceMatcher';
 
-export const SellerListings = ({ language, user, onBack }) => {
+export const SellerListings = ({ language, user, onBack, onNewSale }) => {
+    const { 
+        setPageContext,
+        setScreenInstruction, 
+        setGuidePrompt, 
+        registerVoiceHandler, 
+        unregisterVoiceHandler 
+    } = useSmartVoice();
     const [listings, setListings] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const pageCtx = language === 'ta-IN' ? "என் விற்பனைப் பொருட்கள் / My Products" : "My Products";
+        setPageContext(pageCtx);
+
+        const text = language === 'ta-IN' 
+            ? "உங்கள் செயலில் உள்ள விற்பனைப் பொருட்கள் பட்டியல். விவரங்களைக் காண திரையைப் பாருங்கள்."
+            : "Your active product listings. Review items and interested buyers.";
+        setScreenInstruction(text);
+
+        const guide = language === 'ta-IN'
+            ? "முகப்பிற்குத் திரும்ப 'முகப்பு' என்று சொல்லுங்கள், அல்லது புதிய விற்பனை தொடங்க 'விற்பனை' என்று சொல்லுங்கள்."
+            : "Say 'Home' to return to dashboard, or 'New Sale' to list a new item.";
+        setGuidePrompt(guide);
+
+        return () => {
+            setPageContext('');
+        };
+    }, [language, setPageContext, setScreenInstruction, setGuidePrompt]);
+
+    // Register voice navigation
+    useEffect(() => {
+        const handleVoiceNav = (spokenText) => {
+            if (!spokenText) return;
+            if (isHomeIntent(spokenText)) {
+                if (onBack) onBack();
+            } else if (isNewSaleIntent(spokenText)) {
+                if (onNewSale) onNewSale();
+            }
+        };
+
+        registerVoiceHandler(handleVoiceNav);
+        return () => unregisterVoiceHandler();
+    }, [onBack, onNewSale, registerVoiceHandler, unregisterVoiceHandler]);
 
     useEffect(() => {
         const fetchListings = async () => {
@@ -20,17 +63,30 @@ export const SellerListings = ({ language, user, onBack }) => {
     }, [user.user_id]);
 
     return (
-        <div className="w-full max-w-5xl mx-auto flex flex-col items-center p-8">
-            <div className="w-full flex justify-between items-center mb-8">
-                <h1 className="text-4xl font-bold text-white">
+        <div className="w-full max-w-5xl mx-auto flex flex-col items-center p-8 pb-32">
+            <div className="w-full flex justify-between items-center mb-8 flex-wrap gap-4">
+                <h1 className="text-4xl font-black text-white">
                     {language === 'ta-IN' ? "என் விற்பனைப் பொருட்கள்" : "My Active Listings"}
                 </h1>
-                <button 
-                    onClick={onBack}
-                    className="px-6 py-2 bg-gray-800 text-white font-bold rounded-lg hover:bg-gray-700 transition-colors"
-                >
-                    {language === 'ta-IN' ? "திரும்பச் செல்" : "Back to Dashboard"}
-                </button>
+                <div className="flex items-center gap-3">
+                    {onNewSale && (
+                        <button 
+                            onClick={onNewSale}
+                            className="px-5 py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold rounded-xl text-sm transition-all shadow-lg flex items-center gap-2"
+                        >
+                            <span>➕</span>
+                            <span>{language === 'ta-IN' ? "புதிய விற்பனை" : "New Sale"}</span>
+                        </button>
+                    )}
+                    {onBack && (
+                        <button 
+                            onClick={onBack}
+                            className="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-gray-300 font-bold rounded-xl text-sm transition-colors"
+                        >
+                            ← {language === 'ta-IN' ? "முகப்பு" : "Dashboard"}
+                        </button>
+                    )}
+                </div>
             </div>
 
             {loading ? (

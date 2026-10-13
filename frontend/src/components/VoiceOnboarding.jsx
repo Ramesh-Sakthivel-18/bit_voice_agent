@@ -1,240 +1,166 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useAudioRecorder } from '../hooks/useAudioRecorder';
-import { playTTS, transcribeAudio, parseIntent } from '../services/api';
+import { parseIntent } from '../services/api';
 import { getTranslation } from '../utils/translations';
+import { useSmartVoice } from '../context/SmartVoiceContext';
+import { normalizeText } from '../utils/voiceMatcher';
 
 export const VoiceOnboarding = ({ language, userData, onComplete }) => {
+    const { 
+        setPageContext,
+        setScreenInstruction, 
+        setGuidePrompt, 
+        speak,
+        registerVoiceHandler, 
+        unregisterVoiceHandler 
+    } = useSmartVoice();
+
     const [step, setStep] = useState(0); // 0: Name, 1: Village, 2: Phone
-    const [orbState, setOrbState] = useState('speaking'); // 'speaking' | 'listening' | 'processing'
-    const [transcript, setTranscript] = useState('');
+    const [statusFeedback, setStatusFeedback] = useState('');
     const [localData, setLocalData] = useState({ name: '', village: '', phone: '' });
     const localDataRef = useRef({ name: '', village: '', phone: '' });
-    
-    const recognitionRef = useRef(null);
-    const timeoutRef = useRef(null);
-    const activeRef = useRef(true);
-    
-    const t = getTranslation(language);
     const unmounted = useRef(false);
 
+    const t = getTranslation(language);
+
     const questions = [
-        { key: 'name', prompt: t.namePrompt, entity: 'name', title: t.nameUI },
-        { key: 'village', prompt: t.villagePrompt, entity: 'village', title: t.villageUI },
-        { key: 'phone', prompt: t.phonePrompt, entity: 'phone', title: t.phoneUI }
+        { key: 'name', prompt: t.namePrompt || (language === 'ta-IN' ? "உங்கள் பெயர் என்ன? சொல்லுங்கள்." : "What is your name? Please speak."), entity: 'name', title: t.nameUI || (language === 'ta-IN' ? "பெயர்" : "Name") },
+        { key: 'village', prompt: t.villagePrompt || (language === 'ta-IN' ? "நீங்கள் எந்த ஊர் அல்லது கிராமத்தில் வசிக்கிறீர்கள்?" : "Which village or town do you live in?"), entity: 'village', title: t.villageUI || (language === 'ta-IN' ? "கிராமம்" : "Village") },
+        { key: 'phone', prompt: t.phonePrompt || (language === 'ta-IN' ? "உங்கள் தொலைபேசி எண்ணை சொல்லுங்கள்." : "What is your phone number?"), entity: 'phone', title: t.phoneUI || (language === 'ta-IN' ? "தொலைபேசி எண்" : "Phone") }
     ];
 
-    const startListening = useCallback((currentStep) => {
-        if (!activeRef.current) return;
-        setOrbState('listening');
-        setTranscript(language === 'ta-IN' ? 'சொல்லுங்கள்...' : 'Please speak...');
-        
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SpeechRecognition) return;
+    const currentQ = questions[step];
 
-        if (recognitionRef.current) {
-            try { recognitionRef.current.abort(); } catch(e){}
-        }
+    // Update pageContext & Screen Instruction per step
+    useEffect(() => {
+        if (!currentQ) return;
 
-        const recognition = new SpeechRecognition();
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        recognition.lang = language;
-        
-        let finalTranscript = "";
+        const pageCtx = language === 'ta-IN' 
+            ? `பதிவு: படி ${step + 1}/3 (${currentQ.title})` 
+            : `Registration: Step ${step + 1}/3 (${currentQ.title})`;
+        setPageContext(pageCtx);
 
-        recognition.onresult = (event) => {
-            if (!activeRef.current) return;
-            let interimTranscript = "";
-            for (let i = event.resultIndex; i < event.results.length; ++i) {
-                if (event.results[i].isFinal) {
-                    finalTranscript += event.results[i][0].transcript;
-                } else {
-                    interimTranscript += event.results[i][0].transcript;
-                }
-            }
-            setTranscript(`"${finalTranscript || interimTranscript}"`);
-            
-            if (finalTranscript) {
-                clearTimeout(timeoutRef.current);
-                processTranscript(finalTranscript, currentStep);
-            }
+        setScreenInstruction(currentQ.prompt, true);
+
+        const guide = language === 'ta-IN'
+            ? "கீழே உள்ள மைக்கை இரட்டை தட்டி உங்கள் பதிலை கூறவும்."
+            : "Double-tap bottom mic and speak your answer clearly.";
+        setGuidePrompt(guide);
+
+        return () => {
+            setPageContext('');
         };
-        
-        recognition.onend = () => {
-             if (activeRef.current && orbState === 'listening') {
-                 try { recognition.start(); } catch(e){}
-             }
-        };
+    }, [step, language, currentQ, setPageContext, setScreenInstruction, setGuidePrompt]);
 
-        recognitionRef.current = recognition;
-        try { recognition.start(); } catch(e){}
-        
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = setTimeout(() => {
-            if (activeRef.current) {
-                if (recognitionRef.current) {
-                    try { recognitionRef.current.abort(); } catch(e){}
-                }
-                const errorMsg = language === 'ta-IN' ? "எனக்கு புரியவில்லை. தயவுசெய்து மீண்டும் கூறவும்." : "मैं समझ नहीं पाया। कृपया फिर से बोलें।";
-                playReprompt(errorMsg, currentStep);
-            }
-        }, 10000);
-    }, [language, orbState]);
-
-    const processTranscript = async (text, currentStep) => {
-        if (!activeRef.current) return;
-        activeRef.current = false;
-        
-        if (recognitionRef.current) {
-            try { recognitionRef.current.abort(); } catch(e){}
-        }
-        
-        setOrbState('processing');
-        setTranscript(language === 'ta-IN' ? 'பகுப்பாய்வு...' : 'Processing...');
-        
+    const processVoiceAnswer = useCallback(async (spokenText, currentStep) => {
+        if (!spokenText || unmounted.current) return;
         const q = questions[currentStep];
+        if (!q) return;
+
+        setStatusFeedback(language === 'ta-IN' ? 'பகுப்பாய்வு...' : 'Processing...');
+
         try {
-            const intentRes = await parseIntent(text, q.entity);
+            const intentRes = await parseIntent(spokenText, q.entity);
             const extracted = intentRes.extracted_value;
-            
+
             localDataRef.current[q.key] = extracted;
             setLocalData({ ...localDataRef.current });
-            
-            setTranscript(`✅ ${extracted}`);
-            const prefix = language === 'ta-IN' ? "நான் கேட்டது:" : "मैंने सुना";
-            
-            const utter = new SpeechSynthesisUtterance(`${prefix} ${extracted}`);
-            utter.lang = language;
-            utter.volume = 0.6;
-            
-            utter.onend = () => {
+
+            const prefix = language === 'ta-IN' ? `நான் கேட்டது: ${extracted}` : `Recorded: ${extracted}`;
+            setStatusFeedback(`✅ ${prefix}`);
+            speak(prefix, language);
+
+            setTimeout(() => {
                 if (unmounted.current) return;
-                activeRef.current = true;
                 if (currentStep < 2) {
                     setStep(currentStep + 1);
                 } else {
                     onComplete({ ...localDataRef.current });
                 }
-            };
-            window.speechSynthesis.speak(utter);
-            
+            }, 1400);
+
         } catch (err) {
             console.error("Onboarding error", err);
-            const errorMsg = language === 'ta-IN' ? "எனக்கு புரியவில்லை. தயவுசெய்து மீண்டும் கூறவும்." : "मैं समझ नहीं पाया। कृपया फिर से बोलें।";
-            playReprompt(errorMsg, currentStep);
+            const errorMsg = language === 'ta-IN' ? "எனக்கு புரியவில்லை. தயவுசெய்து மீண்டும் கூறவும்." : "I didn't catch that. Please repeat.";
+            setStatusFeedback(errorMsg);
+            speak(errorMsg, language);
         }
-    };
+    }, [language, questions, onComplete, speak]);
 
-    const playReprompt = useCallback((msg, currentStep) => {
-        if (unmounted.current) return;
-        setOrbState('speaking');
-        setTranscript(language === 'ta-IN' ? 'மன்னிக்கவும்...' : 'Sorry...');
-        
-        const utter = new SpeechSynthesisUtterance(msg);
-        utter.lang = language;
-        utter.volume = 0.6;
-        utter.onend = () => {
-            activeRef.current = true;
-            askQuestion(currentStep, true);
-        };
-        window.speechSynthesis.speak(utter);
-    }, [language]);
-
-    const askQuestion = useCallback((currentStep, isReprompt = false) => {
-        if (unmounted.current) return;
-        activeRef.current = true;
-        
-        const q = questions[currentStep];
-        setOrbState('speaking');
-        setTranscript(language === 'ta-IN' ? 'கேள்வி கேட்கிறது...' : 'Asking...');
-        
-        if (recognitionRef.current) {
-            try { recognitionRef.current.abort(); } catch(e){}
-        }
-        window.speechSynthesis.cancel();
-        
-        const textToSpeak = isReprompt ? q.prompt : q.prompt; // Can alter if we want
-        const utter = new SpeechSynthesisUtterance(textToSpeak);
-        utter.lang = language;
-        utter.volume = 0.6;
-        
-        utter.onend = () => startListening(currentStep);
-        
-        // Safety timeout
-        setTimeout(() => {
-            if (orbState === 'speaking' && activeRef.current) {
-                startListening(currentStep);
-            }
-        }, 8000);
-
-        window.speechSynthesis.speak(utter);
-    }, [language, startListening, orbState]);
-
+    // Register active voice command handler
     useEffect(() => {
-        askQuestion(step);
-    }, [step]); // re-run when step changes
+        const handleVoiceInput = (rawText) => {
+            if (!rawText) return;
+            const text = normalizeText(rawText);
+            console.log(`[Onboarding Step ${step} Voice Input]:`, text);
+            processVoiceAnswer(rawText, step);
+        };
+
+        registerVoiceHandler(handleVoiceInput);
+
+        return () => {
+            unregisterVoiceHandler();
+        };
+    }, [step, registerVoiceHandler, unregisterVoiceHandler, processVoiceAnswer]);
 
     useEffect(() => {
         return () => {
             unmounted.current = true;
-            activeRef.current = false;
-            clearTimeout(timeoutRef.current);
-            window.speechSynthesis.cancel();
-            if (recognitionRef.current) {
-                try { recognitionRef.current.abort(); } catch(e){}
-            }
         };
     }, []);
 
-    const currentQ = questions[step];
-
     return (
-        <div className="w-full max-w-2xl text-center flex flex-col items-center">
-            <h2 className="text-4xl font-bold mb-12 text-white">
+        <div className="w-full max-w-2xl text-center flex flex-col items-center p-6 pb-36">
+            <span className="text-xs font-black uppercase tracking-widest text-cyan-400 bg-cyan-950/60 px-4 py-1.5 rounded-full border border-cyan-700/60 mb-4">
+                {language === 'ta-IN' ? `படிநிலை ${step + 1} / 3` : `Step ${step + 1} of 3`}
+            </span>
+
+            <h1 className="text-3xl md:text-5xl font-black text-white mb-2">
                 {currentQ.title}
-            </h2>
+            </h1>
+            <p className="text-cyan-200 text-lg md:text-xl font-bold mb-8 max-w-lg">
+                {currentQ.prompt}
+            </p>
 
-            {/* The Voice Orb */}
-            <div className="relative w-48 h-48 mb-10 flex items-center justify-center">
-                {orbState === 'speaking' && (
-                    <>
-                        <div className="absolute inset-0 rounded-full bg-purple-500 opacity-40 animate-ping"></div>
-                        <div className="absolute inset-4 rounded-full bg-blue-500 opacity-60 animate-pulse"></div>
-                        <div className="relative z-10 w-28 h-28 rounded-full bg-gradient-to-tr from-blue-600 to-purple-600 shadow-[0_0_50px_rgba(147,51,234,0.8)] flex items-center justify-center">
-                            <span className="text-5xl">🤖</span>
-                        </div>
-                    </>
-                )}
-                {orbState === 'listening' && (
-                    <>
-                        <div className="absolute inset-0 rounded-full bg-green-500 opacity-50 animate-ping"></div>
-                        <div className="relative z-10 w-28 h-28 rounded-full bg-green-500 shadow-[0_0_60px_rgba(34,197,94,0.9)] flex items-center justify-center">
-                            <span className="text-5xl">🎙️</span>
-                        </div>
-                    </>
-                )}
-                {orbState === 'processing' && (
-                    <div className="relative z-10 w-28 h-28 rounded-full bg-yellow-500 shadow-[0_0_60px_rgba(234,179,8,0.9)] flex items-center justify-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-white"></div>
+            {/* Status Feedback Card (No local mic buttons, no middle mic orbs) */}
+            <div className="w-full max-w-lg bg-[#0B152B]/90 border border-slate-700/80 rounded-2xl px-6 py-4 mb-8 shadow-xl text-center min-h-[56px] flex items-center justify-center">
+                <span className="text-base font-bold text-amber-300">
+                    {statusFeedback || (language === 'ta-IN' ? "கீழே உள்ள மைக்கை இரட்டை தட்டி உடனே பேசவும்" : "Double-tap bottom mic to speak")}
+                </span>
+            </div>
+
+            {/* Recorded Fields Summary */}
+            <div className="w-full grid grid-cols-3 gap-3 mb-8">
+                {questions.map((q, idx) => (
+                    <div 
+                        key={q.key}
+                        className={`p-4 rounded-2xl border transition-all ${
+                            idx === step 
+                                ? 'bg-[#0E2042] border-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.4)]' 
+                                : localData[q.key]
+                                ? 'bg-emerald-950/30 border-emerald-500/60'
+                                : 'bg-[#09152B]/60 border-slate-800'
+                        }`}
+                    >
+                        <p className="text-xs text-gray-400 font-bold uppercase">{q.title}</p>
+                        <p className="text-white font-black text-base truncate mt-1">
+                            {localData[q.key] || '---'}
+                        </p>
                     </div>
-                )}
-            </div>
-            
-            {/* Live Voice Subtitle Box */}
-            <div className={`mb-12 px-10 py-5 rounded-full border-2 text-2xl font-bold min-w-[350px] shadow-lg transition-colors
-                ${orbState === 'listening' ? 'border-green-500 text-green-400 bg-green-900/30' : ''}
-                ${orbState === 'speaking' ? 'border-purple-500 text-purple-300 bg-purple-900/30' : ''}
-                ${orbState === 'processing' ? 'border-yellow-400 text-yellow-400 bg-yellow-900/30' : ''}
-            `}>
-                {transcript}
+                ))}
             </div>
 
-            {/* Progress Indicators */}
-            <div className="flex gap-4 mt-4">
+            {/* Step Progress Indicators */}
+            <div className="flex gap-4 mt-2">
                 {[0, 1, 2].map((idx) => (
                     <div 
                         key={idx}
-                        className={`h-3 w-16 rounded-full transition-colors duration-500 ${idx === step ? 'bg-brightYellow shadow-[0_0_10px_rgba(250,204,21,0.8)]' : idx < step ? 'bg-green-500' : 'bg-gray-700'}`}
+                        className={`h-2.5 w-16 rounded-full transition-all duration-500 ${
+                            idx === step 
+                                ? 'bg-cyan-400 shadow-[0_0_12px_rgba(6,182,212,0.9)] animate-pulse' 
+                                : idx < step 
+                                ? 'bg-emerald-500' 
+                                : 'bg-slate-800'
+                        }`}
                     />
                 ))}
             </div>

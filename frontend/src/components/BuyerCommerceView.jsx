@@ -1,253 +1,345 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useAudioRecorder } from '../hooks/useAudioRecorder';
-import { playTTS, transcribeAudio, searchBuyerListings, expressBuyerInterest } from '../services/api';
+import React, { useState, useEffect, useRef } from 'react';
+import { searchBuyerListings, expressBuyerInterest, getBuyerOrderDetails } from '../services/api';
+import { useSmartVoice } from '../context/SmartVoiceContext';
+import { BuyerCheckout } from './BuyerCheckout';
+import { getTranslation } from '../utils/translations';
+import { 
+    isExpressInterestIntent, 
+    isHomeIntent, 
+    isSearchIntent, 
+    normalizeText,
+    matchesAnyKeyword,
+    BUYER_SEARCH_KEYWORDS,
+    BUYER_EXPRESS_INTEREST_KEYWORDS,
+    GLOBAL_HOME_KEYWORDS 
+} from '../utils/voiceMatcher';
 
 const BUYER_STATES = {
     IDLE: 0,
-    LISTENING: 1,
-    SEARCHING: 2,
-    RESULTS: 3
+    SEARCHING: 1,
+    RESULTS: 2
 };
 
-export const BuyerCommerceView = ({ language, user }) => {
-    const [state, setState] = useState(BUYER_STATES.IDLE);
-    const [transcript, setTranscript] = useState('');
-    const [results, setResults] = useState([]);
+export const BuyerCommerceView = ({ language, user, onBack }) => {
+    const { 
+        setPageContext, 
+        setScreenInstruction, 
+        setGuidePrompt, 
+        speak, 
+        registerVoiceHandler, 
+        unregisterVoiceHandler 
+    } = useSmartVoice();
     
-    const recognitionRef = useRef(null);
-    const timeoutRef = useRef(null);
+    const t = getTranslation(language);
+
+    const [state, setState] = useState(BUYER_STATES.IDLE);
+    const [statusText, setStatusText] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [results, setResults] = useState([]);
+    const [pendingOrders, setPendingOrders] = useState({}); // listingId -> order
+    const [checkoutOrder, setCheckoutOrder] = useState(null);
+
+    const pollingIntervalRef = useRef(null);
     const unmounted = useRef(false);
 
-    const startSearch = async () => {
-        if (unmounted.current) return;
-        
-        setState(BUYER_STATES.LISTENING);
-        const prompt = language === 'ta-IN' ? "நீங்கள் என்ன வாங்க விரும்புகிறீர்கள்? சொல்லுங்கள்." : "What do you want to buy? Speak now.";
-        
-        const utter = new SpeechSynthesisUtterance(prompt);
-        utter.lang = language;
-        utter.volume = 0.6;
-        
-        utter.onend = () => {
-            if (unmounted.current) return;
-            startListening();
+    // Set page context badge and screen instructions on mount
+    useEffect(() => {
+        const pageCtx = language === 'ta-IN' ? "தேடல்... / Searching..." : "Searching Products...";
+        setPageContext(pageCtx);
+
+        const screenInstruction = language === 'ta-IN'
+            ? "பொருட்களை தேட கீழே உள்ள மைக்ரோஃபோனை இரட்டை தட்டவும். நீங்கள் விரும்பும் பொருளின் பெயரை கூறவும்."
+            : "Double-tap the bottom microphone and say what product you want to buy, like honey or turmeric.";
+        setScreenInstruction(screenInstruction, false);
+
+        const guide = language === 'ta-IN'
+            ? "நீங்கள் வாங்க விரும்பும் பொருளின் பெயரைக் கூறுங்கள், அல்லது விருப்பம் தெரிவிக்க 'விருப்பம்' என்று சொல்லுங்கள்."
+            : "Say the product name to search, or say 'Interested' to purchase.";
+        setGuidePrompt(guide);
+
+        return () => {
+            setPageContext('');
         };
-        
-        window.speechSynthesis.speak(utter);
-    };
-    
-    const startListening = () => {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SpeechRecognition) return;
+    }, [language, setPageContext, setScreenInstruction, setGuidePrompt]);
 
-        if (recognitionRef.current) {
-            try { recognitionRef.current.abort(); } catch(e){}
-        }
-
-        const recognition = new SpeechRecognition();
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        recognition.lang = language;
-        
-        let finalTranscript = "";
-
-        setTranscript(language === 'ta-IN' ? "கேட்கிறது..." : "Listening...");
-
-        recognition.onresult = (event) => {
-            let interimTranscript = "";
-            for (let i = event.resultIndex; i < event.results.length; ++i) {
-                if (event.results[i].isFinal) {
-                    finalTranscript += event.results[i][0].transcript;
-                } else {
-                    interimTranscript += event.results[i][0].transcript;
+    // Polling mechanism to check if any pending order is accepted by seller
+    useEffect(() => {
+        const checkPendingStatuses = async () => {
+            const orderIds = Object.values(pendingOrders).map(o => o.order_id);
+            for (const orderId of orderIds) {
+                try {
+                    const statusRes = await getBuyerOrderDetails(orderId, language);
+                    if (statusRes.status === 'invitation_accepted') {
+                        // Seller has accepted! Transition buyer to checkout screen!
+                        clearInterval(pollingIntervalRef.current);
+                        setCheckoutOrder(statusRes);
+                        if (statusRes.voice_prompt) {
+                            speak(statusRes.voice_prompt, language);
+                        }
+                        break;
+                    }
+                } catch (e) {
+                    console.error("Order polling check failed", e);
                 }
             }
-            setTranscript(`"${finalTranscript || interimTranscript}"`);
-            
-            if (finalTranscript) {
-                clearTimeout(timeoutRef.current);
-                processTranscript(finalTranscript);
-            }
         };
 
-        recognition.onend = () => {
-             // Let it time out naturally if no final result
-        };
-
-        recognitionRef.current = recognition;
-        try { recognition.start(); } catch(e){}
-        
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = setTimeout(() => {
-            if (recognitionRef.current) {
-                try { recognitionRef.current.abort(); } catch(e){}
-            }
-            setState(BUYER_STATES.IDLE);
-            setTranscript(language === 'ta-IN' ? "நேரம் முடிந்தது. மீண்டும் தட்டவும்." : "Timed out. Tap again.");
-        }, 10000);
-    };
-
-    const processTranscript = async (text) => {
-        if (unmounted.current) return;
-        
-        if (recognitionRef.current) {
-            try { recognitionRef.current.abort(); } catch(e){}
+        if (Object.keys(pendingOrders).length > 0) {
+            pollingIntervalRef.current = setInterval(checkPendingStatuses, 2500);
         }
-        
+
+        return () => {
+            if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
+        };
+    }, [pendingOrders, language, speak]);
+
+    const performSearch = async (queryText) => {
+        if (unmounted.current || !queryText) return;
+
         try {
             setState(BUYER_STATES.SEARCHING);
-            setTranscript(language === 'ta-IN' ? "தேடுகிறது..." : "Searching...");
-            
-            const searchRes = await searchBuyerListings(text, language);
-            setResults(searchRes.results || []);
+            setSearchQuery(queryText);
+            setStatusText(language === 'ta-IN' ? `"${queryText}" தேடுகிறது...` : `Searching for "${queryText}"...`);
+
+            const searchRes = await searchBuyerListings(queryText, language);
+            const foundItems = searchRes.results || [];
+            setResults(foundItems);
             setState(BUYER_STATES.RESULTS);
-            
-            const foundCount = (searchRes.results || []).length;
+
+            const foundCount = foundItems.length;
             if (foundCount > 0) {
-                const successMsg = language === 'ta-IN' ? `${foundCount} முடிவுகள் கிடைத்துள்ளன.` : `Found ${foundCount} results.`;
-                const utter = new SpeechSynthesisUtterance(successMsg);
-                utter.lang = language;
-                utter.volume = 0.6;
-                window.speechSynthesis.speak(utter);
+                const successMsg = language === 'ta-IN' 
+                    ? `${queryText} குறித்த ${foundCount} முடிவுகள் கிடைத்துள்ளன.` 
+                    : `Found ${foundCount} results for ${queryText}.`;
+                setStatusText(successMsg);
+                speak(successMsg, language);
             } else {
-                const failMsg = language === 'ta-IN' ? "மன்னிக்கவும், எதுவும் கிடைக்கவில்லை." : "Sorry, no matches found.";
-                const utter = new SpeechSynthesisUtterance(failMsg);
-                utter.lang = language;
-                utter.volume = 0.6;
-                window.speechSynthesis.speak(utter);
-                setTimeout(() => setState(BUYER_STATES.IDLE), 3000);
+                const failMsg = language === 'ta-IN' 
+                    ? `மன்னிக்கவும், "${queryText}" கிடைக்கவில்லை.` 
+                    : `Sorry, no matches found for "${queryText}".`;
+                setStatusText(failMsg);
+                speak(failMsg, language);
             }
-            
         } catch (err) {
             console.error("Search Error", err);
             const errorMsg = language === 'ta-IN' ? "எனக்கு புரியவில்லை. மீண்டும் கூறவும்." : "I didn't catch that. Please repeat.";
-            const utter = new SpeechSynthesisUtterance(errorMsg);
-            utter.lang = language;
-            utter.volume = 0.6;
-            window.speechSynthesis.speak(utter);
+            setStatusText(errorMsg);
+            speak(errorMsg, language);
             setState(BUYER_STATES.IDLE);
         }
     };
 
+    // Buyer Expresses Interest -> Creates order in SQLite with status 'interest_expressed'
     const handleExpressInterest = async (listingId) => {
         try {
-            await expressBuyerInterest(user.user_id, listingId);
-            const msg = language === 'ta-IN' ? "உங்கள் விருப்பம் பதிவு செய்யப்பட்டது. விற்பனையாளர் உங்களை தொடர்பு கொள்வார்." : "Interest registered. The seller will contact you.";
-            const utter = new SpeechSynthesisUtterance(msg);
-            utter.lang = language;
-            utter.volume = 0.6;
-            window.speechSynthesis.speak(utter);
+            const orderRes = await expressBuyerInterest(user.user_id, listingId, language);
             
-            // Optionally set UI state for the specific item, but an alert/TTS is fine for now
-            alert(msg);
+            setPendingOrders(prev => ({
+                ...prev,
+                [listingId]: orderRes
+            }));
+
+            if (orderRes.voice_prompt) {
+                speak(orderRes.voice_prompt, language);
+            }
         } catch (e) {
             console.error("Interest Error", e);
+            alert("Could not register interest. Please try again.");
         }
     };
+
+    // Register voice handler for searching, navigating, or expressing interest (Rule 3)
+    useEffect(() => {
+        const handleVoiceInput = (rawText) => {
+            if (!rawText) return;
+            const text = normalizeText(rawText);
+            console.log("[Buyer View Voice Input]:", text);
+
+            // 1. Navigation Home / Back: 'முகப்பு', 'Home', 'main', 'back', 'பின்'
+            if (isHomeIntent(text)) {
+                if (onBack) onBack();
+                return;
+            }
+
+            // 2. Express Interest: 'ஆர்வமாக உள்ளேன்', 'வாங்குகிறேன்', 'ஆர்வமுள்ளது', 'interest', 'buy this', 'want'
+            if (isExpressInterestIntent(text)) {
+                if (results.length > 0) {
+                    handleExpressInterest(results[0].id);
+                } else {
+                    const needSearchMsg = language === 'ta-IN' 
+                        ? "முதலில் ஒரு பொருளைத் தேடுங்கள்." 
+                        : "Please search for a product first.";
+                    speak(needSearchMsg, language);
+                }
+                return;
+            }
+
+            // 3. Search / Find: 'தேடு', 'வாங்கு', 'பொருள்', 'search', 'buy', 'find', 'மஞ்சள்', 'தேன்', 'turmeric', 'honey'
+            if (text.length >= 2) {
+                let cleanQuery = text
+                    .replace(/^(search|find|buy|தேடு|வாங்கு|எனக்கு|வேண்டும்|காட்டு|பொருள்)\s+/i, '')
+                    .trim();
+                performSearch(cleanQuery || text);
+            }
+        };
+
+        registerVoiceHandler(handleVoiceInput);
+
+        return () => {
+            unregisterVoiceHandler();
+        };
+    }, [language, results, onBack, registerVoiceHandler, unregisterVoiceHandler, speak]);
 
     useEffect(() => {
         return () => {
             unmounted.current = true;
-            clearTimeout(timeoutRef.current);
-            window.speechSynthesis.cancel();
-            if (recognitionRef.current) {
-                try { recognitionRef.current.abort(); } catch(e){}
-            }
+            if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
         };
     }, []);
 
-    return (
-        <div className="w-full max-w-5xl mx-auto flex flex-col items-center p-8">
-            <h1 className="text-4xl font-bold text-white mb-8">
-                {language === 'ta-IN' ? "பொருட்களை தேடுங்கள்" : "Search for Products"}
-            </h1>
+    // ─── IF TRANSITIONED TO STEP 3: CHECKOUT ───
+    if (checkoutOrder) {
+        return (
+            <BuyerCheckout
+                order={checkoutOrder}
+                user={user}
+                language={language}
+                onComplete={() => {
+                    setCheckoutOrder(null);
+                    setPendingOrders({});
+                    setState(BUYER_STATES.IDLE);
+                }}
+                onBack={() => setCheckoutOrder(null)}
+            />
+        );
+    }
 
-            {/* Central Search Orb */}
-            {state !== BUYER_STATES.RESULTS && (
-                <div 
-                    onClick={state === BUYER_STATES.IDLE ? startSearch : undefined}
-                    className={`relative w-48 h-48 mb-8 flex items-center justify-center rounded-full transition-all duration-300 ${state === BUYER_STATES.IDLE ? 'cursor-pointer hover:scale-105' : ''}`}
-                >
-                    {state === BUYER_STATES.LISTENING && (
-                        <div className="absolute inset-0 rounded-full bg-green-500 opacity-50 animate-ping"></div>
-                    )}
-                    {state === BUYER_STATES.SEARCHING && (
-                        <div className="absolute inset-0 rounded-full bg-yellow-500 opacity-50 animate-pulse"></div>
-                    )}
-                    
-                    <div className={`relative z-10 w-32 h-32 rounded-full flex items-center justify-center shadow-2xl transition-colors duration-500
-                        ${state === BUYER_STATES.IDLE ? 'bg-gradient-to-tr from-blue-600 to-indigo-600 shadow-[0_0_40px_rgba(79,70,229,0.8)]' : ''}
-                        ${state === BUYER_STATES.LISTENING ? 'bg-green-500 shadow-[0_0_60px_rgba(34,197,94,0.9)]' : ''}
-                        ${state === BUYER_STATES.SEARCHING ? 'bg-yellow-500 shadow-[0_0_60px_rgba(234,179,8,0.9)]' : ''}
-                    `}>
-                        {state === BUYER_STATES.SEARCHING ? (
-                            <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-white"></div>
-                        ) : (
-                            <span className="text-6xl">🎙️</span>
-                        )}
+    return (
+        <div className="w-full max-w-5xl mx-auto flex flex-col items-center p-8 pb-36">
+            {/* Header Navigation */}
+            <div className="w-full flex justify-between items-center mb-8">
+                <div>
+                    <h1 className="text-3xl md:text-4xl font-black text-white">
+                        {language === 'ta-IN' ? "பொருட்களை தேடுங்கள்" : "Search for Products"}
+                    </h1>
+                    <p className="text-gray-400 text-sm mt-1">
+                        {language === 'ta-IN' 
+                            ? "இயற்கை தேன், மஞ்சள், மசாலா பொருட்களை நேரடியாக வாங்கலாம்" 
+                            : "Direct from tribal producers - honey, turmeric, herbs & spices"}
+                    </p>
+                </div>
+                {onBack && (
+                    <button
+                        onClick={onBack}
+                        className="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-gray-300 font-bold rounded-xl text-sm transition-colors border border-slate-700"
+                    >
+                        ← {language === 'ta-IN' ? "முகப்பு" : "Dashboard"}
+                    </button>
+                )}
+            </div>
+
+            {/* Clean Query / Status Banner (No local mic buttons, no middle mic orb animations) */}
+            <div className="w-full bg-[#0B152B]/90 border border-cyan-500/30 rounded-2xl p-6 mb-8 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-4 w-full sm:w-auto">
+                    <div className="w-12 h-12 rounded-xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-2xl flex-shrink-0">
+                        🔍
+                    </div>
+                    <div>
+                        <p className="text-xs uppercase tracking-wider font-bold text-cyan-400">
+                            {language === 'ta-IN' ? "தேடல் தகவல்" : "Voice Query Status"}
+                        </p>
+                        <p className="text-white font-bold text-base md:text-lg">
+                            {statusText || (searchQuery ? `"${searchQuery}"` : (language === 'ta-IN' ? "கீழே உள்ள மைக்கில் 'தேன்' அல்லது 'மஞ்சள்' என்று பேசவும்" : "Double-tap bottom mic & say 'Honey' or 'Turmeric'"))}
+                        </p>
                     </div>
                 </div>
-            )}
 
-            {/* Status / Transcript Text */}
-            <div className="text-2xl font-bold text-blue-300 mb-8 min-h-[40px] text-center">
-                {state === BUYER_STATES.IDLE && (language === 'ta-IN' ? "தொடங்க மைக்ரோஃபோனை தட்டவும்" : "Tap to speak what you want to buy")}
-                {state !== BUYER_STATES.IDLE && transcript}
+                {/* Quick Keyword Suggestion Pills */}
+                <div className="flex flex-wrap gap-2 items-center justify-end w-full sm:w-auto">
+                    {['தேன்', 'மஞ்சள்', 'Honey', 'Turmeric'].map((kw) => (
+                        <button
+                            key={kw}
+                            onClick={() => performSearch(kw)}
+                            className="px-3 py-1.5 bg-slate-800/80 hover:bg-cyan-900/50 hover:border-cyan-400 text-cyan-200 border border-slate-700 rounded-lg text-xs font-semibold transition-all"
+                        >
+                            {kw}
+                        </button>
+                    ))}
+                </div>
             </div>
 
             {/* Results Grid */}
             {state === BUYER_STATES.RESULTS && (
                 <div className="w-full">
                     <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-2xl font-bold text-white">
-                            {language === 'ta-IN' ? "முடிவுகள்" : "Search Results"}
+                        <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                            <span>📦</span>
+                            <span>{language === 'ta-IN' ? `முடிவுகள் (${results.length})` : `Results (${results.length})`}</span>
                         </h2>
                         <button 
-                            onClick={() => setState(BUYER_STATES.IDLE)}
-                            className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700"
+                            onClick={() => {
+                                setState(BUYER_STATES.IDLE);
+                                setSearchQuery('');
+                                setStatusText('');
+                            }}
+                            className="px-4 py-2 bg-slate-800 text-cyan-300 rounded-xl hover:bg-slate-700 font-bold text-xs border border-slate-700"
                         >
-                            {language === 'ta-IN' ? "மீண்டும் தேடு" : "Search Again"}
+                            {language === 'ta-IN' ? "தேடலை மீட்டமை" : "Clear Search"}
                         </button>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {results.map((item) => (
-                            <div key={item.id} className="bg-gray-800/80 rounded-2xl p-6 border border-gray-700 shadow-xl flex flex-col h-full">
-                                <div className="flex justify-between items-start mb-4">
-                                    <h3 className="text-2xl font-bold text-brightYellow">{item.title}</h3>
-                                    <span className="bg-green-900/50 text-green-400 px-3 py-1 rounded-full text-sm font-bold border border-green-700">
-                                        ₹{item.price_per_unit} / {item.unit}
-                                    </span>
+                        {results.map((item) => {
+                            const isPending = !!pendingOrders[item.id];
+                            return (
+                                <div key={item.id} className="bg-[#0B152B]/90 rounded-3xl p-6 border border-slate-700/80 shadow-2xl flex flex-col h-full hover:border-cyan-500/50 transition-all">
+                                    <div className="flex justify-between items-start mb-4">
+                                        <h3 className="text-2xl font-black text-amber-400">{item.title}</h3>
+                                        <span className="bg-emerald-950/80 text-emerald-400 px-3 py-1 rounded-full text-sm font-extrabold border border-emerald-700">
+                                            ₹{item.price_per_unit} / {item.unit}
+                                        </span>
+                                    </div>
+                                    
+                                    <p className="text-gray-300 mb-6 flex-grow text-sm leading-relaxed">{item.description}</p>
+                                    
+                                    <div className="bg-[#060D1E] p-4 rounded-2xl mb-6 border border-slate-800">
+                                        <p className="text-gray-400 text-xs mb-1">{language === 'ta-IN' ? "விற்பனையாளர்" : "Seller"}</p>
+                                        <p className="text-white font-bold">{item.seller_name}</p>
+                                        <p className="text-gray-400 text-xs">📍 {item.seller_village}</p>
+                                        <p className="text-cyan-400 font-bold mt-2">📦 {item.quantity} {item.unit} {language === 'ta-IN' ? "இருப்பு உள்ளது" : "Available"}</p>
+                                    </div>
+
+                                    {/* Action button */}
+                                    <div className="flex flex-col gap-3 w-full mt-2">
+                                        {isPending ? (
+                                            <div className="w-full py-3.5 bg-amber-950/70 border border-amber-500/60 rounded-xl text-amber-300 font-bold text-sm text-center flex items-center justify-center gap-2 animate-pulse">
+                                                <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                                                <span>{language === 'ta-IN' ? "விற்பனையாளர் ஒப்புதலுக்காக காத்திருக்கிறது..." : "Waiting for seller acceptance..."}</span>
+                                            </div>
+                                        ) : (
+                                            <div className="flex gap-3 w-full">
+                                                <button 
+                                                    onClick={() => handleExpressInterest(item.id)}
+                                                    className="flex-1 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl font-black text-sm text-center shadow-lg transition-all"
+                                                >
+                                                    ✅ {language === 'ta-IN' ? "விருப்பம் தெரிவியுங்கள்" : "I'm Interested"}
+                                                </button>
+                                                <a 
+                                                    href={`tel:${item.seller_phone}`}
+                                                    className="px-4 py-3.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold text-sm text-center transition-colors flex items-center justify-center"
+                                                >
+                                                    📞
+                                                </a>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
-                                
-                                <p className="text-gray-300 mb-6 flex-grow">{item.description}</p>
-                                
-                                <div className="bg-gray-900/50 p-4 rounded-xl mb-6">
-                                    <p className="text-gray-400 text-sm mb-1">{language === 'ta-IN' ? "விற்பனையாளர்" : "Seller"}</p>
-                                    <p className="text-white font-bold">{item.seller_name}</p>
-                                    <p className="text-gray-400 text-sm">📍 {item.seller_village}</p>
-                                    <p className="text-blue-400 font-bold mt-2">📦 {item.quantity} {item.unit} {language === 'ta-IN' ? "இருப்பு உள்ளது" : "Available"}</p>
-                                </div>
-                                
-                                <div className="flex gap-4 w-full mt-2">
-                                    <button 
-                                        onClick={() => handleExpressInterest(item.id)}
-                                        className="flex-1 py-3 bg-green-600 hover:bg-green-500 text-white rounded-xl font-bold text-lg text-center transition-colors"
-                                    >
-                                        ✅ {language === 'ta-IN' ? "விருப்பம் தெரிவியுங்கள்" : "I'm Interested"}
-                                    </button>
-                                    <a 
-                                        href={`tel:${item.seller_phone}`}
-                                        className="flex-1 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold text-lg text-center transition-colors"
-                                    >
-                                        📞 {language === 'ta-IN' ? "அழைக்க" : "Call"}
-                                    </a>
-                                </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
             )}
         </div>
     );
 };
+

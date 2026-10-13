@@ -112,17 +112,63 @@ export const searchBuyerListings = async (transcript, language) => {
     return res.json();
 };
 
-export const expressBuyerInterest = async (buyerId, listingId) => {
-    const res = await fetch(`${API_BASE_URL}/commerce/buyer/interest`, {
+export const expressBuyerInterest = async (buyerId, listingId, language = 'ta-IN') => {
+    const res = await fetch(`${API_BASE_URL}/commerce/order/interest`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ buyer_id: buyerId, listing_id: listingId })
+        body: JSON.stringify({ buyer_id: buyerId, listing_id: listingId, language })
     });
-    
-    if (!res.ok) {
-        throw new Error('Expressing interest failed');
-    }
-    
+    if (!res.ok) throw new Error('Expressing interest failed');
+    return res.json();
+};
+
+export const getSellerPendingOrders = async (sellerId, language = 'ta-IN') => {
+    const res = await fetch(`${API_BASE_URL}/commerce/orders/seller/pending/${sellerId}?language=${encodeURIComponent(language)}`);
+    if (!res.ok) throw new Error("Failed to fetch pending orders");
+    return res.json();
+};
+
+export const acceptSellerOrder = async (orderId, sellerId, language = 'ta-IN') => {
+    const res = await fetch(`${API_BASE_URL}/commerce/order/accept`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order_id: orderId, seller_id: sellerId, language })
+    });
+    if (!res.ok) throw new Error("Failed to accept order");
+    return res.json();
+};
+
+export const getBuyerOrderDetails = async (orderId, language = 'ta-IN') => {
+    const res = await fetch(`${API_BASE_URL}/commerce/order/${orderId}?language=${encodeURIComponent(language)}`);
+    if (!res.ok) throw new Error("Failed to fetch order details");
+    return res.json();
+};
+
+export const getBuyerActiveOrders = async (buyerId, language = 'ta-IN') => {
+    const res = await fetch(`${API_BASE_URL}/commerce/orders/buyer/active/${buyerId}?language=${encodeURIComponent(language)}`);
+    if (!res.ok) throw new Error("Failed to fetch active buyer orders");
+    return res.json();
+};
+
+export const payOrder = async (orderId, buyerId, language = 'ta-IN') => {
+    const res = await fetch(`${API_BASE_URL}/commerce/order/pay`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order_id: orderId, buyer_id: buyerId, language })
+    });
+    if (!res.ok) throw new Error("Payment processing failed");
+    return res.json();
+};
+
+export const getSellerConfirmedOrders = async (sellerId, language = 'ta-IN') => {
+    const res = await fetch(`${API_BASE_URL}/commerce/orders/seller/confirmed/${sellerId}?language=${encodeURIComponent(language)}`);
+    if (!res.ok) throw new Error("Failed to fetch confirmed orders");
+    return res.json();
+};
+
+export const getScreenInstruction = async (screen, language = 'ta-IN') => {
+    const res = await fetch(`${API_BASE_URL}/commerce/screen-instruction?screen=${encodeURIComponent(screen)}&language=${encodeURIComponent(language)}`);
+    if (!res.ok) throw new Error("Failed to fetch screen instruction");
     return res.json();
 };
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { playTTS } from '../services/api';
+import { useSmartVoice } from '../context/SmartVoiceContext';
+import { matchesAnyKeyword, normalizeText } from '../utils/voiceMatcher';
 
 const ACTION_KEYWORDS = {
     login: ['login', 'log in', 'log', 'புகுபதிகை', 'பதிகை', 'உள்நுழை', 'लॉगिन', 'लाग इन', 'लाग', 'లాగిన్', 'புகு', 'pugu', 'ulnulai'],
@@ -7,217 +8,140 @@ const ACTION_KEYWORDS = {
 };
 
 export const AuthActionSelect = ({ language, onSelect }) => {
-    const [orbState, setOrbState] = useState('speaking'); // 'speaking' | 'listening' | 'success'
-    const [transcript, setTranscript] = useState('');
+    const { 
+        setPageContext,
+        setScreenInstruction, 
+        setGuidePrompt, 
+        speak,
+        registerVoiceHandler, 
+        unregisterVoiceHandler 
+    } = useSmartVoice();
+
+    const [statusText, setStatusText] = useState('');
     const [selectedAction, setSelectedAction] = useState(null);
-    
-    const recognitionRef = useRef(null);
-    const timeoutRef = useRef(null);
     const selectedRef = useRef(false);
 
-    const startListening = useCallback(() => {
+    const confirmAction = useCallback((action) => {
         if (selectedRef.current) return;
-        setOrbState('listening');
-        setTranscript(language === 'ta-IN' ? 'உங்களைக் கேட்கிறது... சொல்லுங்கள்' : 'Listening to you... speak now');
-        
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SpeechRecognition) return;
-
-        if (recognitionRef.current) {
-            try { recognitionRef.current.abort(); } catch(e){}
-        }
-
-        const recognition = new SpeechRecognition();
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        recognition.lang = language;
-        
-        recognition.onresult = (event) => {
-            if (selectedRef.current) return;
-            
-            const spokenText = Array.from(event.results)
-                .map(res => res[0].transcript)
-                .join(' ')
-                .toLowerCase();
-                
-            setTranscript(`"${spokenText}"`);
-            
-            let matchedAction = null;
-            for (const keyword of ACTION_KEYWORDS.login) {
-                if (spokenText.includes(keyword.toLowerCase())) matchedAction = 'login';
-            }
-            for (const keyword of ACTION_KEYWORDS.register) {
-                if (spokenText.includes(keyword.toLowerCase())) matchedAction = 'register';
-            }
-            
-            if (matchedAction) {
-                confirmAction(matchedAction);
-            }
-        };
-        
-        recognition.onend = () => {
-             if (!selectedRef.current && orbState === 'listening') {
-                 try { recognition.start(); } catch(e){}
-             }
-        };
-
-        recognitionRef.current = recognition;
-        try { recognition.start(); } catch(e){}
-        
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = setTimeout(() => {
-            if (!selectedRef.current) {
-                if (recognitionRef.current) {
-                    try { recognitionRef.current.abort(); } catch(e){}
-                }
-                playReprompt();
-            }
-        }, 7000);
-        
-    }, [language, orbState]);
-
-    const playInitialPrompt = useCallback(() => {
-        setOrbState('speaking');
-        setTranscript(language === 'ta-IN' ? 'ஏஜென்ட் பேசுகிறது...' : 'Agent is speaking...');
-        window.speechSynthesis.cancel();
-        
-        const text = language === 'ta-IN' 
-            ? "நீங்கள் ஏற்கனவே பதிவு செய்துள்ளீர்களா? உள்நுழைய 'புகுபதிகை' என்று சொல்லுங்கள். புதிய கணக்கு தொடங்க 'பதிவு' என்று சொல்லுங்கள்."
-            : "Have you registered before? Say 'Login' to enter, or 'Register' to create a new account.";
-            
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.lang = language;
-        utter.volume = 0.6;
-        utter.onend = () => startListening();
-        
-        setTimeout(() => {
-            if (orbState === 'speaking' && !selectedRef.current) {
-                startListening();
-            }
-        }, 8000);
-
-        window.speechSynthesis.speak(utter);
-    }, [language, startListening, orbState]);
-
-    const playReprompt = useCallback(() => {
-        setOrbState('speaking');
-        setTranscript(language === 'ta-IN' ? 'மன்னிக்கவும், சரியாகக் கேட்கவில்லை...' : 'I did not catch that...');
-        
-        const text = language === 'ta-IN'
-            ? "உள்நுழைய 'புகுபதிகை' என்று சொல்லுங்கள். புதிய பதிவு செய்ய 'பதிவு' என்று சொல்லுங்கள்."
-            : "Say 'Login' to login, or 'Register' to sign up.";
-            
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.lang = language;
-        utter.volume = 0.6;
-        utter.onend = () => startListening();
-        window.speechSynthesis.speak(utter);
-    }, [language, startListening]);
-
-    const confirmAction = useCallback(async (action) => {
         selectedRef.current = true;
         setSelectedAction(action);
-        setOrbState('success');
-        clearTimeout(timeoutRef.current);
-        
-        if (recognitionRef.current) {
-            try { recognitionRef.current.abort(); } catch(e){}
-        }
-        
+
         window.speechSynthesis.cancel();
         const confirmText = language === 'ta-IN'
             ? (action === 'login' ? "புகுபதிகை செய்கிறோம்..." : "புதிய பதிவை தொடங்குவோம்...")
             : (action === 'login' ? "Logging you in..." : "Starting new registration...");
             
-        setTranscript(`✅ ${confirmText}`);
-        
-        const utter = new SpeechSynthesisUtterance(confirmText);
-        utter.lang = language;
-        utter.volume = 0.6;
-        
-        utter.onend = () => onSelect(action);
-        window.speechSynthesis.speak(utter);
-        
+        setStatusText(`✅ ${confirmText}`);
+        speak(confirmText, language);
+
         setTimeout(() => {
             onSelect(action);
-        }, 3000);
-    }, [language, onSelect]);
+        }, 1600);
+    }, [language, onSelect, speak]);
 
     useEffect(() => {
-        playInitialPrompt();
-        return () => {
-            selectedRef.current = true;
-            clearTimeout(timeoutRef.current);
-            window.speechSynthesis.cancel();
-            if (recognitionRef.current) {
-                try { recognitionRef.current.abort(); } catch(e){}
+        const pageCtx = language === 'ta-IN' ? "உள்நுழைவு / தொடக்கம்" : "Login / Register";
+        setPageContext(pageCtx);
+
+        const prompt = language === 'ta-IN' 
+            ? "நீங்கள் ஏற்கனவே பதிவு செய்துள்ளீர்களா? உள்நுழைய 'புகுபதிகை' என்றும், புதிய கணக்கு தொடங்க 'பதிவு' என்றும் சொல்லுங்கள்."
+            : "Have you registered before? Say 'Login' to enter, or 'Register' to create a new account.";
+        
+        setScreenInstruction(prompt, true);
+
+        const guide = language === 'ta-IN'
+            ? "உள்நுழைய 'புகுபதிகை' என்றும், பதிவு செய்ய 'பதிவு' என்றும் சொல்லுங்கள்."
+            : "Say 'Login' or 'Register' into the microphone below.";
+        setGuidePrompt(guide);
+
+        // Register Voice Handler with fuzzy keyword matching
+        const handleVoiceInput = (rawText) => {
+            if (selectedRef.current || !rawText) return;
+            const text = normalizeText(rawText);
+            console.log("[Auth Action Voice Input]:", text);
+
+            if (matchesAnyKeyword(text, ACTION_KEYWORDS.login)) {
+                confirmAction('login');
+            } else if (matchesAnyKeyword(text, ACTION_KEYWORDS.register)) {
+                confirmAction('register');
+            } else {
+                const retry = language === 'ta-IN'
+                    ? "உள்நுழைய 'புகுபதிகை' என்று சொல்லுங்கள். புதிய பதிவு செய்ய 'பதிவு' என்று சொல்லுங்கள்."
+                    : "Say 'Login' or 'Register' to continue.";
+                setStatusText(retry);
+                speak(retry, language);
             }
         };
-    }, []);
+
+        registerVoiceHandler(handleVoiceInput);
+
+        return () => {
+            unregisterVoiceHandler();
+            setPageContext('');
+        };
+    }, [language, setPageContext, setScreenInstruction, setGuidePrompt, registerVoiceHandler, unregisterVoiceHandler, confirmAction, speak]);
 
     return (
-        <div className="w-full max-w-2xl text-center flex flex-col items-center">
-            {/* The Voice Orb / Soundwave */}
-            <div className="relative w-48 h-48 mb-10 flex items-center justify-center">
-                {orbState === 'speaking' && (
-                    <>
-                        <div className="absolute inset-0 rounded-full bg-purple-500 opacity-40 animate-ping"></div>
-                        <div className="absolute inset-4 rounded-full bg-blue-500 opacity-60 animate-pulse"></div>
-                        <div className="relative z-10 w-28 h-28 rounded-full bg-gradient-to-tr from-blue-600 to-purple-600 shadow-[0_0_50px_rgba(147,51,234,0.8)] flex items-center justify-center">
-                            <span className="text-5xl">🤖</span>
-                        </div>
-                    </>
-                )}
-                {orbState === 'listening' && (
-                    <>
-                        <div className="absolute inset-0 rounded-full bg-green-500 opacity-50 animate-ping"></div>
-                        <div className="relative z-10 w-28 h-28 rounded-full bg-green-500 shadow-[0_0_60px_rgba(34,197,94,0.9)] flex items-center justify-center">
-                            <span className="text-5xl">🎙️</span>
-                        </div>
-                    </>
-                )}
-                {orbState === 'success' && (
-                    <div className="relative z-10 w-28 h-28 rounded-full bg-yellow-400 shadow-[0_0_60px_rgba(250,204,21,1)] flex items-center justify-center scale-110 transition-transform">
-                        <span className="text-5xl">✅</span>
-                    </div>
-                )}
-            </div>
-            
-            <div className={`mb-12 px-10 py-5 rounded-full border-2 text-2xl font-bold min-w-[350px] shadow-lg transition-colors
-                ${orbState === 'listening' ? 'border-green-500 text-green-400 bg-green-900/30' : ''}
-                ${orbState === 'speaking' ? 'border-purple-500 text-purple-300 bg-purple-900/30' : ''}
-                ${orbState === 'success' ? 'border-yellow-400 text-yellow-400 bg-yellow-900/30' : ''}
-            `}>
-                {transcript}
+        <div className="w-full max-w-3xl text-center flex flex-col items-center p-6 pb-36">
+            <h1 className="text-3xl md:text-5xl font-black text-white mb-3">
+                {language === 'ta-IN' ? "உள்நுழைவு அல்லது புதிய பதிவு" : "Login or Register"}
+            </h1>
+            <p className="text-gray-400 text-sm md:text-base max-w-lg mb-8 leading-relaxed">
+                {language === 'ta-IN'
+                    ? "ஏற்கனவே கணக்கு இருந்தால் உள்நுழையவும், இல்லையெனில் புதிய பதிவு தொடங்கவும்"
+                    : "Access your existing account, or register as a new producer or buyer."}
+            </p>
+
+            {/* Status / Feedback Pill (No local mic buttons, no middle mic orbs) */}
+            <div className="w-full max-w-lg bg-[#0B152B]/90 border border-slate-700/80 rounded-2xl px-6 py-4 mb-10 shadow-xl text-center min-h-[56px] flex items-center justify-center">
+                <span className={`text-base font-bold ${selectedAction ? 'text-emerald-400' : 'text-cyan-300'}`}>
+                    {statusText || (language === 'ta-IN' ? "கீழே உள்ள மைக்கை இரட்டை தட்டி 'புகுபதிகை' அல்லது 'பதிவு' என்று சொல்லுங்கள்" : "Double-tap bottom mic & say 'Login' or 'Register'")}
+                </span>
             </div>
 
-            <div className="grid grid-cols-2 gap-8 w-full">
+            {/* Visual Action Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+                {/* Login Card */}
                 <div 
                     onClick={() => confirmAction('login')}
                     className={`
-                    flex flex-col items-center justify-center p-8 rounded-3xl border-4 transition-all duration-700 cursor-pointer hover:scale-105
-                    ${selectedAction === 'login' ? 'bg-yellow-500/20 border-yellow-400 scale-110 shadow-[0_0_40px_rgba(250,204,21,0.6)]' : 'bg-gray-900/80 border-gray-700 opacity-60'}
-                    ${selectedAction && selectedAction !== 'login' ? 'opacity-20 scale-95' : ''}
+                    flex flex-col items-center justify-center p-8 rounded-3xl border-2 transition-all duration-300 cursor-pointer hover:scale-[1.02]
+                    ${selectedAction === 'login' 
+                        ? 'bg-amber-500/20 border-amber-400 shadow-[0_0_35px_rgba(245,158,11,0.5)]' 
+                        : 'bg-[#0B152B]/80 border-slate-700 hover:border-amber-400/60'}
+                    ${selectedAction && selectedAction !== 'login' ? 'opacity-30 pointer-events-none' : ''}
                 `}>
                     <div className="text-7xl mb-4 drop-shadow-md">👤</div>
-                    <div className={`text-3xl font-bold ${selectedAction === 'login' ? 'text-yellow-400' : 'text-gray-300'}`}>
+                    <div className="text-2xl font-black text-amber-400">
                         {language === 'ta-IN' ? "புகுபதிகை" : "Login"}
                     </div>
+                    <div className="text-gray-400 mt-2 text-sm">(Existing User Face Login)</div>
+                    <p className="text-gray-400 text-xs mt-3 text-center">
+                        {language === 'ta-IN' ? "முக அங்கீகாரம் மூலம் உடனடியாக உள்நுழைய" : "Instant sign-in with your registered face"}
+                    </p>
                 </div>
 
+                {/* Register Card */}
                 <div 
                     onClick={() => confirmAction('register')}
                     className={`
-                    flex flex-col items-center justify-center p-8 rounded-3xl border-4 transition-all duration-700 cursor-pointer hover:scale-105
-                    ${selectedAction === 'register' ? 'bg-yellow-500/20 border-yellow-400 scale-110 shadow-[0_0_40px_rgba(250,204,21,0.6)]' : 'bg-gray-900/80 border-gray-700 opacity-60'}
-                    ${selectedAction && selectedAction !== 'register' ? 'opacity-20 scale-95' : ''}
+                    flex flex-col items-center justify-center p-8 rounded-3xl border-2 transition-all duration-300 cursor-pointer hover:scale-[1.02]
+                    ${selectedAction === 'register' 
+                        ? 'bg-cyan-500/20 border-cyan-400 shadow-[0_0_35px_rgba(6,182,212,0.5)]' 
+                        : 'bg-[#0B152B]/80 border-slate-700 hover:border-cyan-400/60'}
+                    ${selectedAction && selectedAction !== 'register' ? 'opacity-30 pointer-events-none' : ''}
                 `}>
                     <div className="text-7xl mb-4 drop-shadow-md">📝</div>
-                    <div className={`text-3xl font-bold ${selectedAction === 'register' ? 'text-yellow-400' : 'text-gray-300'}`}>
+                    <div className="text-2xl font-black text-cyan-400">
                         {language === 'ta-IN' ? "புதிய பதிவு" : "Register"}
                     </div>
+                    <div className="text-gray-400 mt-2 text-sm">(New Producer / Buyer)</div>
+                    <p className="text-gray-400 text-xs mt-3 text-center">
+                        {language === 'ta-IN' ? "குரல் வழியே பெயர், கிராமம் விவரங்களை பதிவு செய்ய" : "Voice-guided profile setup & face enrollment"}
+                    </p>
                 </div>
             </div>
         </div>
     );
 };
+
