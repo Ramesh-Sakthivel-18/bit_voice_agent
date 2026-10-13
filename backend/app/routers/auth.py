@@ -35,40 +35,72 @@ def face_login(request: FaceLoginRequest, db: Session = Depends(get_db)):
     try:
         incoming_embedding = get_face_embedding(request.image_base64)
     except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        err_msg = str(e)
+        logger.warning(f"Face extraction failed: {err_msg}")
+        raise HTTPException(
+            status_code=400, 
+            detail={"error_code": err_msg, "message": f"Face detection error: {err_msg}"}
+        )
     except Exception as e:
-        logger.error(f"Face login error: {e}")
-        raise HTTPException(status_code=500, detail="Internal server error")
+        logger.error(f"Face extraction unexpected error: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=500, 
+            detail={"error_code": "INTERNAL_ERROR", "message": "Face recognition service error"}
+        )
 
-    # Fetch all users (in production, use localized search or vector DB like Qdrant/Milvus)
-    users = db.query(User).all()
-    
-    best_match = None
-    highest_score = -1.0
+    try:
+        users = db.query(User).all()
+        best_match = None
+        highest_score = -1.0
 
-    for user in users:
-        stored_embedding = np.frombuffer(user.face_embedding, dtype=np.float32)
-        score = compare_embeddings(incoming_embedding, stored_embedding)
-        
-        if score > highest_score:
-            highest_score = score
-            best_match = user
+        for user in users:
+            if not user.face_embedding or len(user.face_embedding) == 0:
+                continue
+            
+            try:
+                stored_embedding = np.frombuffer(user.face_embedding, dtype=np.float32)
+                if stored_embedding.shape != incoming_embedding.shape:
+                    logger.warning(
+                        f"Skipping user {user.user_id}: embedding shape mismatch {stored_embedding.shape} vs {incoming_embedding.shape}"
+                    )
+                    continue
+                
+                score = compare_embeddings(incoming_embedding, stored_embedding)
+                if score > highest_score:
+                    highest_score = score
+                    best_match = user
+            except Exception as e:
+                logger.warning(f"Failed to compare with user {user.user_id}: {e}")
+                continue
 
-    if best_match and highest_score >= settings.FACE_SIMILARITY_THRESHOLD:
-        return {
-            "status": "success",
-            "user": {
-                "user_id": best_match.user_id,
-                "name": best_match.name,
-                "role": best_match.role,
-                "language": best_match.language,
-                "village": best_match.village,
-                "phone": best_match.phone,
-                "confidence_score": highest_score
+        logger.info(f"Face comparison complete. Best match: {best_match.user_id if best_match else 'None'}, Score: {highest_score:.4f}")
+
+        if best_match and highest_score >= settings.FACE_SIMILARITY_THRESHOLD:
+            return {
+                "status": "success",
+                "user": {
+                    "user_id": best_match.user_id,
+                    "name": best_match.name,
+                    "role": best_match.role,
+                    "language": best_match.language,
+                    "village": best_match.village,
+                    "phone": best_match.phone,
+                    "confidence_score": highest_score
+                }
             }
-        }
-    
-    raise HTTPException(status_code=401, detail={"error_code": "FACE_NOT_RECOGNIZED", "message": "Face did not match any registered users."})
+        
+        raise HTTPException(
+            status_code=401, 
+            detail={"error_code": "FACE_NOT_RECOGNIZED", "message": "Face did not match any registered users."}
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Face login search error: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=500, 
+            detail={"error_code": "DATABASE_ERROR", "message": "Error searching user database."}
+        )
 
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)

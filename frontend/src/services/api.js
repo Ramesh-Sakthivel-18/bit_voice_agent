@@ -47,8 +47,20 @@ export const faceLogin = async (imageBase64) => {
     body: JSON.stringify({ image_base64: imageBase64 }),
   });
   if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.detail?.message || "Face did not match any registered users.");
+      let errorMessage = "Face did not match any registered users.";
+      try {
+          const error = await response.json();
+          if (error.detail) {
+              if (typeof error.detail === 'string') {
+                  errorMessage = error.detail;
+              } else if (error.detail.message) {
+                  errorMessage = error.detail.message;
+              }
+          }
+      } catch (e) {
+          // Fallback if not valid json
+      }
+      throw new Error(errorMessage);
   }
   return response.json();
 };
@@ -108,9 +120,17 @@ export const searchBuyerListings = async (transcript, language) => {
     if (!res.ok) {
         throw new Error('Search failed');
     }
-    
     return res.json();
 };
+
+export const getAllBuyerListings = async (language = 'ta-IN') => {
+    const res = await fetch(`${API_BASE_URL}/commerce/buyer/all-listings?language=${encodeURIComponent(language)}`);
+    if (!res.ok) {
+        throw new Error('Failed to fetch all listings');
+    }
+    return res.json();
+};
+
 
 export const expressBuyerInterest = async (buyerId, listingId, language = 'ta-IN') => {
     const res = await fetch(`${API_BASE_URL}/commerce/order/interest`, {
@@ -163,6 +183,68 @@ export const payOrder = async (orderId, buyerId, language = 'ta-IN') => {
 export const getSellerConfirmedOrders = async (sellerId, language = 'ta-IN') => {
     const res = await fetch(`${API_BASE_URL}/commerce/orders/seller/confirmed/${sellerId}?language=${encodeURIComponent(language)}`);
     if (!res.ok) throw new Error("Failed to fetch confirmed orders");
+    return res.json();
+};
+
+export const scheduleOrderPickup = async (orderId, sellerId, language = 'ta-IN') => {
+    const res = await fetch(`${API_BASE_URL}/commerce/order/schedule-pickup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order_id: orderId, seller_id: sellerId, language })
+    });
+    if (!res.ok) throw new Error("Failed to schedule pickup");
+    return res.json();
+};
+
+export const createDirectOrder = async (buyerId, listingId, quantity = 1, language = 'ta-IN') => {
+    const res = await fetch(`${API_BASE_URL}/commerce/order/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ buyer_id: buyerId, listing_id: listingId, quantity, language })
+    });
+    if (!res.ok) throw new Error("Creating direct order failed");
+    return res.json();
+};
+
+export const packOrder = async (orderId, sellerId, language = 'ta-IN') => {
+    const res = await fetch(`${API_BASE_URL}/commerce/order/pack`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order_id: orderId, seller_id: sellerId, language })
+    });
+    if (!res.ok) throw new Error("Failed to pack order");
+    return res.json();
+};
+
+export const dispatchOrder = async (orderId, language = 'ta-IN') => {
+    const res = await fetch(`${API_BASE_URL}/commerce/order/dispatch`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order_id: orderId, language })
+    });
+    if (!res.ok) throw new Error("Failed to dispatch order");
+    return res.json();
+};
+
+export const confirmOrderReceived = async (orderId, userId, language = 'ta-IN') => {
+    const res = await fetch(`${API_BASE_URL}/commerce/order/receive`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order_id: orderId, user_id: userId, language })
+    });
+    if (!res.ok) throw new Error("Failed to confirm order received");
+    return res.json();
+};
+
+export const getBuyerOrderHistory = async (buyerId, language = 'ta-IN') => {
+    const res = await fetch(`${API_BASE_URL}/commerce/orders/buyer/history/${buyerId}?language=${encodeURIComponent(language)}`);
+    if (!res.ok) throw new Error("Failed to fetch buyer order history");
+    return res.json();
+};
+
+export const getSellerOrderHistory = async (sellerId, language = 'ta-IN') => {
+    const res = await fetch(`${API_BASE_URL}/commerce/orders/seller/history/${sellerId}?language=${encodeURIComponent(language)}`);
+    if (!res.ok) throw new Error("Failed to fetch seller order history");
     return res.json();
 };
 

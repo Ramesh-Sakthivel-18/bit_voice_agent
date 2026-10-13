@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getSellerListings } from '../services/api';
 import { useSmartVoice } from '../context/SmartVoiceContext';
 import { isHomeIntent, isNewSaleIntent } from '../utils/voiceMatcher';
+import { translateField } from '../utils/translations';
 
 export const SellerListings = ({ language, user, onBack, onNewSale }) => {
     const { 
@@ -102,22 +103,22 @@ export const SellerListings = ({ language, user, onBack, onNewSale }) => {
                     {listings.map((item) => (
                         <div key={item.id} className="bg-gray-800/80 rounded-2xl p-6 border border-gray-700 shadow-xl flex flex-col">
                             <div className="flex justify-between items-start mb-4">
-                                <h3 className="text-2xl font-bold text-brightYellow">{item.title}</h3>
+                                <h3 className="text-2xl font-bold text-brightYellow">{translateField(item.title, language)}</h3>
                                 <span className={`px-3 py-1 rounded-full text-sm font-bold border ${item.status === 'ACTIVE' ? 'bg-green-900/50 text-green-400 border-green-700' : 'bg-gray-900/50 text-gray-400 border-gray-700'}`}>
-                                    {item.status}
+                                    {translateField(item.status, language)}
                                 </span>
                             </div>
                             
-                            <p className="text-gray-300 text-sm mb-6 flex-grow italic">"{item.description}"</p>
+                            <p className="text-gray-300 text-sm mb-6 flex-grow italic">"{translateField(item.description, language)}"</p>
                             
                             <div className="grid grid-cols-2 gap-4 mt-auto">
                                 <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
                                     <p className="text-gray-400 text-xs uppercase tracking-wider">{language === 'ta-IN' ? "அளவு" : "Quantity"}</p>
-                                    <p className="text-white font-bold text-lg">{item.quantity} {item.unit}</p>
+                                    <p className="text-white font-bold text-lg">{item.quantity} {translateField(item.unit, language)}</p>
                                 </div>
                                 <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
                                     <p className="text-gray-400 text-xs uppercase tracking-wider">{language === 'ta-IN' ? "விலை" : "Price"}</p>
-                                    <p className="text-white font-bold text-lg">₹{item.price_per_unit}/{item.unit}</p>
+                                    <p className="text-white font-bold text-lg">₹{item.price_per_unit}/{translateField(item.unit, language)}</p>
                                 </div>
                             </div>
                             
@@ -135,8 +136,8 @@ export const SellerListings = ({ language, user, onBack, onNewSale }) => {
                                         {item.interested_buyers.map((buyer, idx) => (
                                             <div key={idx} className="bg-gray-800 p-3 rounded flex justify-between items-center">
                                                 <div>
-                                                    <p className="text-white font-bold">{buyer.name}</p>
-                                                    <p className="text-gray-400 text-xs">📍 {buyer.village}</p>
+                                                    <p className="text-white font-bold">{translateField(buyer.name, language)}</p>
+                                                    <p className="text-gray-400 text-xs">📍 {translateField(buyer.village, language)}</p>
                                                 </div>
                                                 <a 
                                                     href={`tel:${buyer.phone}`}

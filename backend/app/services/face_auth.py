@@ -52,4 +52,18 @@ def get_face_embedding(image_base64: str) -> np.ndarray:
     return embedding
 
 def compare_embeddings(emb1: np.ndarray, emb2: np.ndarray) -> float:
-    return float(np.dot(emb1, emb2))
+    if emb1 is None or emb2 is None:
+        return -1.0
+    if not isinstance(emb1, np.ndarray) or not isinstance(emb2, np.ndarray):
+        return -1.0
+    if emb1.shape != emb2.shape or emb1.size == 0 or emb2.size == 0:
+        return -1.0
+    try:
+        norm1 = np.linalg.norm(emb1)
+        norm2 = np.linalg.norm(emb2)
+        if norm1 == 0 or norm2 == 0:
+            return -1.0
+        return float(np.dot(emb1, emb2) / (norm1 * norm2))
+    except Exception as e:
+        logger.warning(f"Error computing embedding similarity: {e}")
+        return -1.0

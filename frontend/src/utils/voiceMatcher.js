@@ -216,3 +216,114 @@ export const PHOTO_CAPTURE_KEYWORDS = [
 ];
 
 export const isTakePhotoIntent = (transcript) => matchesAnyKeyword(transcript, PHOTO_CAPTURE_KEYWORDS);
+
+// Affirmation / Yes / Confirm Keywords for Step 4 Guardrails:
+export const AFFIRMATIVE_KEYWORDS = [
+    'ஆம்', 'சரி', 'உறுதி', 'ஏற்றுக்கொள்', 'ஆம் உறுதி', 'சரி செய்',
+    'yes', 'confirm', 'ok', 'okay', 'sure', 'accept', 'done', 'proceed',
+    'ha', 'haan', 'sari', 'theek', 'theek hai', 'avunu', 'ho'
+];
+
+export const isAffirmativeIntent = (transcript) => matchesAnyKeyword(transcript, AFFIRMATIVE_KEYWORDS);
+
+// Negative / No / Cancel Keywords for Step 4 Guardrails:
+export const NEGATIVE_KEYWORDS = [
+    'இல்லை', 'வேண்டாம்', 'ரத்து', 'வேண்டாம் ரத்து செய்', 'நிறுத்து',
+    'no', 'cancel', 'nah', 'stop', 'reject', 'abort', 'dont', 'do not',
+    'nahi', 'vaddhu', 'nako', 'na'
+];
+
+export const isNegativeIntent = (transcript) => matchesAnyKeyword(transcript, NEGATIVE_KEYWORDS);
+
+// Pickup / Logistics Keywords:
+export const PICKUP_LOGISTICS_KEYWORDS = [
+    'பிக்-அப்', 'பிக் அப்', 'வாகனம்', 'டெலிவரி', 'ஏற்பாடு', 'பிக்அப்',
+    'pickup', 'transport', 'schedule', 'van', 'delivery', 'dispatch', 'logistics',
+    'gadi', 'vahan', 'bhejo'
+];
+
+export const isPickupIntent = (transcript) => matchesAnyKeyword(transcript, PICKUP_LOGISTICS_KEYWORDS);
+
+// Buy Now Intent:
+export const BUY_NOW_KEYWORDS = [
+    'வாங்கு', 'இப்போதே வாங்கு', 'வாங்க', 'வாங்குகிறேன்', 'buy', 'buy now', 'purchase', 'order', 'kharido', 'chahiye'
+];
+export const isBuyNowIntent = (transcript) => matchesAnyKeyword(transcript, BUY_NOW_KEYWORDS);
+
+// Pack Order Intent:
+export const PACK_ORDER_KEYWORDS = [
+    'பேக் செய்', 'பேக்கிங்', 'பேக்', 'pack', 'pack order', 'packing', 'ready'
+];
+export const isPackOrderIntent = (transcript) => matchesAnyKeyword(transcript, PACK_ORDER_KEYWORDS);
+
+// Order Received Intent:
+export const ORDER_RECEIVED_KEYWORDS = [
+    'பொருளைப் பெற்றேன்', 'பெற்றேன்', 'கிடைத்தது', 'received', 'order received', 'got it', 'delivered', 'mil gaya'
+];
+export const isOrderReceivedIntent = (transcript) => matchesAnyKeyword(transcript, ORDER_RECEIVED_KEYWORDS);
+
+// Order History Intent:
+export const ORDER_HISTORY_KEYWORDS = [
+    'வரலாறு', 'ஆர்டர் வரலாறு', 'விற்பனை வரலாறு', 'history', 'order history', 'past orders', 'sales history'
+];
+export const isOrderHistoryIntent = (transcript) => matchesAnyKeyword(transcript, ORDER_HISTORY_KEYWORDS);
+
+// Dispatch / Package Moving Intent:
+export const DISPATCH_KEYWORDS = [
+    'புறப்பட்டது', 'அனுப்பு', 'பயணம்', 'பார்சல் புறப்பட்டது', 'பார்சல் அனுப்பு', 'dispatch', 'handover', 'moving', 'in transit', 'package moving'
+];
+export const isDispatchIntent = (transcript) => matchesAnyKeyword(transcript, DISPATCH_KEYWORDS);
+
+// Digit Extraction from Voice (Tamil, English, Hindi number words & numerals):
+export const extractDigitsFromVoice = (text) => {
+    if (!text || typeof text !== 'string') return '';
+    
+    // Direct numerical digits
+    const direct = text.replace(/\D/g, '');
+    if (direct.length >= 10) {
+        return direct.slice(0, 10);
+    }
+
+    const wordToDigit = {
+        // English
+        'zero': '0', 'oh': '0', 'one': '1', 'two': '2', 'three': '3', 'four': '4',
+        'five': '5', 'six': '6', 'seven': '7', 'eight': '8', 'nine': '9',
+        // Tamil formal & colloquial
+        'பூஜ்ஜியம்': '0', 'ஒன்று': '1', 'இரண்டு': '2', 'மூன்று': '3', 'நான்கு': '4',
+        'ஐந்து': '5', 'ஆறு': '6', 'ஏழு': '7', 'எட்டு': '8', 'ஒன்பது': '9',
+        'ஒன்னு': '1', 'ரெண்டு': '2', 'மூணு': '3', 'நாலு': '4', 'அஞ்சு': '5',
+        'ஒம்போது': '9', 'ஒம்பது': '9',
+        // Tanglish
+        'onnu': '1', 'rendu': '2', 'moonu': '3', 'naalu': '4', 'anju': '5',
+        'aaru': '6', 'ezhu': '7', 'ettu': '8', 'ombadhu': '9', 'poojiyam': '0',
+        // Hindi
+        'शून्य': '0', 'एक': '1', 'दो': '2', 'तीन': '3', 'चार': '4',
+        'पाँच': '5', 'पांच': '5', 'छह': '6', 'सात': '7', 'आठ': '8', 'नौ': '9',
+        'ek': '1', 'do': '2', 'teen': '3', 'char': '4', 'paanch': '5',
+        'chhah': '6', 'saat': '7', 'aath': '8', 'nau': '9', 'shunya': '0'
+    };
+
+    let result = '';
+    const clean = text.toLowerCase().replace(/[.,/#!$%^&*;:{}=\-_`~()?"'’]/g, ' ');
+    const tokens = clean.split(/\s+/).filter(Boolean);
+
+    for (const token of tokens) {
+        if (/^\d+$/.test(token)) {
+            result += token;
+        } else if (wordToDigit[token]) {
+            result += wordToDigit[token];
+        }
+    }
+
+    return result.slice(0, 10);
+};
+
+// Backspace / Delete Digit Intent
+export const isDeleteDigitIntent = (transcript) => matchesAnyKeyword(transcript, [
+    'அழி', 'பின்', 'நீக்கு', 'delete', 'backspace', 'remove', 'hatao', 'peeche'
+]);
+
+// Clear All Digits Intent
+export const isClearAllDigitsIntent = (transcript) => matchesAnyKeyword(transcript, [
+    'முழுதும் அழி', 'அனைத்தும் நீக்கு', 'clear', 'reset', 'clear all', 'saaf karo'
+]);
