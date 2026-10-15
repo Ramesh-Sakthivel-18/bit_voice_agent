@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSmartVoice } from '../context/SmartVoiceContext';
 import { BuyerCommerceView } from './BuyerCommerceView';
 import { BuyerOrderHistory } from './BuyerOrderHistory';
+import { MarketAssistantWidget } from './MarketAssistantWidget';
 import { getTranslation, translateField } from '../utils/translations';
 import { 
     isSearchIntent, 
@@ -178,6 +179,9 @@ export const BuyerDashboard = ({ language, user }) => {
                     </p>
                 </div>
             </div>
+
+            {/* ─── STATELESS VOICE-FIRST AI MARKET ASSISTANT ─── */}
+            <MarketAssistantWidget language={language} userRole="buyer" />
         </div>
     );
 };

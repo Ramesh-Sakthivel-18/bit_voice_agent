@@ -10,6 +10,7 @@ import { useSmartVoice } from '../context/SmartVoiceContext';
 import { SellerCommerceView } from './SellerCommerceView';
 import { SellerListings } from './SellerListings';
 import { SellerOrderHistory } from './SellerOrderHistory';
+import { MarketAssistantWidget } from './MarketAssistantWidget';
 import { getTranslation, translateField } from '../utils/translations';
 import { 
     isNewSaleIntent, 
@@ -796,6 +797,9 @@ export const SellerDashboard = ({ language, user }) => {
                     </div>
                 </div>
             )}
+
+            {/* ─── STATELESS VOICE-FIRST AI MARKET ASSISTANT ─── */}
+            <MarketAssistantWidget language={language} userRole="seller" />
         </div>
     );
 };

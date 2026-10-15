@@ -259,3 +259,16 @@ export const getSellerListings = async (sellerId) => {
   if (!response.ok) throw new Error("Failed to fetch listings");
   return response.json();
 };
+
+export const askMarketAssistant = async (query, language = 'ta-IN', userRole = 'buyer') => {
+  const response = await fetch(`${API_BASE_URL}/market/query`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ query, language, user_role: userRole })
+  });
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.detail || "Market assistant request failed");
+  }
+  return response.json();
+};
