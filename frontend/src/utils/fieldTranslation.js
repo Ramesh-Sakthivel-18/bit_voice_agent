@@ -134,7 +134,41 @@ const PRODUCE_DICTIONARY = {
         'vellam': 'வெல்லம்',
 
         'palm jaggery': 'பனை கருப்பட்டி',
-        'karupatti': 'கருப்பட்டி'
+        'karupatti': 'கருப்பட்டி',
+
+        // Timber & Forest Wood
+        'teak': 'தேக்கு',
+        'teak wood': 'தேக்கு மரம்',
+        'thekku': 'தேக்கு',
+        'wood': 'மரம்',
+        'timber': 'மரக்கட்டை',
+        'bamboo': 'மூங்கில்',
+        'sandalwood': 'சந்தன மரம்',
+        'rubber': 'ரப்பர்',
+        'eucalyptus': 'தைல மரம்',
+
+        // Agricultural & Tribal Produce
+        'cashew': 'முந்திரி',
+        'cashews': 'முந்திரி',
+        'munthiri': 'முந்திரி',
+        'jackfruit': 'பலாப்பழம்',
+        'palapalam': 'பலாப்பழம்',
+        'banana': 'வாழைப்பழம்',
+        'mango': 'மாம்பழம்',
+        'groundnut': 'வேர்க்கடலை',
+        'peanut': 'நிலக்கடலை',
+        'peanuts': 'நிலக்கடலை',
+        'cotton': 'பருத்தி',
+        'sugarcane': 'கரும்பு',
+        'onion': 'வெங்காயம்',
+        'tomato': 'தக்காளி',
+        'potato': 'உருளைக்கிழங்கு',
+        'oil': 'எண்ணெய்',
+        'coconut oil': 'தேங்காய் எண்ணெய்',
+        'sesame oil': 'நல்லெண்ணெய்',
+        'sesame': 'எள்',
+        'ghee': 'நெய்',
+        'milk': 'பால்'
     },
     'hi': {
         'organic turmeric': 'जैविक हल्दी',
@@ -143,6 +177,18 @@ const PRODUCE_DICTIONARY = {
         'turmeric': 'हल्दी',
 
         'wild forest honey': 'जंगली शहद',
+        'forest honey': 'वन शहद',
+        'organic honey': 'जैविक शहद',
+        'pure honey': 'शुद्ध शहद',
+        'honey': 'शहद',
+
+        'teak': 'सागौन',
+        'teak wood': 'सागौन की लकड़ी',
+        'bamboo': 'बांस',
+        'sandalwood': 'चंदन',
+        'mango': 'आम',
+        'banana': 'केला',
+        'cotton': 'कपास',
         'forest honey': 'वन शहद',
         'organic honey': 'जैविक शहद',
         'pure honey': 'शुद्ध शहद',

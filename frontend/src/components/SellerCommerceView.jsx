@@ -107,7 +107,9 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
                 : `All details received! Auto-saving listing to SQLite...`;
         } else if (step === SELLER_STATES.PUBLISHED) {
             stepContextBadge = language === 'ta-IN' ? "வெளியிடப்பட்டது / Published" : "Published";
-            promptText = language === 'ta-IN' ? "வெற்றிகரமாக வெளியிடப்பட்டது!" : "Successfully published!";
+            promptText = language === 'ta-IN' 
+                ? "விற்பனை வெற்றிகரமாக வெளியிடப்பட்டது! உங்கள் பொருட்களைப் பார்க்க 'பொருட்கள்' என்று சொல்லுங்கள் அல்லது முகப்பிற்குச் செல்ல 'முகப்பு' என்று சொல்லுங்கள்."
+                : "Listing successfully published! Say 'Products' to view listings or 'Home' to return to dashboard.";
         }
 
         setPageContext(stepContextBadge);
@@ -200,6 +202,26 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
         }
         if (isMyProductsIntent(norm)) {
             if (onViewListings) onViewListings();
+            else if (onBack) onBack();
+            return;
+        }
+
+        // Voice actions when on the PUBLISHED Success screen
+        if (step === SELLER_STATES.PUBLISHED) {
+            if (isMyProductsIntent(norm) || matchesAnyKeyword(norm, ['பொருட்கள்', 'பார்', 'லிஸ்டிங்', 'listings', 'products', 'view', 'my products'])) {
+                if (onViewListings) onViewListings();
+                else if (onBack) onBack();
+                return;
+            }
+            if (isHomeIntent(norm) || matchesAnyKeyword(norm, ['முகப்பு', 'டாஷ்போர்டு', 'home', 'dashboard', 'திரும்பு', 'முடிக்க'])) {
+                if (onBack) onBack();
+                return;
+            }
+            if (matchesAnyKeyword(norm, ['இன்னொரு', 'புதிய', 'சேர்', 'add', 'another', 'new', 'மீண்டும்'])) {
+                setStep(SELLER_STATES.PRODUCT);
+                setListingData({ title: '', quantity: '', unit: 'kg', price_per_unit: '' });
+                return;
+            }
             return;
         }
 
@@ -326,41 +348,70 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
 
     // Published Success Screen
     if (step === SELLER_STATES.PUBLISHED) {
+        const localizedTitle = translateField(listingData.title, language);
+        const localizedUnit = translateField(listingData.unit, language);
         return (
-            <div className="w-full max-w-2xl text-center flex flex-col items-center p-8 pb-36">
+            <div className="w-full max-w-2xl text-center flex flex-col items-center p-6 md:p-8 pb-36 animate-fadeIn">
                 <div className="w-24 h-24 rounded-full bg-emerald-500/20 border-2 border-emerald-400 flex items-center justify-center mb-6 shadow-[0_0_35px_rgba(16,185,129,0.7)] animate-bounce">
                     <span className="text-5xl">✅</span>
                 </div>
                 <h1 className="text-3xl md:text-4xl font-black text-emerald-400">
                     {language === 'ta-IN' ? "வெற்றிகரமாக வெளியிடப்பட்டது!" : "Listing Published!"}
                 </h1>
-                <p className="text-gray-400 mt-3 text-lg mb-8">
+                <p className="text-gray-300 mt-2 text-base md:text-lg mb-6">
                     {language === 'ta-IN' ? "வாங்குபவர்கள் உங்களை தொடர்பு கொள்வார்கள்." : "Buyers will contact you soon."}
                 </p>
 
-                <div className="w-full bg-[#09152B] p-6 rounded-2xl border border-slate-700 text-left mb-8 space-y-2">
-                    <p className="text-white font-bold text-lg">{listingData.title}</p>
-                    <p className="text-gray-300 text-sm">📦 {listingData.quantity} {listingData.unit} @ ₹{listingData.price_per_unit}/{listingData.unit}</p>
-                    <p className="text-amber-400 font-extrabold text-xl">₹{totalAmount}</p>
+                {/* Localized Product Summary Card */}
+                <div className="w-full bg-[#09152B] p-6 rounded-2xl border-2 border-emerald-500/40 text-left mb-8 space-y-2 shadow-xl">
+                    <p className="text-white font-extrabold text-2xl">{localizedTitle}</p>
+                    <p className="text-emerald-300 font-bold text-base">
+                        📦 {listingData.quantity} {localizedUnit} @ ₹{listingData.price_per_unit} / {localizedUnit}
+                    </p>
+                    <p className="text-amber-400 font-black text-2xl">₹{totalAmount}</p>
                 </div>
 
-                <div className="flex gap-4">
+                {/* Navigation Buttons (All fully wired and clickable) */}
+                <div className="flex flex-wrap gap-3.5 justify-center w-full">
                     <button 
+                        type="button"
                         onClick={() => {
                             setStep(SELLER_STATES.PRODUCT);
                             setListingData({ title: '', quantity: '', unit: 'kg', price_per_unit: '' });
                         }}
-                        className="px-6 py-3.5 bg-slate-800 hover:bg-slate-700 text-gray-300 font-bold rounded-2xl text-base transition-all"
+                        className="px-5 py-3.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-gray-200 font-bold rounded-2xl text-sm sm:text-base transition-all border border-slate-700 cursor-pointer shadow-md"
                     >
-                        + {language === 'ta-IN' ? "இன்னொரு பொருள் சேர்க்க" : "Add Another"}
+                        + {language === 'ta-IN' ? "இன்னொரு பொருள் சேர்க்க" : "Add Another Product"}
                     </button>
                     <button 
-                        onClick={onViewListings}
-                        className="px-8 py-3.5 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white font-black rounded-2xl text-base transition-all shadow-xl"
+                        type="button"
+                        onClick={() => {
+                            if (onViewListings) onViewListings();
+                            else if (onBack) onBack();
+                        }}
+                        className="px-6 py-3.5 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 active:from-emerald-700 text-white font-black rounded-2xl text-sm sm:text-base transition-all shadow-[0_0_20px_rgba(16,185,129,0.5)] cursor-pointer"
                     >
-                        {language === 'ta-IN' ? "என் விற்பனைப் பொருட்கள்" : "View My Listings"}
+                        {language === 'ta-IN' ? "என் விற்பனைப் பொருட்கள் ➔" : "View My Listings ➔"}
+                    </button>
+                    <button 
+                        type="button"
+                        onClick={onBack}
+                        className="px-5 py-3.5 bg-slate-800/90 hover:bg-slate-700 active:bg-slate-600 text-cyan-300 border border-slate-700 font-bold rounded-2xl text-sm sm:text-base transition-all cursor-pointer shadow-md flex items-center gap-1.5"
+                    >
+                        <span>🏠</span>
+                        <span>{language === 'ta-IN' ? "முகப்பு" : "Dashboard"}</span>
                     </button>
                 </div>
+
+                {/* Spoken Guide Hint */}
+                <p className="text-xs text-gray-400 mt-5 flex items-center gap-1">
+                    <span>💡</span>
+                    <span>
+                        {language === 'ta-IN'
+                            ? "மைக்கில் 'பொருட்கள்' அல்லது 'முகப்பு' என்று கூறி செல்லலாம்."
+                            : "Say 'Products' or 'Home' to navigate by voice."}
+                    </span>
+                </p>
             </div>
         );
     }
@@ -473,8 +524,8 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
                                     {step === SELLER_STATES.PRICE && prompts.price}
                                     {step >= SELLER_STATES.CONFIRM_1 && (
                                         language === 'ta-IN' 
-                                            ? `நீங்கள் ${listingData.quantity} ${listingData.unit} ${listingData.title} ₹${listingData.price_per_unit} வீதம் விற்கிறீர்கள்.` 
-                                            : `Selling ${listingData.quantity} ${listingData.unit} of ${listingData.title} at ₹${listingData.price_per_unit}.`
+                                            ? `நீங்கள் ${listingData.quantity} ${translateField(listingData.unit, language)} ${translateField(listingData.title, language)} ₹${listingData.price_per_unit} வீதம் விற்கிறீர்கள்.` 
+                                            : `Selling ${listingData.quantity} ${translateField(listingData.unit, language)} of ${translateField(listingData.title, language)} at ₹${listingData.price_per_unit}.`
                                     )}
                                 </>
                             )}

@@ -47,11 +47,13 @@ def validate_step(request: ValidateStepRequest):
 
     system_prompt = ""
     if request.step == "name":
-        system_prompt = """You are a highly intelligent data extractor. The user is selling an agricultural or local product.
-The transcript may be in English or a romanized native language (like Tanglish or Hinglish, e.g., 'manjal', 'thakkali', 'gehu').
-YOUR JOB: Find the EXACT product name from the transcript. For example, if the transcript is "Nan mangel bitke verindi giren", the product is "mangel" (or "manjal" / turmeric).
-If they clearly mention ANY product name, return JSON: {"is_valid": true, "extracted_data": {"title": "PRODUCT_NAME"}, "error_message": null}
-If it is completely missing, return JSON: {"is_valid": false, "extracted_data": null, "retry_prompt": "Please tell me clearly what product you are selling."}
+        system_prompt = """You are a highly intelligent data extractor for an Indian agricultural & tribal commerce application.
+The user is speaking or typing the product they wish to sell.
+The transcript may be in Tamil (தமிழ்), Hindi (हिन्दी), English, or romanized native terms (e.g. 'தேன்', 'தேக்கு', 'மஞ்சள்', 'மிளகு', 'manjal', 'then', 'thekku', 'milagu').
+YOUR JOB: Accurately identify the exact product name.
+Convert it to a standard, clean English product title (e.g., 'தேன்' / 'then' -> 'Wild Forest Honey', 'மஞ்சள்' / 'manjal' -> 'Organic Turmeric', 'மிளகு' / 'milagu' -> 'Black Pepper', 'ஏலக்காய்' -> 'Cardamom', 'தேக்கு' / 'thekku' -> 'Teak Wood', 'முந்திரி' -> 'Cashews', 'இஞ்சி' -> 'Ginger', 'பூண்டு' -> 'Garlic', 'காப்பி' -> 'Coffee Beans', 'தேயிலை' -> 'Organic Tea').
+If they mention ANY recognizable agricultural, forest, or local product, return JSON: {"is_valid": true, "extracted_data": {"title": "STANDARD_ENGLISH_NAME"}, "error_message": null}
+If it is completely missing or unintelligible, return JSON: {"is_valid": false, "extracted_data": null, "retry_prompt": "Please tell me clearly what product you are selling."}
 ONLY output valid JSON."""
     elif request.step == "quantity":
         system_prompt = """You are a highly intelligent data extractor. The user is stating how much they have to sell.

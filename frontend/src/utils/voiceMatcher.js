@@ -327,3 +327,13 @@ export const isDeleteDigitIntent = (transcript) => matchesAnyKeyword(transcript,
 export const isClearAllDigitsIntent = (transcript) => matchesAnyKeyword(transcript, [
     'முழுதும் அழி', 'அனைத்தும் நீக்கு', 'clear', 'reset', 'clear all', 'saaf karo'
 ]);
+
+// Voice vs Type Method Selection Intents
+export const isVoiceMethodIntent = (transcript) => matchesAnyKeyword(transcript, [
+    'குரல்', 'வாய்ஸ்', 'பேச', 'பேசு', 'பேசலாம்', 'குரல் வழி', 'voice', 'speak', 'mic', 'மைக்', 'bolkar', 'awaaz'
+]);
+
+export const isTypeMethodIntent = (transcript) => matchesAnyKeyword(transcript, [
+    'தட்டச்சு', 'டைப்', 'டைப்பிங்', 'எழுத', 'எழுது', 'தட்டச்சு வழி', 'type', 'write', 'typing', 'keyboard', 'likhkar'
+]);
+

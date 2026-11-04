@@ -175,8 +175,8 @@ export const SmartVoiceDock = () => {
     // ─── ACTION HANDLERS ───
     const triggerListening = () => {
         const now = Date.now();
-        // Prevent accidental rapid re-triggering within 380ms
-        if (now - lastListenTriggerTimeRef.current < 380) {
+        // Prevent accidental rapid re-triggering within 240ms
+        if (now - lastListenTriggerTimeRef.current < 240) {
             return;
         }
         lastListenTriggerTimeRef.current = now;
@@ -204,6 +204,17 @@ export const SmartVoiceDock = () => {
         } else {
             speakCurrentInstruction();
         }
+    };
+
+    // Native desktop double-click support
+    const handleDoubleClick = (e) => {
+        e.stopPropagation();
+        if (tapTimerRef.current) {
+            clearTimeout(tapTimerRef.current);
+            tapTimerRef.current = null;
+        }
+        tapCountRef.current = 0;
+        triggerListening();
     };
 
     // Pointer events for press-and-hold (420ms) to listen
@@ -251,9 +262,15 @@ export const SmartVoiceDock = () => {
             return;
         }
 
+        // If site is currently speaking, silence it immediately on the first touch!
+        if (isSpeaking) {
+            stopSpeaking();
+            setSpeakGraceActive(false);
+        }
+
         tapCountRef.current += 1;
 
-        if (tapCountRef.current === 2) {
+        if (tapCountRef.current >= 2) {
             // DOUBLE TAP / DOUBLE CLICK -> LISTEN IMMEDIATELY
             if (tapTimerRef.current) {
                 clearTimeout(tapTimerRef.current);
@@ -262,12 +279,12 @@ export const SmartVoiceDock = () => {
             tapCountRef.current = 0;
             triggerListening();
         } else if (tapCountRef.current === 1) {
-            // SINGLE TAP CANDIDATE -> Wait 300ms for possible second tap
+            // SINGLE TAP CANDIDATE -> Wait 360ms for possible second tap
             tapTimerRef.current = setTimeout(() => {
                 tapCountRef.current = 0;
                 tapTimerRef.current = null;
                 triggerSpeaking();
-            }, 300);
+            }, 360);
         }
     };
 
@@ -344,40 +361,40 @@ export const SmartVoiceDock = () => {
                                         className="flex items-center justify-between w-full border-b border-cyan-500/20 pb-2 cursor-grab active:cursor-grabbing select-none"
                                         title={language === 'ta-IN' ? "இழுத்து எங்கு வேண்டுமானாலும் நகர்த்தலாம்" : "Drag to move anywhere"}
                                     >
-                                        <div className="flex items-center gap-2">
+                                        <div className="flex items-center gap-2 min-w-0">
                                             {/* Drag Grip Handle */}
-                                            <span className="text-cyan-400/60 text-xs hover:text-cyan-300 px-0.5" title="Drag handle">
+                                            <span className="text-cyan-400/60 text-xs hover:text-cyan-300 px-0.5 shrink-0" title="Drag handle">
                                                 ⋮⋮
                                             </span>
                                             {/* Animated sound wave bars */}
-                                            <div className="flex items-center gap-1 h-5 px-1 bg-cyan-950/60 rounded-md border border-cyan-500/30">
+                                            <div className="flex items-center gap-1 h-5 px-1 bg-cyan-950/60 rounded-md border border-cyan-500/30 shrink-0">
                                                 <span className="w-1 bg-cyan-400 rounded-full voice-wave-1"></span>
                                                 <span className="w-1 bg-cyan-300 rounded-full voice-wave-2"></span>
                                                 <span className="w-1 bg-cyan-400 rounded-full voice-wave-3"></span>
                                                 <span className="w-1 bg-cyan-300 rounded-full voice-wave-4"></span>
                                                 <span className="w-1 bg-cyan-400 rounded-full voice-wave-5"></span>
                                             </div>
-                                            <span className="text-cyan-300 text-xs sm:text-sm font-bold flex items-center gap-1">
-                                                <span className="text-base animate-pulse">📢</span>
-                                                <span>{language === 'ta-IN' ? "உதவிக்குரல் பேசுகிறது" : "Assistant Speaking"}</span>
+                                            <span className="text-cyan-300 text-xs sm:text-sm font-bold flex items-center gap-1 truncate">
+                                                <span className="text-base animate-pulse shrink-0">📢</span>
+                                                <span className="truncate">{language === 'ta-IN' ? "உதவிக்குரல் பேசுகிறது" : "Assistant Speaking"}</span>
                                             </span>
                                         </div>
 
-                                        <div className="flex items-center gap-1.5" onMouseDown={(e) => e.stopPropagation()} onTouchStart={(e) => e.stopPropagation()}>
+                                        <div className="flex items-center gap-1.5 shrink-0" onMouseDown={(e) => e.stopPropagation()} onTouchStart={(e) => e.stopPropagation()}>
                                             {/* Status Pill */}
-                                            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${
+                                            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider shrink-0 ${
                                                 isSpeaking 
                                                     ? 'bg-cyan-500/25 text-cyan-200 border border-cyan-400/50 animate-pulse' 
                                                     : 'bg-emerald-500/25 text-emerald-300 border border-emerald-400/50'
                                             }`}>
-                                                <span className={`w-1.5 h-1.5 rounded-full ${isSpeaking ? 'bg-cyan-400 animate-ping' : 'bg-emerald-400'}`}></span>
+                                                <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${isSpeaking ? 'bg-cyan-400 animate-ping' : 'bg-emerald-400'}`}></span>
                                                 <span>{isSpeaking ? (language === 'ta-IN' ? "ஒலிக்கிறது..." : "Speaking...") : (language === 'ta-IN' ? "முடிந்தது" : "Finished")}</span>
                                             </span>
 
                                             {/* Side Switch Button */}
                                             <button
                                                 onClick={toggleSide}
-                                                className="text-[11px] text-cyan-300 bg-cyan-950/70 hover:bg-cyan-900 border border-cyan-500/40 px-2 py-0.5 rounded-md font-bold transition-all cursor-pointer"
+                                                className="text-[11px] text-cyan-300 bg-cyan-950/70 hover:bg-cyan-900 border border-cyan-500/40 px-2 py-0.5 rounded-md font-bold transition-all cursor-pointer shrink-0"
                                                 title={sidePosition === 'left' ? "Move to Right Side (⇄)" : "Move to Left Side (⇄)"}
                                             >
                                                 ⇄ {sidePosition === 'left' ? "Right" : "Left"}
@@ -386,8 +403,9 @@ export const SmartVoiceDock = () => {
                                             {/* Minimize Toggle Button */}
                                             <button
                                                 onClick={() => setIsMinimized(true)}
-                                                className="text-gray-400 hover:text-white text-xs px-1.5 py-0.5 rounded hover:bg-white/10 transition-colors cursor-pointer"
+                                                className="w-6 h-6 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white text-xs font-bold transition-all shrink-0 cursor-pointer border border-white/10"
                                                 title="Minimize"
+                                                aria-label="Minimize"
                                             >
                                                 ⎯
                                             </button>
@@ -395,8 +413,9 @@ export const SmartVoiceDock = () => {
                                             {/* Close / Dismiss */}
                                             <button 
                                                 onClick={() => { setUserDismissed(true); setSpeakGraceActive(false); }}
-                                                className="text-gray-400 hover:text-white text-xs px-1.5 py-0.5 rounded hover:bg-white/10 transition-colors cursor-pointer"
+                                                className="w-6 h-6 flex items-center justify-center rounded-lg bg-white/10 hover:bg-rose-500/30 text-gray-300 hover:text-white text-xs font-bold transition-all shrink-0 cursor-pointer border border-white/10 ml-0.5"
                                                 title="Close"
+                                                aria-label="Close"
                                             >
                                                 ✕
                                             </button>
@@ -431,32 +450,32 @@ export const SmartVoiceDock = () => {
                                         className="flex items-center justify-between w-full border-b border-rose-500/25 pb-2 cursor-grab active:cursor-grabbing select-none"
                                         title={language === 'ta-IN' ? "இழுத்து எங்கு வேண்டுமானாலும் நகர்த்தலாம்" : "Drag to move anywhere"}
                                     >
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-rose-400/60 text-xs hover:text-rose-300 px-0.5">⋮⋮</span>
+                                        <div className="flex items-center gap-2 min-w-0">
+                                            <span className="text-rose-400/60 text-xs hover:text-rose-300 px-0.5 shrink-0">⋮⋮</span>
                                             {/* Animated rose sound wave bars */}
-                                            <div className="flex items-center gap-1 h-5 px-1 bg-rose-950/60 rounded-md border border-rose-500/40">
+                                            <div className="flex items-center gap-1 h-5 px-1 bg-rose-950/60 rounded-md border border-rose-500/40 shrink-0">
                                                 <span className="w-1 bg-rose-500 rounded-full voice-wave-1"></span>
                                                 <span className="w-1 bg-pink-400 rounded-full voice-wave-2"></span>
                                                 <span className="w-1 bg-rose-500 rounded-full voice-wave-3"></span>
                                                 <span className="w-1 bg-pink-400 rounded-full voice-wave-4"></span>
                                                 <span className="w-1 bg-rose-500 rounded-full voice-wave-5"></span>
                                             </div>
-                                            <span className="text-rose-300 text-xs sm:text-sm font-black flex items-center gap-1">
-                                                <span>🎙️</span>
-                                                <span>{language === 'ta-IN' ? "கேட்கிறது... சொல்லுங்கள்" : "Listening... Speak now"}</span>
+                                            <span className="text-rose-300 text-xs sm:text-sm font-black flex items-center gap-1 truncate">
+                                                <span className="shrink-0">🎙️</span>
+                                                <span className="truncate">{language === 'ta-IN' ? "கேட்கிறது... சொல்லுங்கள்" : "Listening... Speak now"}</span>
                                             </span>
                                         </div>
 
-                                        <div className="flex items-center gap-1.5" onMouseDown={(e) => e.stopPropagation()} onTouchStart={(e) => e.stopPropagation()}>
-                                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-rose-500/25 text-rose-200 border border-rose-400/50 animate-pulse">
-                                                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span>
+                                        <div className="flex items-center gap-1.5 shrink-0" onMouseDown={(e) => e.stopPropagation()} onTouchStart={(e) => e.stopPropagation()}>
+                                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-rose-500/25 text-rose-200 border border-rose-400/50 animate-pulse shrink-0">
+                                                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping shrink-0"></span>
                                                 <span>{language === 'ta-IN' ? "நேரலை" : "LIVE"}</span>
                                             </span>
 
                                             {/* Side Switch Button */}
                                             <button
                                                 onClick={toggleSide}
-                                                className="text-[11px] text-rose-300 bg-rose-950/70 hover:bg-rose-900 border border-rose-500/40 px-2 py-0.5 rounded-md font-bold transition-all cursor-pointer"
+                                                className="text-[11px] text-rose-300 bg-rose-950/70 hover:bg-rose-900 border border-rose-500/40 px-2 py-0.5 rounded-md font-bold transition-all cursor-pointer shrink-0"
                                                 title={sidePosition === 'left' ? "Move to Right Side (⇄)" : "Move to Left Side (⇄)"}
                                             >
                                                 ⇄ {sidePosition === 'left' ? "Right" : "Left"}
@@ -464,7 +483,7 @@ export const SmartVoiceDock = () => {
 
                                             <button 
                                                 onClick={stopListening}
-                                                className="text-xs bg-rose-500/30 hover:bg-rose-500/50 text-rose-200 px-2 py-0.5 rounded-full font-bold transition-all border border-rose-400/40 cursor-pointer"
+                                                className="text-xs bg-rose-500/30 hover:bg-rose-500/50 text-rose-200 px-2.5 py-0.5 rounded-lg font-bold transition-all border border-rose-400/40 cursor-pointer shrink-0"
                                             >
                                                 ⏹️ {language === 'ta-IN' ? "முடி" : "Stop"}
                                             </button>

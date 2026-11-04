@@ -389,7 +389,14 @@ export const SellerDashboard = ({ language, user }) => {
     }, [viewMode, language, guardrailAction, unDismissedPendingOrders, activeFulfillmentOrders, registerVoiceHandler, unregisterVoiceHandler, speak, t]);
 
     if (viewMode === 'commerce') {
-        return <SellerCommerceView language={language} user={user} onBack={() => setViewMode('dashboard')} />;
+        return (
+            <SellerCommerceView 
+                language={language} 
+                user={user} 
+                onBack={() => setViewMode('dashboard')} 
+                onViewListings={() => setViewMode('listings')} 
+            />
+        );
     }
 
     if (viewMode === 'listings') {
