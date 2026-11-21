@@ -186,25 +186,25 @@ export const MarketAssistantWidget = ({ language = 'ta-IN', userRole = 'buyer' }
 
             {/* ─── STATELESS CHAT DRAWER / WINDOW ─── */}
             {isOpen && (
-                <div className="w-[360px] sm:w-[420px] max-w-[94vw] h-[580px] max-h-[80vh] flex flex-col bg-gradient-to-b from-[#09152B]/98 via-[#061122]/98 to-[#040C1A]/98 border-2 border-cyan-500/70 rounded-3xl shadow-[0_15px_50px_rgba(0,0,0,0.85)] backdrop-blur-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                <div className="w-[360px] sm:w-[420px] max-w-[94vw] h-[580px] max-h-[80vh] flex flex-col bg-white border border-slate-200 rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 text-slate-900">
                     
                     {/* Widget Header */}
-                    <div className="p-3.5 sm:p-4 bg-[#081730]/90 border-b border-cyan-500/30 flex items-center justify-between">
+                    <div className="p-3.5 sm:p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
                         <div className="flex items-center gap-2.5">
-                            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-emerald-500 flex items-center justify-center text-lg shadow-md">
+                            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-emerald-600 flex items-center justify-center text-lg shadow-sm text-white">
                                 🤖
                             </div>
                             <div>
                                 <div className="flex items-center gap-2">
-                                    <h3 className="text-sm font-black text-white leading-tight">
+                                    <h3 className="text-sm font-black text-slate-900 leading-tight">
                                         {language === 'ta-IN' ? "AI சந்தை வழிகாட்டி" : "AI Market Assistant"}
                                     </h3>
-                                    <span className="text-[10px] bg-emerald-950 text-emerald-300 font-bold px-2 py-0.5 rounded-full border border-emerald-500 flex items-center gap-1">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                    <span className="text-[10px] bg-emerald-50 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-300 flex items-center gap-1">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
                                         <span>Live</span>
                                     </span>
                                 </div>
-                                <p className="text-[10px] text-cyan-300/80">
+                                <p className="text-[10px] text-slate-500">
                                     {language === 'ta-IN' ? "அக்மார்க்நெட் & ட்ரைஃபெட் நேரடி தேடல்" : "Agmarknet & TRIFED Live Search"}
                                 </p>
                             </div>
@@ -216,7 +216,7 @@ export const MarketAssistantWidget = ({ language = 'ta-IN', userRole = 'buyer' }
                             <button
                                 onClick={() => setAutoVoiceResponse(!autoVoiceResponse)}
                                 className={`p-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
-                                    autoVoiceResponse ? 'text-cyan-300 bg-cyan-950/60 border border-cyan-500/40' : 'text-gray-500 hover:text-gray-300'
+                                    autoVoiceResponse ? 'text-blue-700 bg-blue-50 border border-blue-200' : 'text-slate-400 hover:text-slate-700'
                                 }`}
                                 title={autoVoiceResponse ? "Voice response ON" : "Voice response MUTED"}
                             >
@@ -226,7 +226,7 @@ export const MarketAssistantWidget = ({ language = 'ta-IN', userRole = 'buyer' }
                             {/* Clear Ephemeral Chat */}
                             <button
                                 onClick={handleClearChat}
-                                className="p-1.5 rounded-lg text-xs text-gray-400 hover:text-amber-400 hover:bg-white/5 transition-colors cursor-pointer"
+                                className="p-1.5 rounded-lg text-xs text-slate-400 hover:text-amber-700 hover:bg-slate-100 transition-colors cursor-pointer"
                                 title="Clear conversation (Stateless)"
                             >
                                 🗑️
@@ -238,7 +238,7 @@ export const MarketAssistantWidget = ({ language = 'ta-IN', userRole = 'buyer' }
                                     stopSpeaking();
                                     setIsOpen(false);
                                 }}
-                                className="p-1.5 rounded-lg text-xs text-gray-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                                className="p-1.5 rounded-lg text-xs text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors cursor-pointer"
                                 title="Close"
                             >
                                 ✕
@@ -250,15 +250,15 @@ export const MarketAssistantWidget = ({ language = 'ta-IN', userRole = 'buyer' }
                     <div className="flex-1 overflow-y-auto p-4 space-y-3.5 side-panel-scrollbar">
                         
                         {/* Initial stateless helper badge */}
-                        <div className="bg-[#0A1A33]/80 border border-cyan-500/30 rounded-2xl p-3 text-[11px] text-cyan-200/90 flex items-start gap-2.5">
+                        <div className="bg-blue-50 border border-blue-200 rounded-2xl p-3 text-[11px] text-blue-900 flex items-start gap-2.5">
                             <span className="text-base">💡</span>
                             <div>
-                                <p className="font-bold text-white">
+                                <p className="font-bold text-slate-900">
                                     {language === 'ta-IN' 
                                         ? "நேரடி சந்தை விலை & MSP உதவி" 
                                         : "Live Mandi & Tribal Price Intelligence"}
                                 </p>
-                                <p className="text-gray-300 mt-0.5 leading-relaxed text-[11px]">
+                                <p className="text-slate-600 mt-0.5 leading-relaxed text-[11px]">
                                     {language === 'ta-IN' 
                                         ? "அக்மார்க்நெட் & ட்ரைஃபெட் நேரடி தேடல் மூலம் ஜெமினி AI பதிலளிக்கும். மைக்கை தட்டி குரல் வழியே கேட்கலாம்." 
                                         : "Direct Gemini grounding with live Agmarknet & TRIFED search. Tap mic or type to ask."}
@@ -269,7 +269,7 @@ export const MarketAssistantWidget = ({ language = 'ta-IN', userRole = 'buyer' }
                         {/* Quick Prompt Suggestion Chips (when chat is empty) */}
                         {messages.length === 0 && (
                             <div className="space-y-1.5 pt-1">
-                                <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                                <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
                                     {language === 'ta-IN' ? "விரைவு கேள்விகள்:" : "Suggested Inquiries:"}
                                 </p>
                                 <div className="flex flex-col gap-1.5">
@@ -277,7 +277,7 @@ export const MarketAssistantWidget = ({ language = 'ta-IN', userRole = 'buyer' }
                                         <button
                                             key={idx}
                                             onClick={() => handleSendMessage(chip)}
-                                            className="text-left text-xs bg-[#0B1E38]/90 hover:bg-[#0F284C] border border-slate-700 hover:border-cyan-400/60 text-cyan-200 p-2 rounded-xl transition-all hover:translate-x-1 cursor-pointer"
+                                            className="text-left text-xs bg-slate-50 hover:bg-slate-100 border border-slate-200 hover:border-blue-400 text-slate-700 p-2 rounded-xl transition-all hover:translate-x-1 cursor-pointer shadow-sm"
                                         >
                                             {chip}
                                         </button>
@@ -293,24 +293,24 @@ export const MarketAssistantWidget = ({ language = 'ta-IN', userRole = 'buyer' }
                                 className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'} animate-in fade-in duration-150`}
                             >
                                 <div
-                                    className={`max-w-[88%] rounded-2xl p-3 text-xs sm:text-[13px] leading-relaxed shadow-md ${
+                                    className={`max-w-[88%] rounded-2xl p-3 text-xs sm:text-[13px] leading-relaxed shadow-sm ${
                                         msg.sender === 'user'
-                                            ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-br-sm'
+                                            ? 'bg-blue-600 text-white rounded-br-sm'
                                             : msg.isError
-                                            ? 'bg-red-950/90 text-red-200 border border-red-500/50 rounded-bl-sm'
-                                            : 'bg-[#0B1E3B]/95 text-gray-100 border border-cyan-500/40 rounded-bl-sm'
+                                            ? 'bg-rose-50 text-rose-800 border border-rose-200 rounded-bl-sm'
+                                            : 'bg-slate-50 text-slate-900 border border-slate-200 rounded-bl-sm'
                                     }`}
                                 >
                                     {/* Assistant Header Tag */}
                                     {msg.sender === 'assistant' && !msg.isError && (
-                                        <div className="flex items-center justify-between pb-1.5 mb-1.5 border-b border-cyan-500/20 text-[10px]">
-                                            <span className="text-emerald-300 font-bold flex items-center gap-1">
+                                        <div className="flex items-center justify-between pb-1.5 mb-1.5 border-b border-slate-200 text-[10px]">
+                                            <span className="text-emerald-700 font-bold flex items-center gap-1">
                                                 <span>🌿</span>
                                                 <span>Agmarknet & TRIFED Live Context</span>
                                             </span>
                                             <button
                                                 onClick={() => speak(msg.text, language)}
-                                                className="text-cyan-300 hover:text-white p-0.5 rounded cursor-pointer"
+                                                className="text-slate-500 hover:text-slate-800 p-0.5 rounded cursor-pointer"
                                                 title="Read aloud"
                                             >
                                                 🔊
@@ -322,17 +322,17 @@ export const MarketAssistantWidget = ({ language = 'ta-IN', userRole = 'buyer' }
 
                                     {/* Sources Footer */}
                                     {msg.sources && (
-                                        <div className="mt-2 pt-1.5 border-t border-slate-700/50 text-[10px] text-gray-400 flex flex-wrap gap-1 items-center">
-                                            <span className="font-semibold text-cyan-300">Sources:</span>
+                                        <div className="mt-2 pt-1.5 border-t border-slate-200 text-[10px] text-slate-500 flex flex-wrap gap-1 items-center">
+                                            <span className="font-semibold text-blue-700">Sources:</span>
                                             {msg.sources.map((s, i) => (
-                                                <span key={i} className="bg-slate-800/80 px-1.5 py-0.5 rounded text-[9px] text-gray-300">
+                                                <span key={i} className="bg-white border border-slate-200 px-1.5 py-0.5 rounded text-[9px] text-slate-700 font-medium">
                                                     {s}
                                                 </span>
                                             ))}
                                         </div>
                                     )}
                                 </div>
-                                <span className="text-[9px] text-gray-500 mt-0.5 px-1 font-mono">
+                                <span className="text-[9px] text-slate-400 mt-0.5 px-1 font-mono">
                                     {msg.time}
                                 </span>
                             </div>
@@ -340,15 +340,15 @@ export const MarketAssistantWidget = ({ language = 'ta-IN', userRole = 'buyer' }
 
                         {/* Loading Indicator */}
                         {isLoading && (
-                            <div className="flex items-center gap-2 p-3 bg-[#0B1E3B]/80 border border-cyan-500/30 rounded-2xl w-fit animate-pulse">
+                            <div className="flex items-center gap-2 p-3 bg-slate-50 border border-slate-200 rounded-2xl w-fit animate-pulse text-slate-900">
                                 <span className="text-sm">🔍</span>
-                                <span className="text-xs text-cyan-300 font-bold">
+                                <span className="text-xs text-blue-700 font-bold">
                                     {language === 'ta-IN' ? "நேரடி சந்தை விலை தேடப்படுகிறது..." : "Searching Agmarknet & TRIFED with Gemini..."}
                                 </span>
                                 <div className="flex gap-1">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce"></span>
-                                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce [animation-delay:0.2s]"></span>
-                                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce [animation-delay:0.4s]"></span>
+                                    <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-bounce"></span>
+                                    <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-bounce [animation-delay:0.2s]"></span>
+                                    <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-bounce [animation-delay:0.4s]"></span>
                                 </div>
                             </div>
                         )}
@@ -357,10 +357,10 @@ export const MarketAssistantWidget = ({ language = 'ta-IN', userRole = 'buyer' }
                     </div>
 
                     {/* Widget Footer: Voice & Text Input */}
-                    <div className="p-3 bg-[#071326] border-t border-cyan-500/30 flex flex-col gap-2">
+                    <div className="p-3 bg-slate-50 border-t border-slate-200 flex flex-col gap-2">
                         {isListening && (
-                            <div className="flex items-center justify-center gap-2 text-xs text-amber-300 py-1 bg-amber-950/40 rounded-xl border border-amber-500/30 animate-pulse">
-                                <span className="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                            <div className="flex items-center justify-center gap-2 text-xs text-amber-800 py-1 bg-amber-50 rounded-xl border border-amber-200 animate-pulse font-medium">
+                                <span className="w-2 h-2 rounded-full bg-rose-600 animate-ping"></span>
                                 <span>{language === 'ta-IN' ? "கேட்கிறது... உங்கள் கேள்வியைப் பேசுங்கள்" : "Listening... Speak your market query"}</span>
                             </div>
                         )}
@@ -376,10 +376,10 @@ export const MarketAssistantWidget = ({ language = 'ta-IN', userRole = 'buyer' }
                             <button
                                 type="button"
                                 onClick={toggleSpeechInput}
-                                className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer shadow-md ${
+                                className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer shadow-sm ${
                                     isListening
-                                        ? 'bg-red-500 text-white animate-pulse ring-4 ring-red-400/40'
-                                        : 'bg-gradient-to-tr from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-gray-950 font-bold'
+                                        ? 'bg-rose-600 text-white animate-pulse ring-4 ring-rose-300'
+                                        : 'bg-gradient-to-tr from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-bold'
                                 }`}
                                 title={isListening ? "Stop listening" : "Tap to speak in native language"}
                             >
@@ -397,14 +397,14 @@ export const MarketAssistantWidget = ({ language = 'ta-IN', userRole = 'buyer' }
                                         : "Ask prices or tap mic..."
                                 }
                                 disabled={isLoading}
-                                className="flex-1 bg-[#0B1E38] border border-slate-700 focus:border-cyan-400 focus:outline-none rounded-xl px-3 py-2 text-xs sm:text-sm text-white placeholder-gray-500 transition-colors"
+                                className="flex-1 bg-white border border-slate-300 focus:border-blue-600 focus:outline-none rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-900 placeholder-slate-400 transition-colors shadow-sm"
                             />
 
                             {/* Send Button */}
                             <button
                                 type="submit"
                                 disabled={!inputText.trim() || isLoading}
-                                className="w-10 h-10 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 disabled:opacity-40 text-white flex items-center justify-center transition-all cursor-pointer shadow-md"
+                                className="w-10 h-10 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white flex items-center justify-center transition-all cursor-pointer shadow-sm"
                                 title="Send"
                             >
                                 <span className="text-sm">➤</span>

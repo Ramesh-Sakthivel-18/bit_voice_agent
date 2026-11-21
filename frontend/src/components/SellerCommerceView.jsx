@@ -351,24 +351,24 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
         const localizedTitle = translateField(listingData.title, language);
         const localizedUnit = translateField(listingData.unit, language);
         return (
-            <div className="w-full max-w-2xl text-center flex flex-col items-center p-6 md:p-8 pb-36 animate-fadeIn">
-                <div className="w-24 h-24 rounded-full bg-emerald-500/20 border-2 border-emerald-400 flex items-center justify-center mb-6 shadow-[0_0_35px_rgba(16,185,129,0.7)] animate-bounce">
+            <div className="w-full max-w-2xl text-center flex flex-col items-center p-6 md:p-8 pb-36 animate-fadeIn text-slate-900">
+                <div className="w-24 h-24 rounded-full bg-emerald-50 border-2 border-emerald-500 flex items-center justify-center mb-6 shadow-sm animate-bounce">
                     <span className="text-5xl">✅</span>
                 </div>
-                <h1 className="text-3xl md:text-4xl font-black text-emerald-400">
+                <h1 className="text-3xl md:text-4xl font-black text-emerald-800">
                     {language === 'ta-IN' ? "வெற்றிகரமாக வெளியிடப்பட்டது!" : "Listing Published!"}
                 </h1>
-                <p className="text-gray-300 mt-2 text-base md:text-lg mb-6">
+                <p className="text-slate-600 mt-2 text-base md:text-lg mb-6">
                     {language === 'ta-IN' ? "வாங்குபவர்கள் உங்களை தொடர்பு கொள்வார்கள்." : "Buyers will contact you soon."}
                 </p>
 
                 {/* Localized Product Summary Card */}
-                <div className="w-full bg-[#09152B] p-6 rounded-2xl border-2 border-emerald-500/40 text-left mb-8 space-y-2 shadow-xl">
-                    <p className="text-white font-extrabold text-2xl">{localizedTitle}</p>
-                    <p className="text-emerald-300 font-bold text-base">
+                <div className="w-full bg-white p-6 rounded-2xl border-2 border-slate-200 text-left mb-8 space-y-2 shadow-sm">
+                    <p className="text-slate-900 font-extrabold text-2xl">{localizedTitle}</p>
+                    <p className="text-emerald-800 font-bold text-base">
                         📦 {listingData.quantity} {localizedUnit} @ ₹{listingData.price_per_unit} / {localizedUnit}
                     </p>
-                    <p className="text-amber-400 font-black text-2xl">₹{totalAmount}</p>
+                    <p className="text-amber-700 font-black text-2xl">₹{totalAmount}</p>
                 </div>
 
                 {/* Navigation Buttons (All fully wired and clickable) */}
@@ -379,7 +379,7 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
                             setStep(SELLER_STATES.PRODUCT);
                             setListingData({ title: '', quantity: '', unit: 'kg', price_per_unit: '' });
                         }}
-                        className="px-5 py-3.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-gray-200 font-bold rounded-2xl text-sm sm:text-base transition-all border border-slate-700 cursor-pointer shadow-md"
+                        className="px-5 py-3.5 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-700 font-bold rounded-2xl text-sm sm:text-base transition-all border border-slate-200 cursor-pointer shadow-sm"
                     >
                         + {language === 'ta-IN' ? "இன்னொரு பொருள் சேர்க்க" : "Add Another Product"}
                     </button>
@@ -389,14 +389,14 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
                             if (onViewListings) onViewListings();
                             else if (onBack) onBack();
                         }}
-                        className="px-6 py-3.5 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 active:from-emerald-700 text-white font-black rounded-2xl text-sm sm:text-base transition-all shadow-[0_0_20px_rgba(16,185,129,0.5)] cursor-pointer"
+                        className="px-6 py-3.5 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 active:from-emerald-700 text-white font-black rounded-2xl text-sm sm:text-base transition-all shadow-md cursor-pointer"
                     >
                         {language === 'ta-IN' ? "என் விற்பனைப் பொருட்கள் ➔" : "View My Listings ➔"}
                     </button>
                     <button 
                         type="button"
                         onClick={onBack}
-                        className="px-5 py-3.5 bg-slate-800/90 hover:bg-slate-700 active:bg-slate-600 text-cyan-300 border border-slate-700 font-bold rounded-2xl text-sm sm:text-base transition-all cursor-pointer shadow-md flex items-center gap-1.5"
+                        className="px-5 py-3.5 bg-white hover:bg-slate-50 active:bg-slate-100 text-slate-700 border border-slate-200 font-bold rounded-2xl text-sm sm:text-base transition-all cursor-pointer shadow-sm flex items-center gap-1.5"
                     >
                         <span>🏠</span>
                         <span>{language === 'ta-IN' ? "முகப்பு" : "Dashboard"}</span>
@@ -404,7 +404,7 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
                 </div>
 
                 {/* Spoken Guide Hint */}
-                <p className="text-xs text-gray-400 mt-5 flex items-center gap-1">
+                <p className="text-xs text-slate-500 mt-5 flex items-center gap-1">
                     <span>💡</span>
                     <span>
                         {language === 'ta-IN'
@@ -417,22 +417,22 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
     }
 
     return (
-        <div className="w-full max-w-4xl flex flex-col items-center p-6 md:p-8 pb-36 relative">
+        <div className="w-full max-w-4xl flex flex-col items-center p-6 md:p-8 pb-36 relative text-slate-900">
             
             {/* Top Navigation Bar */}
             <div className="w-full flex justify-between items-center mb-6">
                 <div>
-                    <h1 className="text-3xl md:text-4xl font-black text-white">
+                    <h1 className="text-3xl md:text-4xl font-black text-slate-900">
                         {language === 'ta-IN' ? "புதிய விற்பனை" : "New Product Listing"}
                     </h1>
-                    <p className="text-gray-400 text-sm mt-1">
+                    <p className="text-slate-600 text-sm mt-1">
                         {language === 'ta-IN' ? "குரல் அல்லது தட்டச்சு வழியே எளிதாக பதிவு செய்யுங்கள்" : "Dual-input mode: Speak or type to list products"}
                     </p>
                 </div>
                 {onBack && (
                     <button
                         onClick={onBack}
-                        className="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-gray-300 font-bold rounded-xl text-sm transition-colors border border-slate-700"
+                        className="px-5 py-2.5 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-xl text-sm transition-colors border border-slate-200 shadow-sm"
                     >
                         ← {language === 'ta-IN' ? "முகப்பு" : "Dashboard"}
                     </button>
@@ -441,7 +441,7 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
 
             {/* ─── DUAL-INPUT MODE SELECTOR TABS ─── */}
             <div className="w-full flex items-center justify-center mb-6">
-                <div className="bg-[#081226] p-1.5 rounded-2xl border border-slate-700/80 flex items-center gap-2 shadow-xl">
+                <div className="bg-slate-100 p-1.5 rounded-2xl border border-slate-200 flex items-center gap-2 shadow-sm">
                     <button
                         type="button"
                         onClick={() => {
@@ -450,8 +450,8 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
                         }}
                         className={`px-6 py-2.5 rounded-xl font-black text-sm transition-all flex items-center gap-2 cursor-pointer ${
                             inputMode === 'voice'
-                                ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-[0_0_20px_rgba(6,182,212,0.6)]'
-                                : 'text-gray-400 hover:text-white'
+                                ? 'bg-blue-600 text-white shadow-sm'
+                                : 'text-slate-600 hover:text-slate-900'
                         }`}
                     >
                         <span>🎙️</span>
@@ -466,8 +466,8 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
                         }}
                         className={`px-6 py-2.5 rounded-xl font-black text-sm transition-all flex items-center gap-2 cursor-pointer ${
                             inputMode === 'manual'
-                                ? 'bg-gradient-to-r from-amber-400 to-yellow-500 text-gray-950 shadow-[0_0_20px_rgba(245,158,11,0.6)]'
-                                : 'text-gray-400 hover:text-white'
+                                ? 'bg-amber-500 text-white shadow-sm'
+                                : 'text-slate-600 hover:text-slate-900'
                         }`}
                     >
                         <span>⌨️</span>
@@ -478,12 +478,12 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
 
             {/* ─── MODE A: VOICE INPUT WIZARD ─── */}
             {inputMode === 'voice' && (
-                <div className="w-full bg-[#0B152B]/90 border border-slate-700/80 rounded-3xl p-6 mb-6 shadow-2xl">
+                <div className="w-full bg-white border border-slate-200 rounded-3xl p-6 mb-6 shadow-sm">
                     <div className="flex items-center justify-between mb-4">
-                        <span className="text-xs uppercase font-extrabold tracking-widest text-cyan-400">
+                        <span className="text-xs uppercase font-extrabold tracking-widest text-blue-700">
                             {language === 'ta-IN' ? `படிநிலை ${Math.min(step + 1, 3)} / 3` : `Voice Step ${Math.min(step + 1, 3)} of 3`}
                         </span>
-                        <span className="text-xs font-semibold text-gray-400">
+                        <span className="text-xs font-semibold text-slate-500">
                             {step === SELLER_STATES.PRODUCT && (language === 'ta-IN' ? "1. பொருளின் பெயர்" : "1. Produce Name")}
                             {step === SELLER_STATES.QUANTITY && (language === 'ta-IN' ? "2. அளவு" : "2. Quantity")}
                             {step === SELLER_STATES.PRICE && (language === 'ta-IN' ? "3. விலை" : "3. Price")}
@@ -500,10 +500,10 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
                                     key={sIndex}
                                     className={`h-2.5 rounded-full transition-all duration-500 ${
                                         isDone 
-                                            ? 'bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.8)]' 
+                                            ? 'bg-emerald-500' 
                                             : isCurrent 
-                                            ? 'bg-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.9)] animate-pulse' 
-                                            : 'bg-slate-800'
+                                            ? 'bg-blue-600 animate-pulse' 
+                                            : 'bg-slate-200'
                                     }`}
                                 />
                             );
@@ -511,8 +511,8 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
                     </div>
 
                     {/* Voice Prompt Banner */}
-                    <div className="bg-[#060E1E] border border-cyan-500/30 rounded-2xl p-5 text-center">
-                        <p className="text-xl md:text-2xl font-black text-cyan-200 mb-2">
+                    <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 text-center">
+                        <p className="text-xl md:text-2xl font-black text-slate-900 mb-2">
                             {Boolean(listingData.title && listingData.quantity && listingData.price_per_unit) ? (
                                 language === 'ta-IN' 
                                     ? "அனைத்து விவரங்களும் பெறப்பட்டன! விற்பனை தானாகவே சேமிக்கப்படுகிறது..." 
@@ -530,11 +530,11 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
                                 </>
                             )}
                         </p>
-                        <p className="text-xs text-gray-400">
+                        <p className="text-xs text-slate-500">
                             {language === 'ta-IN' ? "கீழே உள்ள மைக்கை இரட்டை தட்டி உடனே பேசவும்" : "Double-tap bottom mic to speak"}
                         </p>
                         {statusFeedback && (
-                            <p className="mt-3 text-sm font-bold text-amber-300 animate-pulse">
+                            <p className="mt-3 text-sm font-bold text-amber-700 animate-pulse">
                                 {statusFeedback}
                             </p>
                         )}
@@ -544,22 +544,22 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
 
             {/* ─── MODE B: MANUAL TYPING INPUT FORM ─── */}
             {inputMode === 'manual' && (
-                <div className="w-full bg-[#0B152B]/95 border border-amber-500/40 rounded-3xl p-6 md:p-8 mb-6 shadow-2xl">
-                    <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-700/80">
+                <div className="w-full bg-white border border-slate-200 rounded-3xl p-6 md:p-8 mb-6 shadow-sm">
+                    <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
                         <div className="flex items-center gap-2">
                             <span className="text-2xl">⌨️</span>
-                            <h3 className="text-xl font-black text-amber-400">
+                            <h3 className="text-xl font-black text-slate-900">
                                 {language === 'ta-IN' ? "விவரங்களை தட்டச்சு செய்யவும்" : "Manual Listing Form"}
                             </h3>
                         </div>
-                        <span className="text-xs text-gray-400">
+                        <span className="text-xs text-slate-500">
                             {language === 'ta-IN' ? "அனைத்து விவரங்களையும் நிரப்பவும்" : "Fill details & tap publish"}
                         </span>
                     </div>
 
                     {/* Quick Commodity Suggestion Chips */}
                     <div className="mb-6">
-                        <label className="text-xs font-bold uppercase tracking-wider text-gray-400 block mb-2">
+                        <label className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-2">
                             ⚡ {t.quickProduceSuggestions || "Quick Select Produce"}
                         </label>
                         <div className="flex flex-wrap gap-2">
@@ -575,7 +575,7 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
                                             price_per_unit: c.defaultPrice
                                         }));
                                     }}
-                                    className="px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-800 hover:bg-amber-400/20 hover:border-amber-400 border border-slate-700 text-gray-300 hover:text-amber-300 transition-all cursor-pointer"
+                                    className="px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-50 hover:bg-amber-50 hover:border-amber-400 border border-slate-200 text-slate-700 hover:text-amber-800 transition-all cursor-pointer"
                                 >
                                     {language === 'ta-IN' ? c.local : c.title}
                                 </button>
@@ -587,7 +587,7 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
                         {/* 1. Produce Name */}
                         <div className="space-y-1.5">
-                            <label className="text-xs font-bold uppercase tracking-wider text-cyan-300">
+                            <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
                                 {t.productNameLabel || "Produce Name"} *
                             </label>
                             <input
@@ -595,14 +595,14 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
                                 value={listingData.title}
                                 onChange={(e) => setListingData(prev => ({ ...prev, title: e.target.value }))}
                                 placeholder={language === 'ta-IN' ? "எ.கா: காட்டுத் தேன், மஞ்சள்" : "e.g. Wild Honey, Turmeric"}
-                                className="w-full bg-[#070F1E] border border-slate-700 focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 rounded-xl px-4 py-3 text-white text-base font-bold outline-none transition-all"
+                                className="w-full bg-white border-2 border-slate-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 rounded-xl px-4 py-3 text-slate-900 text-base font-bold outline-none transition-all placeholder-slate-400 shadow-sm"
                             />
                         </div>
 
                         {/* 2. Quantity & Unit */}
                         <div className="grid grid-cols-2 gap-3 space-y-0">
                             <div className="space-y-1.5">
-                                <label className="text-xs font-bold uppercase tracking-wider text-cyan-300">
+                                <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
                                     {t.quantityLabel || "Quantity"} *
                                 </label>
                                 <input
@@ -612,18 +612,18 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
                                     value={listingData.quantity}
                                     onChange={(e) => setListingData(prev => ({ ...prev, quantity: e.target.value }))}
                                     placeholder="50"
-                                    className="w-full bg-[#070F1E] border border-slate-700 focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 rounded-xl px-4 py-3 text-white text-base font-bold outline-none transition-all"
+                                    className="w-full bg-white border-2 border-slate-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 rounded-xl px-4 py-3 text-slate-900 text-base font-bold outline-none transition-all placeholder-slate-400 shadow-sm"
                                 />
                             </div>
 
                             <div className="space-y-1.5">
-                                <label className="text-xs font-bold uppercase tracking-wider text-cyan-300">
+                                <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
                                     {t.unitLabel || "Unit"}
                                 </label>
                                 <select
                                     value={listingData.unit}
                                     onChange={(e) => setListingData(prev => ({ ...prev, unit: e.target.value }))}
-                                    className="w-full bg-[#070F1E] border border-slate-700 focus:border-amber-400 rounded-xl px-3 py-3 text-white text-base font-bold outline-none transition-all cursor-pointer"
+                                    className="w-full bg-white border-2 border-slate-300 focus:border-blue-600 rounded-xl px-3 py-3 text-slate-900 text-base font-bold outline-none transition-all cursor-pointer shadow-sm"
                                 >
                                     <option value="kg">{language === 'ta-IN' ? "கிலோ (kg)" : "kg"}</option>
                                     <option value="litres">{language === 'ta-IN' ? "லிட்டர் (litres)" : "litres"}</option>
@@ -636,7 +636,7 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
 
                         {/* 3. Price per Unit */}
                         <div className="space-y-1.5">
-                            <label className="text-xs font-bold uppercase tracking-wider text-cyan-300">
+                            <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
                                 {t.priceLabel || "Price per Unit (₹)"} *
                             </label>
                             <input
@@ -645,16 +645,16 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
                                 value={listingData.price_per_unit}
                                 onChange={(e) => setListingData(prev => ({ ...prev, price_per_unit: e.target.value }))}
                                 placeholder="450"
-                                className="w-full bg-[#070F1E] border border-slate-700 focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 rounded-xl px-4 py-3 text-white text-base font-bold outline-none transition-all"
+                                className="w-full bg-white border-2 border-slate-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 rounded-xl px-4 py-3 text-slate-900 text-base font-bold outline-none transition-all placeholder-slate-400 shadow-sm"
                             />
                         </div>
 
                         {/* 4. Total Amount Live Display */}
-                        <div className="bg-[#070F1E] border border-slate-700 rounded-xl p-3 flex flex-col justify-center">
-                            <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                        <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 flex flex-col justify-center">
+                            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
                                 {t.totalValueLabel || "Total Value"}
                             </span>
-                            <span className="text-2xl font-black text-amber-400 mt-1">
+                            <span className="text-2xl font-black text-amber-700 mt-1">
                                 ₹{totalAmount > 0 ? totalAmount.toLocaleString() : '0'}
                             </span>
                         </div>
@@ -666,10 +666,10 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
                             type="button"
                             onClick={() => commitPublishListing(listingData)}
                             disabled={!listingData.title || !listingData.quantity || !listingData.price_per_unit || isPublishing}
-                            className={`w-full py-4 px-8 rounded-2xl font-black text-lg tracking-wide transition-all shadow-xl flex items-center justify-center gap-3 cursor-pointer ${
+                            className={`w-full py-4 px-8 rounded-2xl font-black text-lg tracking-wide transition-all shadow-md flex items-center justify-center gap-3 cursor-pointer ${
                                 listingData.title && listingData.quantity && listingData.price_per_unit && !isPublishing
-                                    ? 'bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-gray-950 active:scale-95 shadow-[0_10px_25px_rgba(245,158,11,0.4)]'
-                                    : 'bg-slate-800 text-gray-500 cursor-not-allowed opacity-60'
+                                    ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-500 text-white active:scale-95'
+                                    : 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed opacity-60'
                             }`}
                         >
                             <span>📢</span>
@@ -678,7 +678,7 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
                     </div>
 
                     {statusFeedback && (
-                        <p className="mt-4 text-center text-sm font-bold text-amber-300">
+                        <p className="mt-4 text-center text-sm font-bold text-amber-700">
                             {statusFeedback}
                         </p>
                     )}
@@ -687,28 +687,28 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
 
             {/* Produce Summary Cards */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
-                <div className={`p-5 rounded-2xl border transition-all ${listingData.title ? 'border-emerald-500/80 bg-emerald-950/20' : 'border-slate-800 bg-[#0B152B]/60'}`}>
-                    <p className="text-gray-400 text-xs font-bold uppercase tracking-wider">{language === 'ta-IN' ? "பொருள்" : "Produce"}</p>
-                    <p className="text-white font-black text-xl mt-1">{listingData.title ? translateField(listingData.title, language) : '---'}</p>
+                <div className={`p-5 rounded-2xl border transition-all ${listingData.title ? 'border-emerald-300 bg-emerald-50/40' : 'border-slate-200 bg-white shadow-sm'}`}>
+                    <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">{language === 'ta-IN' ? "பொருள்" : "Produce"}</p>
+                    <p className="text-slate-900 font-black text-xl mt-1">{listingData.title ? translateField(listingData.title, language) : '---'}</p>
                 </div>
 
-                <div className={`p-5 rounded-2xl border transition-all ${listingData.quantity ? 'border-emerald-500/80 bg-emerald-950/20' : 'border-slate-800 bg-[#0B152B]/60'}`}>
-                    <p className="text-gray-400 text-xs font-bold uppercase tracking-wider">{language === 'ta-IN' ? "அளவு" : "Quantity"}</p>
-                    <p className="text-white font-black text-xl mt-1">
+                <div className={`p-5 rounded-2xl border transition-all ${listingData.quantity ? 'border-emerald-300 bg-emerald-50/40' : 'border-slate-200 bg-white shadow-sm'}`}>
+                    <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">{language === 'ta-IN' ? "அளவு" : "Quantity"}</p>
+                    <p className="text-slate-900 font-black text-xl mt-1">
                         {listingData.quantity ? `${listingData.quantity} ${translateField(listingData.unit, language)}` : '---'}
                     </p>
                 </div>
 
-                <div className={`p-5 rounded-2xl border transition-all ${listingData.price_per_unit ? 'border-emerald-500/80 bg-emerald-950/20' : 'border-slate-800 bg-[#0B152B]/60'}`}>
-                    <p className="text-gray-400 text-xs font-bold uppercase tracking-wider">{language === 'ta-IN' ? "விலை" : "Price"}</p>
-                    <p className="text-white font-black text-xl mt-1">
+                <div className={`p-5 rounded-2xl border transition-all ${listingData.price_per_unit ? 'border-emerald-300 bg-emerald-50/40' : 'border-slate-200 bg-white shadow-sm'}`}>
+                    <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">{language === 'ta-IN' ? "விலை" : "Price"}</p>
+                    <p className="text-slate-900 font-black text-xl mt-1">
                         {listingData.price_per_unit ? `₹${listingData.price_per_unit} / ${translateField(listingData.unit || 'unit', language)}` : '---'}
                     </p>
                 </div>
 
-                <div className={`p-5 rounded-2xl border transition-all ${totalAmount > 0 ? 'border-amber-400 bg-amber-950/30' : 'border-slate-800 bg-[#0B152B]/60'}`}>
-                    <p className="text-gray-400 text-xs font-bold uppercase tracking-wider">{language === 'ta-IN' ? "மொத்த மதிப்பு" : "Total Amount"}</p>
-                    <p className="text-amber-400 font-black text-2xl mt-1">{totalAmount > 0 ? `₹${totalAmount}` : '---'}</p>
+                <div className={`p-5 rounded-2xl border transition-all ${totalAmount > 0 ? 'border-amber-400 bg-amber-50/40' : 'border-slate-200 bg-white shadow-sm'}`}>
+                    <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">{language === 'ta-IN' ? "மொத்த மதிப்பு" : "Total Amount"}</p>
+                    <p className="text-amber-700 font-black text-2xl mt-1">{totalAmount > 0 ? `₹${totalAmount}` : '---'}</p>
                 </div>
             </div>
 
@@ -719,13 +719,13 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
                         type="button"
                         onClick={() => commitPublishListing(listingData)}
                         disabled={isPublishing}
-                        className="w-full max-w-md py-4 px-8 bg-gradient-to-r from-emerald-400 via-teal-500 to-emerald-400 hover:from-emerald-300 hover:to-teal-300 text-gray-950 font-black text-lg rounded-2xl shadow-[0_0_35px_rgba(16,185,129,0.7)] flex items-center justify-center gap-3 transform hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                        className="w-full max-w-md py-4 px-8 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-lg rounded-2xl shadow-md flex items-center justify-center gap-3 transform hover:scale-105 active:scale-95 transition-all cursor-pointer"
                     >
                         <span className="text-2xl animate-spin-slow">✨</span>
                         <span>{isPublishing ? (language === 'ta-IN' ? "சேமிக்கப்படுகிறது..." : "Saving...") : (language === 'ta-IN' ? "விற்பனையை சேமிக்கவும் (Save Listing)" : "Save Listing Now")}</span>
                         <span className="text-xl">💾</span>
                     </button>
-                    <p className="text-xs text-emerald-400 font-semibold text-center">
+                    <p className="text-xs text-emerald-800 font-semibold text-center">
                         {language === 'ta-IN' ? "குரல் வழியே தானாக சேமிக்கப்படுகிறது • அல்லது உடனே சேமிக்க பொத்தானை தட்டவும்" : "Auto-saving by voice • or tap above to save immediately"}
                     </p>
                 </div>
@@ -733,28 +733,28 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
 
             {/* ─── STEP 4: VOICE CONFIRMATION GUARDRAIL MODAL ─── */}
             {guardrailModal && (
-                <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-                    <div className="bg-[#0B152B] border-2 border-amber-400 rounded-3xl p-6 md:p-8 max-w-lg w-full text-center shadow-[0_0_50px_rgba(245,158,11,0.5)] animate-in fade-in zoom-in-95 duration-200">
-                        <div className="w-16 h-16 rounded-full bg-amber-400/20 border-2 border-amber-400 text-amber-400 text-3xl flex items-center justify-center mx-auto mb-4">
+                <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div className="bg-white border-2 border-amber-500 rounded-3xl p-6 md:p-8 max-w-lg w-full text-center shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+                        <div className="w-16 h-16 rounded-full bg-amber-50 border-2 border-amber-500 text-amber-700 text-3xl flex items-center justify-center mx-auto mb-4 shadow-sm">
                             🛡️
                         </div>
 
-                        <h3 className="text-2xl font-black text-white mb-2">
+                        <h3 className="text-2xl font-black text-slate-900 mb-2">
                             {t.guardrailTitle || "Action Confirmation"}
                         </h3>
 
-                        <div className="bg-[#070F1E] border border-slate-700 rounded-2xl p-4 my-4 text-left space-y-1.5">
-                            <p className="text-white font-bold text-base">📦 {translateField(listingData.title, language)}</p>
-                            <p className="text-gray-300 text-sm">⚖️ {listingData.quantity} {translateField(listingData.unit, language)} @ ₹{listingData.price_per_unit}/{translateField(listingData.unit, language)}</p>
-                            <p className="text-amber-400 font-black text-xl">💰 ₹{totalAmount}</p>
+                        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 my-4 text-left space-y-1.5">
+                            <p className="text-slate-900 font-bold text-base">📦 {translateField(listingData.title, language)}</p>
+                            <p className="text-slate-600 text-sm">⚖️ {listingData.quantity} {translateField(listingData.unit, language)} @ ₹{listingData.price_per_unit}/{translateField(listingData.unit, language)}</p>
+                            <p className="text-amber-700 font-black text-xl">💰 ₹{totalAmount}</p>
                         </div>
 
-                        <p className="text-cyan-200 font-bold text-base mb-6 leading-relaxed">
+                        <p className="text-slate-800 font-bold text-base mb-6 leading-relaxed">
                             {language === 'ta-IN'
                                 ? `இந்த விற்பனையை சந்தையில் வெளியிட உறுதிப்படுத்துகிறீர்களா?`
                                 : `Are you sure you want to publish this listing?`}
                             <br />
-                            <span className="text-amber-300 text-xs">
+                            <span className="text-amber-700 text-xs mt-1 block">
                                 🎙️ {language === 'ta-IN' ? "உறுதி செய்ய 'ஆம்' அல்லது ரத்து செய்ய 'இல்லை' என்று சொல்லுங்கள்" : "Say 'Yes' to confirm or 'No' to cancel into mic"}
                             </span>
                         </p>
@@ -764,7 +764,7 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
                                 type="button"
                                 onClick={commitPublishListing}
                                 disabled={isPublishing}
-                                className="py-3.5 px-6 rounded-xl font-black text-white bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                                className="py-3.5 px-6 rounded-xl font-black text-white bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 shadow-md active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
                             >
                                 <span>✅</span>
                                 <span>{t.confirmYes || "Yes (Confirm)"}</span>
@@ -774,7 +774,7 @@ export const SellerCommerceView = ({ language, user, onBack, onViewListings }) =
                                 type="button"
                                 onClick={cancelGuardrail}
                                 disabled={isPublishing}
-                                className="py-3.5 px-6 rounded-xl font-bold text-gray-300 bg-slate-800 hover:bg-slate-700 border border-slate-700 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                                className="py-3.5 px-6 rounded-xl font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
                             >
                                 <span>❌</span>
                                 <span>{t.cancelNo || "No (Cancel)"}</span>

@@ -314,26 +314,26 @@ export const VoiceOnboarding = ({ language, userData, onComplete }) => {
     }, [method, step, registerVoiceHandler, unregisterVoiceHandler, processVoiceAnswer, language, speak]);
 
     return (
-        <div className="w-full max-w-xl mx-auto px-4 py-2 flex flex-col items-center select-none">
+        <div className="w-full max-w-xl mx-auto px-4 py-2 flex flex-col items-center select-none text-slate-900">
             
             {/* ═══════════════════════════════════════════════════════════════ */}
             {/* SCREEN 0: UPFRONT METHOD SELECTION (VOICE vs TYPE)             */}
             {/* ═══════════════════════════════════════════════════════════════ */}
             {method === null ? (
-                <div className="w-full bg-[#091733]/95 border-2 border-cyan-500/50 rounded-3xl p-6 sm:p-7 shadow-[0_0_40px_rgba(6,182,212,0.25)] flex flex-col items-center text-center animate-fadeIn">
+                <div className="w-full bg-white border border-slate-200 rounded-3xl p-6 sm:p-7 shadow-md flex flex-col items-center text-center animate-fadeIn">
                     
                     {/* Badge */}
                     <div className="flex items-center gap-2 mb-3">
-                        <span className="text-[11px] font-black uppercase tracking-wider text-cyan-300 bg-cyan-950/90 px-3 py-1 rounded-full border border-cyan-600/70 shadow-sm">
+                        <span className="text-[11px] font-black uppercase tracking-wider text-blue-800 bg-blue-50 px-3 py-1 rounded-full border border-blue-200 shadow-sm">
                             {language === 'ta-IN' ? "உறுப்பினர் நேரடி பதிவு" : "Member Registration"}
                         </span>
                     </div>
 
-                    <h1 className="text-2xl sm:text-3xl font-black text-white mb-2">
+                    <h1 className="text-2xl sm:text-3xl font-black text-slate-900 mb-2">
                         {language === 'ta-IN' ? "பதிவு முறையைத் தேர்ந்தெடுக்கவும்" : "Choose Registration Method"}
                     </h1>
                     
-                    <p className="text-sm sm:text-base text-cyan-200/90 font-medium mb-6">
+                    <p className="text-sm sm:text-base text-slate-600 font-medium mb-6">
                         {language === 'ta-IN' 
                             ? "நீங்கள் குரல் வழி அல்லது தட்டச்சு வழியைப் பயன்படுத்த விரும்புகிறீர்களா?" 
                             : "Would you like to use Voice or Typing to register?"}
@@ -345,18 +345,18 @@ export const VoiceOnboarding = ({ language, userData, onComplete }) => {
                         <button
                             type="button"
                             onClick={() => selectMethod('voice')}
-                            className="w-full p-5 rounded-2xl bg-gradient-to-b from-cyan-950/80 to-[#0c2447] border-2 border-cyan-400/80 hover:border-cyan-300 hover:shadow-[0_0_25px_rgba(6,182,212,0.5)] transition-all flex flex-col items-center text-center group cursor-pointer transform hover:-translate-y-0.5 active:translate-y-0"
+                            className="w-full p-5 rounded-2xl bg-white border-2 border-blue-500 hover:border-blue-600 hover:shadow-md transition-all flex flex-col items-center text-center group cursor-pointer transform hover:-translate-y-0.5 active:translate-y-0 shadow-sm"
                         >
-                            <div className="w-16 h-16 rounded-2xl bg-cyan-500/20 border border-cyan-400 flex items-center justify-center text-3xl mb-3 group-hover:scale-110 transition-transform shadow-inner">
+                            <div className="w-16 h-16 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center text-3xl mb-3 group-hover:scale-110 transition-transform shadow-sm">
                                 🎙️
                             </div>
-                            <span className="text-lg font-black text-white mb-1">
+                            <span className="text-lg font-black text-slate-900 mb-1">
                                 {language === 'ta-IN' ? "குரல் வழி" : "Voice Method"}
                             </span>
-                            <span className="text-xs text-cyan-200 font-medium leading-relaxed mb-3">
+                            <span className="text-xs text-slate-600 font-medium leading-relaxed mb-3">
                                 {language === 'ta-IN' ? "மைக்கில் பேசி விவரங்களை எளிதாக உள்ளிடவும்" : "Speak your details naturally into the mic"}
                             </span>
-                            <span className="text-[10px] font-black uppercase text-amber-300 bg-amber-950/80 border border-amber-500/80 px-2.5 py-0.5 rounded-full">
+                            <span className="text-[10px] font-black uppercase text-amber-800 bg-amber-100 border border-amber-300 px-2.5 py-0.5 rounded-full">
                                 {language === 'ta-IN' ? "★ பரிந்துரைக்கப்படுகிறது" : "★ Recommended"}
                             </span>
                         </button>
@@ -365,26 +365,26 @@ export const VoiceOnboarding = ({ language, userData, onComplete }) => {
                         <button
                             type="button"
                             onClick={() => selectMethod('type')}
-                            className="w-full p-5 rounded-2xl bg-gradient-to-b from-slate-900/80 to-[#0e1d35] border-2 border-slate-700 hover:border-cyan-400 hover:shadow-[0_0_25px_rgba(6,182,212,0.3)] transition-all flex flex-col items-center text-center group cursor-pointer transform hover:-translate-y-0.5 active:translate-y-0"
+                            className="w-full p-5 rounded-2xl bg-white border-2 border-slate-200 hover:border-blue-400 hover:shadow-md transition-all flex flex-col items-center text-center group cursor-pointer transform hover:-translate-y-0.5 active:translate-y-0 shadow-sm"
                         >
-                            <div className="w-16 h-16 rounded-2xl bg-slate-800/80 border border-slate-600 flex items-center justify-center text-3xl mb-3 group-hover:scale-110 transition-transform shadow-inner">
+                            <div className="w-16 h-16 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center text-3xl mb-3 group-hover:scale-110 transition-transform shadow-inner">
                                 ⌨️
                             </div>
-                            <span className="text-lg font-black text-white mb-1">
+                            <span className="text-lg font-black text-slate-900 mb-1">
                                 {language === 'ta-IN' ? "தட்டச்சு வழி" : "Typing Method"}
                             </span>
-                            <span className="text-xs text-gray-300 font-medium leading-relaxed mb-3">
+                            <span className="text-xs text-slate-600 font-medium leading-relaxed mb-3">
                                 {language === 'ta-IN' ? "விசைப்பலகை மூலம் நீங்களே நேரடியாக தட்டச்சு செய்யவும்" : "Type directly using keyboard and keypad"}
                             </span>
-                            <span className="text-[10px] font-bold text-gray-400 bg-slate-800/80 border border-slate-700 px-2.5 py-0.5 rounded-full">
+                            <span className="text-[10px] font-bold text-slate-700 bg-slate-100 border border-slate-300 px-2.5 py-0.5 rounded-full">
                                 {language === 'ta-IN' ? "நேரடி உள்ளீடு" : "Direct Input"}
                             </span>
                         </button>
                     </div>
 
                     {/* Footer speech prompt hint */}
-                    <div className="mt-6 flex items-center gap-2 text-xs text-cyan-300/80 bg-cyan-950/40 border border-cyan-800/50 rounded-xl px-3.5 py-2">
-                        <span className="text-amber-400">💡</span>
+                    <div className="mt-6 flex items-center gap-2 text-xs text-blue-900 bg-blue-50 border border-blue-200 rounded-xl px-3.5 py-2">
+                        <span className="text-amber-500">💡</span>
                         <span>
                             {language === 'ta-IN'
                                 ? "மைக்கில் 'குரல்' அல்லது 'தட்டச்சு' என்று கூறலாம் அல்லது அட்டையைத் தொடலாம்."
@@ -414,10 +414,10 @@ export const VoiceOnboarding = ({ language, userData, onComplete }) => {
                                     onClick={() => setStep(s.idx)}
                                     className={`px-3 py-1 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 cursor-pointer ${
                                         step === s.idx
-                                            ? 'bg-cyan-500 text-slate-950 shadow-[0_0_12px_rgba(6,182,212,0.8)] ring-2 ring-cyan-300'
+                                            ? 'bg-blue-600 text-white shadow-md ring-2 ring-blue-300'
                                             : s.done
-                                            ? 'bg-emerald-950/80 text-emerald-300 border border-emerald-600/70 hover:border-emerald-400'
-                                            : 'bg-slate-900/70 text-gray-400 border border-slate-800 hover:border-slate-700'
+                                            ? 'bg-emerald-50 text-emerald-800 border border-emerald-300 hover:border-emerald-500'
+                                            : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300'
                                     }`}
                                 >
                                     <span>{s.done ? "✓" : `${s.idx + 1}.`}</span>
@@ -431,25 +431,25 @@ export const VoiceOnboarding = ({ language, userData, onComplete }) => {
                     {/* STEP 0: NAME (பெயர்)                                          */}
                     {/* ───────────────────────────────────────────────────────────── */}
                     {step === 0 && (
-                        <div className="w-full bg-[#091733]/95 border-2 border-cyan-500/50 rounded-3xl p-5 sm:p-6 shadow-[0_0_35px_rgba(6,182,212,0.25)] flex flex-col space-y-4 animate-fadeIn">
+                        <div className="w-full bg-white border border-slate-200 rounded-3xl p-5 sm:p-6 shadow-md flex flex-col space-y-4 animate-fadeIn">
                             
-                            <div className="border-b border-slate-800 pb-2.5 flex justify-between items-center">
+                            <div className="border-b border-slate-200 pb-2.5 flex justify-between items-center">
                                 <div>
-                                    <span className="text-xs font-black uppercase text-cyan-400 tracking-wider">
+                                    <span className="text-xs font-black uppercase text-blue-700 tracking-wider">
                                         {language === 'ta-IN' ? "படிநிலை 1 / 3" : "Step 1 of 3"}
                                     </span>
-                                    <h2 className="text-2xl font-black text-white mt-0.5">
+                                    <h2 className="text-2xl font-black text-slate-900 mt-0.5">
                                         {t.nameUI || (language === 'ta-IN' ? "பெயர்" : "Name")}
                                     </h2>
                                 </div>
-                                <span className="text-xs font-bold text-cyan-300 bg-cyan-950/80 border border-cyan-700 px-2.5 py-1 rounded-full">
+                                <span className="text-xs font-bold text-blue-800 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-full">
                                     {method === 'voice' 
                                         ? (language === 'ta-IN' ? "🎙️ குரல் / தட்டச்சு" : "🎙️ Voice / Typing") 
                                         : (language === 'ta-IN' ? "⌨️ தட்டச்சு" : "⌨️ Typing")}
                                 </span>
                             </div>
 
-                            <p className="text-cyan-100 text-base font-bold">
+                            <p className="text-slate-800 text-base font-bold">
                                 {t.namePrompt || (language === 'ta-IN' ? "உங்கள் பெயர் என்ன? சொல்லுங்கள் அல்லது தட்டச்சு செய்யவும்." : "What is your name? Speak or type.")}
                             </p>
 
@@ -466,13 +466,13 @@ export const VoiceOnboarding = ({ language, userData, onComplete }) => {
                                         if (e.key === 'Enter' && localData.name.trim()) setStep(1);
                                     }}
                                     placeholder={t.nameInputPlaceholder || (language === 'ta-IN' ? "உங்கள் பெயரை உள்ளிடவும்..." : "Type your full name...")}
-                                    className="w-full bg-[#0E1F3D] border-2 border-slate-700 focus:border-cyan-400 focus:ring-4 focus:ring-cyan-500/20 text-white font-bold rounded-2xl p-4 text-lg outline-none transition-all pr-12 shadow-inner"
+                                    className="w-full bg-white border-2 border-slate-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-100 text-slate-900 font-bold rounded-2xl p-4 text-lg outline-none transition-all pr-12 shadow-sm placeholder-slate-400"
                                 />
                                 {localData.name && (
                                     <button
                                         type="button"
                                         onClick={() => setLocalData(prev => ({ ...prev, name: '' }))}
-                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white font-bold p-1 cursor-pointer"
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 font-bold p-1 cursor-pointer"
                                         title="Clear"
                                     >
                                         ✕
@@ -481,9 +481,9 @@ export const VoiceOnboarding = ({ language, userData, onComplete }) => {
                             </div>
 
                             {/* Help tip */}
-                            <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-3 flex items-center gap-2">
-                                <span className="text-amber-400 text-base">💡</span>
-                                <p className="text-xs text-amber-200/90 font-medium">
+                            <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-center gap-2">
+                                <span className="text-amber-500 text-base">💡</span>
+                                <p className="text-xs text-amber-900 font-medium">
                                     {method === 'voice'
                                         ? (language === 'ta-IN' ? "கீழே உள்ள மைக்கை 2-முறை தட்டி உங்கள் பெயரை கூறலாம் (அல்லது மேலே தட்டச்சு செய்யலாம்)." : "Double-tap bottom mic to speak your name, or type above.")
                                         : (language === 'ta-IN' ? "மேலே உள்ள பெட்டியில் உங்கள் பெயரை தட்டச்சு செய்து 'அடுத்த படி' அழுத்தவும்." : "Type your name above and click Next Step.")}
@@ -499,8 +499,8 @@ export const VoiceOnboarding = ({ language, userData, onComplete }) => {
                                 disabled={!localData.name?.trim()}
                                 className={`w-full py-3.5 rounded-2xl font-black text-base flex items-center justify-center gap-2 transition-all cursor-pointer ${
                                     localData.name?.trim()
-                                        ? 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white shadow-lg transform active:scale-[0.99]'
-                                        : 'bg-slate-800 text-gray-500 border border-slate-700 cursor-not-allowed opacity-60'
+                                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-md transform active:scale-[0.99]'
+                                        : 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed opacity-60'
                                 }`}
                             >
                                 <span>{t.nextStepBtn || (language === 'ta-IN' ? "அடுத்த படி ➔" : "Next Step ➔")}</span>
@@ -513,25 +513,25 @@ export const VoiceOnboarding = ({ language, userData, onComplete }) => {
                     {/* STEP 1: VILLAGE (கிராமம் / ஊர்)                               */}
                     {/* ───────────────────────────────────────────────────────────── */}
                     {step === 1 && (
-                        <div className="w-full bg-[#091733]/95 border-2 border-cyan-500/50 rounded-3xl p-5 sm:p-6 shadow-[0_0_35px_rgba(6,182,212,0.25)] flex flex-col space-y-4 animate-fadeIn">
+                        <div className="w-full bg-white border border-slate-200 rounded-3xl p-5 sm:p-6 shadow-md flex flex-col space-y-4 animate-fadeIn">
                             
-                            <div className="border-b border-slate-800 pb-2.5 flex justify-between items-center">
+                            <div className="border-b border-slate-200 pb-2.5 flex justify-between items-center">
                                 <div>
-                                    <span className="text-xs font-black uppercase text-cyan-400 tracking-wider">
+                                    <span className="text-xs font-black uppercase text-blue-700 tracking-wider">
                                         {language === 'ta-IN' ? "படிநிலை 2 / 3" : "Step 2 of 3"}
                                     </span>
-                                    <h2 className="text-2xl font-black text-white mt-0.5">
+                                    <h2 className="text-2xl font-black text-slate-900 mt-0.5">
                                         {t.villageUI || (language === 'ta-IN' ? "கிராமம் / ஊர்" : "Village")}
                                     </h2>
                                 </div>
-                                <span className="text-xs font-bold text-cyan-300 bg-cyan-950/80 border border-cyan-700 px-2.5 py-1 rounded-full">
+                                <span className="text-xs font-bold text-blue-800 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-full">
                                     {method === 'voice' 
                                         ? (language === 'ta-IN' ? "🎙️ குரல் / பரிந்துரை" : "🎙️ Voice / Suggestions") 
                                         : (language === 'ta-IN' ? "⌨️ தட்டச்சு" : "⌨️ Typing")}
                                 </span>
                             </div>
 
-                            <p className="text-cyan-100 text-base font-bold">
+                            <p className="text-slate-800 text-base font-bold">
                                 {t.villagePrompt || (language === 'ta-IN' ? "நீங்கள் எந்த ஊர் அல்லது கிராமத்தில் வசிக்கிறீர்கள்?" : "Which village or town do you live in?")}
                             </p>
 
@@ -548,13 +548,13 @@ export const VoiceOnboarding = ({ language, userData, onComplete }) => {
                                         if (e.key === 'Enter' && localData.village.trim()) setStep(2);
                                     }}
                                     placeholder={t.villageInputPlaceholder || (language === 'ta-IN' ? "உங்கள் ஊர் அல்லது கிராமத்தை உள்ளிடவும்..." : "Type your village or town...")}
-                                    className="w-full bg-[#0E1F3D] border-2 border-slate-700 focus:border-cyan-400 focus:ring-4 focus:ring-cyan-500/20 text-white font-bold rounded-2xl p-4 text-lg outline-none transition-all pr-12 shadow-inner"
+                                    className="w-full bg-white border-2 border-slate-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-100 text-slate-900 font-bold rounded-2xl p-4 text-lg outline-none transition-all pr-12 shadow-sm placeholder-slate-400"
                                 />
                                 {localData.village && (
                                     <button
                                         type="button"
                                         onClick={() => setLocalData(prev => ({ ...prev, village: '' }))}
-                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white font-bold p-1 cursor-pointer"
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 font-bold p-1 cursor-pointer"
                                         title="Clear"
                                     >
                                         ✕
@@ -564,7 +564,7 @@ export const VoiceOnboarding = ({ language, userData, onComplete }) => {
 
                             {/* Popular Village Hubs Chips */}
                             <div className="w-full text-left">
-                                <p className="text-[11px] text-gray-400 font-bold mb-1.5 flex items-center gap-1">
+                                <p className="text-[11px] text-slate-600 font-bold mb-1.5 flex items-center gap-1">
                                     <span>📍</span>
                                     <span>{t.popularVillagesTitle || (language === 'ta-IN' ? "பிரபலமான பகுதிகள் (தொடவும்):" : "Popular Hubs (Tap to select):")}</span>
                                 </p>
@@ -582,8 +582,8 @@ export const VoiceOnboarding = ({ language, userData, onComplete }) => {
                                                 }}
                                                 className={`px-3 py-1 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
                                                     isSelected
-                                                        ? 'bg-cyan-500 text-slate-950 border-cyan-400 font-black shadow-md'
-                                                        : 'bg-slate-800/90 hover:bg-cyan-900/50 hover:border-cyan-400 text-cyan-200 border-slate-700'
+                                                        ? 'bg-blue-600 text-white border-blue-600 font-black shadow-sm'
+                                                        : 'bg-white hover:bg-blue-50 hover:border-blue-300 text-slate-700 border-slate-200 shadow-sm'
                                                 }`}
                                             >
                                                 {hubName}
@@ -598,7 +598,7 @@ export const VoiceOnboarding = ({ language, userData, onComplete }) => {
                                 <button
                                     type="button"
                                     onClick={() => setStep(0)}
-                                    className="py-3.5 rounded-2xl font-bold text-gray-300 bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-all cursor-pointer text-sm"
+                                    className="py-3.5 rounded-2xl font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-all cursor-pointer text-sm"
                                 >
                                     {t.prevStepBtn || (language === 'ta-IN' ? "⬅ பின்" : "⬅ Back")}
                                 </button>
@@ -610,8 +610,8 @@ export const VoiceOnboarding = ({ language, userData, onComplete }) => {
                                     disabled={!localData.village?.trim()}
                                     className={`py-3.5 rounded-2xl font-black text-base flex items-center justify-center gap-2 transition-all cursor-pointer ${
                                         localData.village?.trim()
-                                            ? 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white shadow-lg transform active:scale-[0.99]'
-                                            : 'bg-slate-800 text-gray-500 border border-slate-700 cursor-not-allowed opacity-60'
+                                            ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-md transform active:scale-[0.99]'
+                                            : 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed opacity-60'
                                     }`}
                                 >
                                     <span>{t.nextStepBtn || (language === 'ta-IN' ? "அடுத்த படி ➔" : "Next Step ➔")}</span>
@@ -625,18 +625,18 @@ export const VoiceOnboarding = ({ language, userData, onComplete }) => {
                     {/* STEP 2: PHONE (தொலைபேசி எண்) - KEYPAD TYPING ONLY!           */}
                     {/* ───────────────────────────────────────────────────────────── */}
                     {step === 2 && (
-                        <div className="w-full bg-[#091733]/95 border-2 border-cyan-500/50 rounded-3xl p-4 sm:p-5 shadow-[0_0_35px_rgba(6,182,212,0.25)] flex flex-col space-y-3 animate-fadeIn">
+                        <div className="w-full bg-white border border-slate-200 rounded-3xl p-4 sm:p-5 shadow-md flex flex-col space-y-3 animate-fadeIn">
                             
-                            <div className="border-b border-slate-800 pb-2 flex justify-between items-center">
+                            <div className="border-b border-slate-200 pb-2 flex justify-between items-center">
                                 <div>
-                                    <span className="text-xs font-black uppercase text-cyan-400 tracking-wider">
+                                    <span className="text-xs font-black uppercase text-blue-700 tracking-wider">
                                         {language === 'ta-IN' ? "படிநிலை 3 / 3" : "Step 3 of 3"}
                                     </span>
-                                    <h2 className="text-xl sm:text-2xl font-black text-white mt-0.5">
+                                    <h2 className="text-xl sm:text-2xl font-black text-slate-900 mt-0.5">
                                         {t.phoneUI || (language === 'ta-IN' ? "தொலைபேசி எண்" : "Phone Number")}
                                     </h2>
                                 </div>
-                                <span className="text-[11px] font-black text-amber-300 bg-amber-950/80 border border-amber-600/80 px-2.5 py-1 rounded-full">
+                                <span className="text-[11px] font-black text-amber-800 bg-amber-100 border border-amber-300 px-2.5 py-1 rounded-full">
                                     {language === 'ta-IN' ? "🔢 விசைப்பலகை மட்டும்" : "🔢 Keypad Only"}
                                 </span>
                             </div>
@@ -644,7 +644,7 @@ export const VoiceOnboarding = ({ language, userData, onComplete }) => {
                             {/* 10-Slot Visual Indicator */}
                             <div className="w-full flex flex-col items-center py-1">
                                 <div className="flex items-center gap-1 sm:gap-1.5 mb-1.5">
-                                    <span className="text-xs font-extrabold text-cyan-300 bg-cyan-950/80 px-2 py-0.5 rounded-lg border border-cyan-700 mr-1">
+                                    <span className="text-xs font-extrabold text-blue-800 bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-200 mr-1">
                                         🇮🇳 +91
                                     </span>
                                     {/* 10 PIN Slots */}
@@ -656,10 +656,10 @@ export const VoiceOnboarding = ({ language, userData, onComplete }) => {
                                                 key={idx}
                                                 className={`w-7 sm:w-8 h-9 sm:h-10 rounded-xl flex items-center justify-center font-mono font-black text-base sm:text-lg border-2 transition-all ${
                                                     char 
-                                                        ? 'bg-cyan-950/90 text-cyan-200 border-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.4)]'
+                                                        ? 'bg-blue-50 text-blue-800 border-blue-500 shadow-sm'
                                                         : isCurrent
-                                                        ? 'bg-slate-900 border-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.5)] animate-pulse text-amber-300'
-                                                        : 'bg-slate-900/60 border-slate-700 text-slate-500'
+                                                        ? 'bg-white border-amber-500 shadow-md animate-pulse text-amber-600'
+                                                        : 'bg-slate-50 border-slate-200 text-slate-400'
                                                 }`}
                                             >
                                                 {char || '·'}
@@ -669,10 +669,10 @@ export const VoiceOnboarding = ({ language, userData, onComplete }) => {
                                 </div>
 
                                 <div className="flex items-center justify-between w-full px-2 text-xs">
-                                    <span className="text-gray-400 font-semibold">
+                                    <span className="text-slate-600 font-semibold">
                                         {language === 'ta-IN' ? "விசைப்பலகையில் 10 எண்களை தட்டவும்" : "Type 10 digits on the keypad"}
                                     </span>
-                                    <span className={`font-mono font-black ${phoneDigits.length === 10 ? 'text-emerald-400' : 'text-amber-400'}`}>
+                                    <span className={`font-mono font-black ${phoneDigits.length === 10 ? 'text-emerald-700' : 'text-amber-700'}`}>
                                         {phoneDigits.length === 10 
                                             ? (language === 'ta-IN' ? "✓ 10/10 பூர்த்தி" : "✓ 10/10 Done") 
                                             : `${phoneDigits.length} / 10`}
@@ -687,7 +687,7 @@ export const VoiceOnboarding = ({ language, userData, onComplete }) => {
                                         key={digit}
                                         type="button"
                                         onClick={() => handleNumPadPress(digit)}
-                                        className="h-12 sm:h-13 rounded-2xl bg-[#0e1d38] hover:bg-cyan-900/60 active:bg-cyan-600 border border-slate-700 hover:border-cyan-400 text-white font-mono font-black text-xl sm:text-2xl shadow-md transition-all cursor-pointer flex items-center justify-center transform active:scale-95"
+                                        className="h-12 sm:h-13 rounded-2xl bg-white hover:bg-slate-50 active:bg-blue-600 active:text-white border border-slate-200 hover:border-blue-400 text-slate-900 font-mono font-black text-xl sm:text-2xl shadow-sm transition-all cursor-pointer flex items-center justify-center transform active:scale-95"
                                     >
                                         {digit}
                                     </button>
@@ -697,7 +697,7 @@ export const VoiceOnboarding = ({ language, userData, onComplete }) => {
                                 <button
                                     type="button"
                                     onClick={handleBackspace}
-                                    className="h-12 sm:h-13 rounded-2xl bg-rose-950/60 hover:bg-rose-900 active:bg-rose-700 border border-rose-700/60 text-rose-200 font-bold text-sm shadow-md transition-all cursor-pointer flex items-center justify-center gap-1 transform active:scale-95"
+                                    className="h-12 sm:h-13 rounded-2xl bg-rose-50 hover:bg-rose-100 active:bg-rose-600 active:text-white border border-rose-200 text-rose-700 font-bold text-sm shadow-sm transition-all cursor-pointer flex items-center justify-center gap-1 transform active:scale-95"
                                     title="Backspace"
                                 >
                                     <span>⌫</span>
@@ -708,7 +708,7 @@ export const VoiceOnboarding = ({ language, userData, onComplete }) => {
                                 <button
                                     type="button"
                                     onClick={() => handleNumPadPress('0')}
-                                    className="h-12 sm:h-13 rounded-2xl bg-[#0e1d38] hover:bg-cyan-900/60 active:bg-cyan-600 border border-slate-700 hover:border-cyan-400 text-white font-mono font-black text-xl sm:text-2xl shadow-md transition-all cursor-pointer flex items-center justify-center transform active:scale-95"
+                                    className="h-12 sm:h-13 rounded-2xl bg-white hover:bg-slate-50 active:bg-blue-600 active:text-white border border-slate-200 hover:border-blue-400 text-slate-900 font-mono font-black text-xl sm:text-2xl shadow-sm transition-all cursor-pointer flex items-center justify-center transform active:scale-95"
                                 >
                                     0
                                 </button>
@@ -717,7 +717,7 @@ export const VoiceOnboarding = ({ language, userData, onComplete }) => {
                                 <button
                                     type="button"
                                     onClick={handleClear}
-                                    className="h-12 sm:h-13 rounded-2xl bg-slate-800/80 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-gray-300 font-bold text-xs shadow-md transition-all cursor-pointer flex items-center justify-center gap-1 transform active:scale-95"
+                                    className="h-12 sm:h-13 rounded-2xl bg-slate-100 hover:bg-slate-200 active:bg-slate-300 border border-slate-300 text-slate-700 font-bold text-xs shadow-sm transition-all cursor-pointer flex items-center justify-center gap-1 transform active:scale-95"
                                     title="Clear All"
                                 >
                                     <span>✕</span>
@@ -730,7 +730,7 @@ export const VoiceOnboarding = ({ language, userData, onComplete }) => {
                                 <button
                                     type="button"
                                     onClick={() => setStep(1)}
-                                    className="py-3 rounded-2xl font-bold text-gray-300 bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-all cursor-pointer text-sm"
+                                    className="py-3 rounded-2xl font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-all cursor-pointer text-sm"
                                 >
                                     {t.prevStepBtn || (language === 'ta-IN' ? "⬅ பின்" : "⬅ Back")}
                                 </button>
@@ -741,15 +741,15 @@ export const VoiceOnboarding = ({ language, userData, onComplete }) => {
                                     disabled={phoneDigits.length !== 10}
                                     className={`col-span-2 py-3 rounded-2xl font-black text-sm sm:text-base flex items-center justify-center gap-2 transition-all cursor-pointer ${
                                         phoneDigits.length === 10
-                                            ? 'bg-gradient-to-r from-emerald-500 via-teal-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-white shadow-[0_0_20px_rgba(16,185,129,0.7)] animate-pulse'
-                                            : 'bg-slate-800 text-gray-500 border border-slate-700 cursor-not-allowed opacity-60'
+                                            ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white shadow-md'
+                                            : 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed opacity-60'
                                     }`}
                                 >
                                     <span>✓</span>
                                     <span>
                                         {phoneDigits.length === 10
-                                            ? (language === 'ta-IN' ? "பதிவை முடி ➔" : "Complete Registration ➔")
-                                            : (language === 'ta-IN' ? `${phoneDigits.length}/10 எண்கள்` : `${phoneDigits.length}/10 Digits`)}
+                                             ? (language === 'ta-IN' ? "பதிவை முடி ➔" : "Complete Registration ➔")
+                                             : (language === 'ta-IN' ? `${phoneDigits.length}/10 எண்கள்` : `${phoneDigits.length}/10 Digits`)}
                                     </span>
                                 </button>
                             </div>
@@ -762,7 +762,7 @@ export const VoiceOnboarding = ({ language, userData, onComplete }) => {
 
             {/* Status Feedback toast if present */}
             {statusFeedback && (
-                <div className="mt-2 text-xs text-cyan-300/90 font-semibold px-3 py-1 rounded-xl bg-slate-900/70 border border-slate-800/80 animate-fadeIn">
+                <div className="mt-2 text-xs text-blue-900 font-semibold px-3 py-1 rounded-xl bg-blue-50 border border-blue-200 animate-fadeIn shadow-sm">
                     {statusFeedback}
                 </div>
             )}

@@ -408,14 +408,14 @@ export const SellerDashboard = ({ language, user }) => {
     }
 
     return (
-        <div className={`w-full ${hasActiveOrders ? 'max-w-7xl' : 'max-w-5xl'} mx-auto flex flex-col items-center p-4 sm:p-6 text-white pb-36 relative transition-all duration-300`}>
+        <div className={`w-full ${hasActiveOrders ? 'max-w-7xl' : 'max-w-5xl'} mx-auto flex flex-col items-center p-4 sm:p-6 text-slate-900 pb-36 relative transition-all duration-300`}>
             {/* Header Bar */}
-            <div className="w-full flex flex-col md:flex-row justify-between items-center mb-6 sm:mb-8 gap-4 border-b border-slate-800/80 pb-5">
+            <div className="w-full flex flex-col md:flex-row justify-between items-center mb-6 sm:mb-8 gap-4 border-b border-slate-200 pb-5">
                 <div>
-                    <h1 className="text-3xl md:text-4xl font-black text-white text-center md:text-left">
-                        {language === 'ta-IN' ? "வணக்கம்" : "Welcome"}, <span className="text-amber-400">{translateField(user.name, language)}!</span>
+                    <h1 className="text-3xl md:text-4xl font-black text-slate-900 text-center md:text-left">
+                        {language === 'ta-IN' ? "வணக்கம்" : "Welcome"}, <span className="text-amber-600">{translateField(user.name, language)}!</span>
                     </h1>
-                    <p className="text-gray-400 text-xs sm:text-sm mt-1 text-center md:text-left">
+                    <p className="text-slate-600 text-xs sm:text-sm mt-1 text-center md:text-left">
                         📍 {translateField(user.village || 'Tamil Nadu', language)} • 🌾 {language === 'ta-IN' ? "விற்பனையாளர் டாஷ்போர்டு" : "Producer Dashboard"}
                     </p>
                 </div>
@@ -423,7 +423,7 @@ export const SellerDashboard = ({ language, user }) => {
                 <div className="flex items-center gap-3">
                     <button
                         onClick={() => setViewMode('history')}
-                        className="px-4 py-2 bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 font-bold rounded-xl text-xs shadow-lg transition-colors border border-emerald-500/50 flex items-center gap-1.5 cursor-pointer"
+                        className="px-4 py-2 bg-white hover:bg-slate-50 text-emerald-800 font-bold rounded-xl text-xs shadow-sm transition-colors border border-slate-200 flex items-center gap-1.5 cursor-pointer"
                     >
                         <span>💰</span>
                         <span>{language === 'ta-IN' ? "வருவாய் & வரலாறு" : "Earnings & History"}</span>
@@ -433,7 +433,7 @@ export const SellerDashboard = ({ language, user }) => {
                             sessionStorage.clear();
                             window.location.href = '/';
                         }}
-                        className="px-4 py-2 bg-red-600/80 hover:bg-red-500 text-white font-bold rounded-xl text-xs shadow-lg transition-colors cursor-pointer"
+                        className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs shadow-sm transition-colors cursor-pointer"
                     >
                         {language === 'ta-IN' ? "வெளியேறு" : "Logout"}
                     </button>
@@ -446,13 +446,13 @@ export const SellerDashboard = ({ language, user }) => {
                 {/* ─── 1. LEFT COLUMN: CORE NAVIGATION TILES (UNDISTURBED!) ─── */}
                 <div className={`${hasActiveOrders ? 'lg:col-span-7 xl:col-span-8' : 'w-full max-w-5xl'} flex flex-col gap-6`}>
                     <div className="flex items-center justify-between">
-                        <h2 className="text-lg sm:text-xl font-bold text-gray-200 flex items-center gap-2">
+                        <h2 className="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-2">
                             <span>⚡</span>
                             <span>{language === 'ta-IN' ? "முதன்மை செயல்பாடுகள்" : "Core Dashboard Actions"}</span>
                         </h2>
                         {hasActiveOrders && (
-                            <span className="text-xs text-cyan-300/90 font-bold bg-cyan-950/60 px-3 py-1 rounded-full border border-cyan-500/30 flex items-center gap-1.5">
-                                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                            <span className="text-xs text-blue-900 font-bold bg-blue-50 px-3 py-1 rounded-full border border-blue-200 flex items-center gap-1.5">
+                                <span className="w-2 h-2 rounded-full bg-blue-600 animate-ping"></span>
                                 <span>{language === 'ta-IN' ? "பக்க பேனலில் ஆர்டர்கள் உள்ளன" : "Orders in side panel"}</span>
                             </span>
                         )}
@@ -463,15 +463,15 @@ export const SellerDashboard = ({ language, user }) => {
                         {/* Tile 1: New Sale */}
                         <div 
                             onClick={() => setViewMode('commerce')}
-                            className="flex flex-col items-center justify-center p-6 sm:p-8 bg-gradient-to-b from-[#09152B]/95 to-[#061124]/95 rounded-3xl border border-slate-700/80 hover:border-cyan-400/80 shadow-2xl cursor-pointer hover:scale-[1.03] active:scale-95 transition-all text-center group"
+                            className="flex flex-col items-center justify-center p-6 sm:p-8 bg-white rounded-3xl border-2 border-slate-200 hover:border-blue-500 shadow-sm hover:shadow-md cursor-pointer hover:scale-[1.03] active:scale-95 transition-all text-center group"
                         >
-                            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 shadow-[0_0_30px_rgba(6,182,212,0.5)] flex items-center justify-center mb-4 group-hover:shadow-[0_0_40px_rgba(6,182,212,0.8)] transition-all">
+                            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 shadow-md flex items-center justify-center mb-4 transition-all">
                                 <span className="text-3xl sm:text-4xl">🏷️</span>
                             </div>
-                            <h3 className="text-lg font-black text-white mb-1 group-hover:text-cyan-300 transition-colors">
+                            <h3 className="text-lg font-black text-slate-900 mb-1 group-hover:text-blue-700 transition-colors">
                                 {language === 'ta-IN' ? "புதிய விற்பனை" : "New Listing"}
                             </h3>
-                            <p className="text-xs text-gray-400 font-medium">
+                            <p className="text-xs text-slate-600 font-medium">
                                 {language === 'ta-IN' ? "குரல் அல்லது தட்டச்சு வழியே பதிவு" : "Dual-mode voice & typing wizard"}
                             </p>
                         </div>
@@ -479,15 +479,15 @@ export const SellerDashboard = ({ language, user }) => {
                         {/* Tile 2: My Listings */}
                         <div 
                             onClick={() => setViewMode('listings')}
-                            className="flex flex-col items-center justify-center p-6 sm:p-8 bg-gradient-to-b from-[#09152B]/95 to-[#061124]/95 rounded-3xl border border-slate-700/80 hover:border-emerald-400/80 shadow-2xl cursor-pointer hover:scale-[1.03] active:scale-95 transition-all text-center group"
+                            className="flex flex-col items-center justify-center p-6 sm:p-8 bg-white rounded-3xl border-2 border-slate-200 hover:border-emerald-500 shadow-sm hover:shadow-md cursor-pointer hover:scale-[1.03] active:scale-95 transition-all text-center group"
                         >
-                            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-600 shadow-[0_0_30px_rgba(16,185,129,0.5)] flex items-center justify-center mb-4 group-hover:shadow-[0_0_40px_rgba(16,185,129,0.8)] transition-all">
+                            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-600 shadow-md flex items-center justify-center mb-4 transition-all">
                                 <span className="text-3xl sm:text-4xl">📋</span>
                             </div>
-                            <h3 className="text-lg font-black text-white mb-1 group-hover:text-emerald-300 transition-colors">
+                            <h3 className="text-lg font-black text-slate-900 mb-1 group-hover:text-emerald-700 transition-colors">
                                 {language === 'ta-IN' ? "என் விற்பனைப் பொருட்கள்" : "My Active Listings"}
                             </h3>
-                            <p className="text-xs text-gray-400 font-medium">
+                            <p className="text-xs text-slate-600 font-medium">
                                 {language === 'ta-IN' ? "இருப்பு மற்றும் விலையை நிர்வகிக்க" : "Manage active items & stock"}
                             </p>
                         </div>
@@ -495,22 +495,22 @@ export const SellerDashboard = ({ language, user }) => {
                         {/* Tile 3: Sales History & Earnings */}
                         <div 
                             onClick={() => setViewMode('history')}
-                            className="flex flex-col items-center justify-center p-6 sm:p-8 bg-gradient-to-b from-[#09152B]/95 to-[#061124]/95 rounded-3xl border border-slate-700/80 hover:border-amber-400/80 shadow-2xl cursor-pointer hover:scale-[1.03] active:scale-95 transition-all text-center group"
+                            className="flex flex-col items-center justify-center p-6 sm:p-8 bg-white rounded-3xl border-2 border-slate-200 hover:border-amber-500 shadow-sm hover:shadow-md cursor-pointer hover:scale-[1.03] active:scale-95 transition-all text-center group"
                         >
-                            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-600 shadow-[0_0_30px_rgba(245,158,11,0.5)] flex items-center justify-center mb-4 group-hover:shadow-[0_0_40px_rgba(245,158,11,0.8)] transition-all">
+                            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-600 shadow-md flex items-center justify-center mb-4 transition-all">
                                 <span className="text-3xl sm:text-4xl">💰</span>
                             </div>
-                            <h3 className="text-lg font-black text-white mb-1 group-hover:text-amber-300 transition-colors">
+                            <h3 className="text-lg font-black text-slate-900 mb-1 group-hover:text-amber-700 transition-colors">
                                 {language === 'ta-IN' ? "விற்பனை வரலாறு & வருவாய்" : "Sales History & Earnings"}
                             </h3>
-                            <p className="text-xs text-gray-400 font-medium">
+                            <p className="text-xs text-slate-600 font-medium">
                                 {language === 'ta-IN' ? "ஆர்டர் பதிவுகள் & மொத்த வருவாய்" : "Complete order logs & earnings"}
                             </p>
                         </div>
                     </div>
 
                     {/* Quick Helper Banner */}
-                    <div className="bg-[#0A1326]/75 border border-slate-800 rounded-2xl p-4 flex items-center gap-3 text-xs text-gray-400">
+                    <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex items-center gap-3 text-xs text-slate-600">
                         <span className="text-xl">💡</span>
                         <p>
                             {language === 'ta-IN' 
@@ -523,23 +523,23 @@ export const SellerDashboard = ({ language, user }) => {
                 {/* ─── 2. RIGHT COLUMN: DEDICATED SIDE PANEL CONTENT BOX (STANDALONE SCROLLBAR) ─── */}
                 {hasActiveOrders && (
                     <div className="lg:col-span-5 xl:col-span-4 w-full">
-                        <div className="bg-gradient-to-b from-[#0B172C]/98 via-[#061324]/98 to-[#040E1B]/98 border-2 border-cyan-500/50 rounded-3xl p-5 shadow-[0_12px_45px_rgba(0,0,0,0.7)] backdrop-blur-2xl flex flex-col sticky top-6">
+                        <div className="bg-white border-2 border-slate-200 rounded-3xl p-5 shadow-xl backdrop-blur-2xl flex flex-col sticky top-6">
                             
                             {/* Side Panel Header */}
-                            <div className="flex items-center justify-between pb-3.5 border-b border-cyan-500/25 mb-3.5">
+                            <div className="flex items-center justify-between pb-3.5 border-b border-slate-200 mb-3.5">
                                 <div className="flex items-center gap-2">
                                     <span className="text-xl animate-bounce">🔔</span>
                                     <div>
-                                        <h3 className="text-base font-black text-white">
+                                        <h3 className="text-base font-black text-slate-900">
                                             {language === 'ta-IN' ? "புதிய & செயலில் உள்ள ஆர்டர்கள்" : "Incoming & Active Orders"}
                                         </h3>
-                                        <p className="text-[11px] text-cyan-300/70">
+                                        <p className="text-[11px] text-slate-500">
                                             {language === 'ta-IN' ? "ஆர்டர் நிறைவேற்ற பக்க பலகை" : "Dedicated fulfillment side panel"}
                                         </p>
                                     </div>
                                 </div>
-                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-black bg-cyan-500/20 text-cyan-300 border border-cyan-400/40">
-                                    <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-black bg-blue-50 text-blue-700 border border-blue-200">
+                                    <span className="w-2 h-2 rounded-full bg-blue-600 animate-ping"></span>
                                     <span>{totalActiveOrdersCount}</span>
                                 </span>
                             </div>
@@ -549,24 +549,24 @@ export const SellerDashboard = ({ language, user }) => {
                                 
                                 {/* A. Auto-clearing celebration toast when buyer accepts order */}
                                 {recentCompletedOrder && (
-                                    <div className="bg-gradient-to-r from-emerald-950/90 to-emerald-900/90 border border-emerald-400/70 rounded-2xl p-4 shadow-lg animate-in fade-in flex items-start justify-between gap-3">
+                                    <div className="bg-emerald-50 border border-emerald-300 rounded-2xl p-4 shadow-sm animate-in fade-in flex items-start justify-between gap-3">
                                         <div className="flex items-start gap-2.5">
                                             <span className="text-2xl">🎉</span>
                                             <div>
-                                                <p className="text-emerald-300 font-extrabold text-sm">
+                                                <p className="text-emerald-800 font-extrabold text-sm">
                                                     {language === 'ta-IN' ? "வாங்குபவர் ஆர்டரை ஏற்றுக்கொண்டார்!" : "Buyer Accepted Order!"}
                                                 </p>
-                                                <p className="text-xs text-gray-200 mt-0.5">
+                                                <p className="text-xs text-slate-700 mt-0.5">
                                                     {translateField(recentCompletedOrder.item_title, language)} • Order #{recentCompletedOrder.order_id}
                                                 </p>
-                                                <p className="text-amber-300 font-black text-sm mt-1">
+                                                <p className="text-amber-700 font-black text-sm mt-1">
                                                     💰 ₹{recentCompletedOrder.total_amount} {language === 'ta-IN' ? "கணக்கில் வரவு வைக்கப்பட்டது" : "credited"}
                                                 </p>
                                             </div>
                                         </div>
                                         <button
                                             onClick={() => setRecentCompletedOrder(null)}
-                                            className="text-gray-400 hover:text-white text-xs p-1 rounded-md hover:bg-emerald-800/40"
+                                            className="text-slate-400 hover:text-slate-700 text-xs p-1 rounded-md hover:bg-emerald-100"
                                             title="Dismiss"
                                         >
                                             ✕
@@ -578,18 +578,18 @@ export const SellerDashboard = ({ language, user }) => {
                                 {unDismissedPendingOrders.map(order => (
                                     <div 
                                         key={`pending-${order.order_id}`}
-                                        className="bg-[#0A1426] border-2 border-amber-500/70 rounded-2xl p-4 shadow-lg flex flex-col gap-3 hover:border-amber-400 transition-all"
+                                        className="bg-white border-2 border-amber-400 rounded-2xl p-4 shadow-sm flex flex-col gap-3 hover:border-amber-500 transition-all"
                                     >
-                                        <div className="flex items-center justify-between border-b border-amber-500/20 pb-2">
-                                            <span className="bg-amber-950/90 border border-amber-500 text-amber-300 text-[11px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                                        <div className="flex items-center justify-between border-b border-amber-200 pb-2">
+                                            <span className="bg-amber-50 border border-amber-300 text-amber-800 text-[11px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1">
                                                 <span>📦</span>
                                                 <span>{language === 'ta-IN' ? "பேக் செய்ய வேண்டும்" : "Needs Packing"}</span>
                                             </span>
                                             <div className="flex items-center gap-2">
-                                                <span className="text-xs text-gray-400 font-mono">#{order.order_id}</span>
+                                                <span className="text-xs text-slate-400 font-mono">#{order.order_id}</span>
                                                 <button
                                                     onClick={() => setDismissedOrderIds(prev => new Set(prev).add(order.order_id))}
-                                                    className="text-gray-500 hover:text-gray-300 text-xs px-1 hover:bg-white/10 rounded"
+                                                    className="text-slate-400 hover:text-slate-700 text-xs px-1 hover:bg-slate-100 rounded"
                                                     title="Dismiss"
                                                 >
                                                     ✕
@@ -598,22 +598,22 @@ export const SellerDashboard = ({ language, user }) => {
                                         </div>
 
                                         <div>
-                                            <h4 className="text-lg font-black text-white">
+                                            <h4 className="text-lg font-black text-slate-900">
                                                 {translateField(order.item_title, language)}
                                             </h4>
-                                            <div className="flex items-center justify-between mt-1 text-xs text-gray-300">
+                                            <div className="flex items-center justify-between mt-1 text-xs text-slate-600">
                                                 <span>👤 {translateField(order.buyer_name, language)}</span>
-                                                <span className="text-emerald-400 font-extrabold text-base">₹{order.total_amount}</span>
+                                                <span className="text-emerald-700 font-extrabold text-base">₹{order.total_amount}</span>
                                             </div>
-                                            <p className="text-xs text-amber-300/90 mt-1">
-                                                ⚖️ {language === 'ta-IN' ? "அளவு:" : "Qty:"} <span className="text-white font-bold">{order.quantity} {translateField(order.unit, language)}</span> • 📍 {translateField(order.buyer_village || 'Hub', language)}
+                                            <p className="text-xs text-amber-800 mt-1">
+                                                ⚖️ {language === 'ta-IN' ? "அளவு:" : "Qty:"} <span className="text-slate-900 font-bold">{order.quantity} {translateField(order.unit, language)}</span> • 📍 {translateField(order.buyer_village || 'Hub', language)}
                                             </p>
                                         </div>
 
                                         {/* Action Button: Pack Order */}
                                         <button
                                             onClick={() => initiatePackOrder(order)}
-                                            className="w-full py-2.5 px-4 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-500 text-gray-950 font-black rounded-xl shadow-md transform hover:scale-[1.02] active:scale-95 transition-all text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer"
+                                            className="w-full py-2.5 px-4 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-500 text-white font-black rounded-xl shadow-sm transform hover:scale-[1.02] active:scale-95 transition-all text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer"
                                         >
                                             <span className="text-base">📦</span>
                                             <span>{t.packOrderBtn || "Pack Order"}</span>
@@ -630,29 +630,29 @@ export const SellerDashboard = ({ language, user }) => {
                                     return (
                                         <div 
                                             key={`fulfillment-${order.order_id}`}
-                                            className={`rounded-2xl p-4 border-2 transition-all shadow-lg flex flex-col gap-3 ${
+                                            className={`rounded-2xl p-4 border-2 transition-all shadow-sm flex flex-col gap-3 ${
                                                 isMoving 
-                                                    ? 'bg-[#14082B]/95 border-purple-400/80 shadow-[0_0_25px_rgba(168,85,247,0.25)]' 
+                                                    ? 'bg-purple-50/60 border-purple-300' 
                                                     : isScheduled 
-                                                    ? 'bg-[#06182B]/95 border-cyan-400/80 shadow-[0_0_25px_rgba(6,182,212,0.25)]' 
-                                                    : 'bg-[#1C1304]/95 border-amber-400/80 shadow-[0_0_25px_rgba(245,158,11,0.25)]'
+                                                    ? 'bg-blue-50/60 border-blue-300' 
+                                                    : 'bg-amber-50/60 border-amber-300'
                                             }`}
                                         >
-                                            <div className="flex items-center justify-between border-b border-slate-700/60 pb-2">
+                                            <div className="flex items-center justify-between border-b border-slate-200 pb-2">
                                                 <span className={`text-[11px] font-black uppercase px-2.5 py-0.5 rounded-full border ${
                                                     isMoving 
-                                                        ? 'bg-purple-950 text-purple-300 border-purple-500 animate-pulse' 
+                                                        ? 'bg-purple-100 text-purple-800 border-purple-300 animate-pulse' 
                                                         : isScheduled 
-                                                        ? 'bg-cyan-950 text-cyan-300 border-cyan-500' 
-                                                        : 'bg-amber-950 text-amber-300 border-amber-500'
+                                                        ? 'bg-blue-100 text-blue-800 border-blue-300' 
+                                                        : 'bg-amber-100 text-amber-800 border-amber-300'
                                                 }`}>
                                                     {translateField(order.status_localized || order.status, language)}
                                                 </span>
                                                 <div className="flex items-center gap-2">
-                                                    <span className="text-xs text-gray-400 font-mono">#{order.order_id}</span>
+                                                    <span className="text-xs text-slate-400 font-mono">#{order.order_id}</span>
                                                     <button
                                                         onClick={() => setDismissedOrderIds(prev => new Set(prev).add(order.order_id))}
-                                                        className="text-gray-500 hover:text-gray-300 text-xs px-1 hover:bg-white/10 rounded"
+                                                        className="text-slate-400 hover:text-slate-700 text-xs px-1 hover:bg-slate-100 rounded"
                                                         title="Dismiss"
                                                     >
                                                         ✕
@@ -662,12 +662,12 @@ export const SellerDashboard = ({ language, user }) => {
 
                                             <div>
                                                 <div className="flex items-center justify-between">
-                                                    <h4 className="text-base font-black text-white">
+                                                    <h4 className="text-base font-black text-slate-900">
                                                         {translateField(order.item_title, language)}
                                                     </h4>
-                                                    <span className="text-amber-400 font-black text-base">₹{order.total_amount}</span>
+                                                    <span className="text-amber-700 font-black text-base">₹{order.total_amount}</span>
                                                 </div>
-                                                <p className="text-xs text-gray-300 mt-0.5">
+                                                <p className="text-xs text-slate-600 mt-0.5">
                                                     👤 {translateField(order.buyer_name, language)} • 📦 {order.quantity} {translateField(order.unit, language)}
                                                 </p>
                                             </div>
@@ -675,13 +675,13 @@ export const SellerDashboard = ({ language, user }) => {
                                             {/* Stage A: Packed -> Schedule Pickup Button */}
                                             {isPacked && (
                                                 <div className="space-y-2">
-                                                    <p className="text-[11px] text-amber-200/90 leading-tight">
+                                                    <p className="text-[11px] text-amber-900 leading-tight">
                                                         {language === 'ta-IN' ? "பொருட்கள் தயார். வாகன பிக்-அப்பை திட்டமிடவும்." : "Package ready. Schedule pickup van."}
                                                     </p>
                                                     <button
                                                         type="button"
                                                         onClick={() => initiateSchedulePickup(order)}
-                                                        className="w-full py-2.5 px-4 bg-gradient-to-r from-cyan-500 via-teal-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black rounded-xl shadow-md transform hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer text-xs sm:text-sm"
+                                                        className="w-full py-2.5 px-4 bg-gradient-to-r from-blue-600 via-teal-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-black rounded-xl shadow-sm transform hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer text-xs sm:text-sm"
                                                     >
                                                         <span className="text-base">🚚</span>
                                                         <span>{t.schedulePickupBtn || "Schedule Pickup"}</span>
@@ -692,20 +692,20 @@ export const SellerDashboard = ({ language, user }) => {
                                             {/* Stage B: Pickup Scheduled -> Handover / Dispatch Button */}
                                             {isScheduled && (
                                                 <div className="space-y-2.5">
-                                                    <div className="bg-[#071326] p-2.5 rounded-xl border border-slate-700/80 text-[11px] space-y-1">
+                                                    <div className="bg-white p-2.5 rounded-xl border border-slate-200 text-[11px] space-y-1">
                                                         <div className="flex justify-between">
-                                                            <span className="text-gray-400">{t.trackingIdLabel || "Tracking ID"}:</span>
-                                                            <span className="text-cyan-300 font-mono font-bold">{order.tracking_id}</span>
+                                                            <span className="text-slate-500">{t.trackingIdLabel || "Tracking ID"}:</span>
+                                                            <span className="text-blue-700 font-mono font-bold">{order.tracking_id}</span>
                                                         </div>
                                                         <div className="flex justify-between">
-                                                            <span className="text-gray-400">{t.pickupTimeLabel || "Window"}:</span>
-                                                            <span className="text-amber-300 font-bold">{translateField(order.pickup_time, language)}</span>
+                                                            <span className="text-slate-500">{t.pickupTimeLabel || "Window"}:</span>
+                                                            <span className="text-amber-700 font-bold">{translateField(order.pickup_time, language)}</span>
                                                         </div>
                                                     </div>
                                                     <button
                                                         type="button"
                                                         onClick={() => commitDispatchOrder(order.order_id)}
-                                                        className="w-full py-2.5 px-4 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white font-black text-xs sm:text-sm rounded-xl shadow-md flex items-center justify-center gap-2 cursor-pointer transition-all hover:scale-[1.02] active:scale-95"
+                                                        className="w-full py-2.5 px-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-black text-xs sm:text-sm rounded-xl shadow-sm flex items-center justify-center gap-2 cursor-pointer transition-all hover:scale-[1.02] active:scale-95"
                                                     >
                                                         <span>🚀</span>
                                                         <span>{t.dispatchVanBtn || "Handover & Dispatch"}</span>
@@ -715,13 +715,13 @@ export const SellerDashboard = ({ language, user }) => {
 
                                             {/* Stage C: Moving in Transit */}
                                             {isMoving && (
-                                                <div className="bg-[#190C36] p-2.5 rounded-xl border border-purple-500/40 text-[11px] space-y-1">
-                                                    <div className="flex items-center gap-2 text-purple-300 font-bold">
-                                                        <span className="w-2 h-2 rounded-full bg-purple-400 animate-ping"></span>
+                                                <div className="bg-white p-2.5 rounded-xl border border-purple-200 text-[11px] space-y-1">
+                                                    <div className="flex items-center gap-2 text-purple-800 font-bold">
+                                                        <span className="w-2 h-2 rounded-full bg-purple-600 animate-ping"></span>
                                                         <span>{language === 'ta-IN' ? "பார்சல் வாகனத்தில் பயணிக்கிறது" : "In transit on logistics van"}</span>
                                                     </div>
-                                                    <p className="text-gray-300 text-[11px]">
-                                                        {t.trackingIdLabel || "Tracking"}: <span className="font-mono text-purple-200">{order.tracking_id}</span>
+                                                    <p className="text-slate-600 text-[11px]">
+                                                        {t.trackingIdLabel || "Tracking"}: <span className="font-mono text-purple-700">{order.tracking_id}</span>
                                                     </p>
                                                 </div>
                                             )}
@@ -731,7 +731,7 @@ export const SellerDashboard = ({ language, user }) => {
                             </div>
 
                             {/* Side Panel Footer */}
-                            <div className="pt-3 mt-3 border-t border-cyan-500/20 text-[11px] text-cyan-300/80 flex items-center justify-between">
+                            <div className="pt-3 mt-3 border-t border-slate-200 text-[11px] text-slate-500 flex items-center justify-between">
                                 <span>🎙️ {language === 'ta-IN' ? "மைக்கில் பேசி இயக்கலாம்" : "Voice commands enabled"}</span>
                                 <span>📜 {language === 'ta-IN' ? "தனி ஸ்க்ரோல் பார்" : "Separate scroll"}</span>
                             </div>
@@ -742,32 +742,32 @@ export const SellerDashboard = ({ language, user }) => {
 
             {/* ─── STEP 4: VOICE CONFIRMATION GUARDRAIL MODAL ─── */}
             {guardrailAction && (
-                <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-                    <div className="bg-[#0B152B] border-2 border-amber-400 rounded-3xl p-6 md:p-8 max-w-lg w-full text-center shadow-[0_0_50px_rgba(245,158,11,0.6)] animate-in fade-in zoom-in-95 duration-200">
-                        <div className="w-16 h-16 rounded-full bg-amber-400/20 border-2 border-amber-400 text-amber-400 text-3xl flex items-center justify-center mx-auto mb-4">
+                <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div className="bg-white border-2 border-amber-500 rounded-3xl p-6 md:p-8 max-w-lg w-full text-center shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+                        <div className="w-16 h-16 rounded-full bg-amber-50 border-2 border-amber-500 text-amber-700 text-3xl flex items-center justify-center mx-auto mb-4 shadow-sm">
                             🛡️
                         </div>
 
-                        <h3 className="text-2xl font-black text-white mb-2">
+                        <h3 className="text-2xl font-black text-slate-900 mb-2">
                             {t.guardrailTitle || "Action Confirmation"}
                         </h3>
 
-                        <div className="bg-[#070F1E] border border-slate-700 rounded-2xl p-4 my-4 text-left space-y-1.5">
-                            <p className="text-white font-bold text-base">
+                        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 my-4 text-left space-y-1.5">
+                            <p className="text-slate-900 font-bold text-base">
                                 📦 {translateField(guardrailAction.order?.item_title, language)}
                             </p>
-                            <p className="text-gray-300 text-sm">
+                            <p className="text-slate-600 text-sm">
                                 👤 {translateField(guardrailAction.order?.buyer_name, language)} ({translateField(guardrailAction.order?.buyer_village, language)}) • {guardrailAction.order?.quantity} {translateField(guardrailAction.order?.unit, language)}
                             </p>
-                            <p className="text-amber-400 font-black text-xl">
+                            <p className="text-amber-700 font-black text-xl">
                                 💰 ₹{guardrailAction.order?.total_amount}
                             </p>
                         </div>
 
-                        <p className="text-cyan-200 font-bold text-base mb-6 leading-relaxed">
+                        <p className="text-slate-800 font-bold text-base mb-6 leading-relaxed">
                             {guardrailAction.prompt}
                             <br />
-                            <span className="text-amber-300 text-xs">
+                            <span className="text-amber-700 text-xs mt-1 block">
                                 🎙️ {language === 'ta-IN' ? "உறுதி செய்ய 'ஆம்' அல்லது ரத்து செய்ய 'இல்லை' என்று சொல்லுங்கள்" : "Say 'Yes' to confirm or 'No' to cancel into mic"}
                             </span>
                         </p>
@@ -785,7 +785,7 @@ export const SellerDashboard = ({ language, user }) => {
                                     }
                                 }}
                                 disabled={isActionProcessing}
-                                className="py-3.5 px-6 rounded-xl font-black text-white bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                                className="py-3.5 px-6 rounded-xl font-black text-white bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 shadow-md active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
                             >
                                 <span>✅</span>
                                 <span>{t.confirmYes || "Yes (Confirm)"}</span>
@@ -795,7 +795,7 @@ export const SellerDashboard = ({ language, user }) => {
                                 type="button"
                                 onClick={cancelGuardrail}
                                 disabled={isActionProcessing}
-                                className="py-3.5 px-6 rounded-xl font-bold text-gray-300 bg-slate-800 hover:bg-slate-700 border border-slate-700 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                                className="py-3.5 px-6 rounded-xl font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
                             >
                                 <span>❌</span>
                                 <span>{t.cancelNo || "No (Cancel)"}</span>

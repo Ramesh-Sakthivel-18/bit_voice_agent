@@ -422,14 +422,14 @@ export const BuyerCommerceView = ({ language, user, onBack }) => {
     }
 
     return (
-        <div className="w-full max-w-5xl mx-auto flex flex-col items-center p-4 md:p-8 pb-40">
+        <div className="w-full max-w-5xl mx-auto flex flex-col items-center p-4 md:p-8 pb-40 text-slate-900">
             {/* Header Navigation */}
             <div className="w-full flex justify-between items-center mb-6 gap-4">
                 <div>
-                    <h1 className="text-3xl md:text-4xl font-black text-white tracking-tight">
+                    <h1 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">
                         {isTamil ? "பொருட்கள் பட்டியல் & வாங்குதல்" : "Product Catalog & Purchasing"}
                     </h1>
-                    <p className="text-gray-400 text-sm mt-1">
+                    <p className="text-slate-600 text-sm mt-1">
                         {isTamil 
                             ? "பழங்குடியின விவசாயிகளிடமிருந்து நேரடியாக வாங்கவும் - அளவை தேர்வு செய்து இப்போதே ஆர்டர் செய்யவும்" 
                             : "Direct e-commerce purchase from tribal producers - select quantity & buy now"}
@@ -440,7 +440,7 @@ export const BuyerCommerceView = ({ language, user, onBack }) => {
                     {/* Dedicated Order History button */}
                     <button
                         onClick={() => setShowHistory(true)}
-                        className="px-4 py-2.5 bg-gradient-to-r from-purple-900/80 to-indigo-900/80 hover:from-purple-800 hover:to-indigo-800 text-purple-200 border border-purple-500/50 font-bold rounded-xl text-xs md:text-sm transition-all shadow-md flex items-center gap-2 flex-shrink-0 cursor-pointer"
+                        className="px-4 py-2.5 bg-white hover:bg-slate-50 text-purple-700 border border-slate-200 font-bold rounded-xl text-xs md:text-sm transition-all shadow-sm flex items-center gap-2 flex-shrink-0 cursor-pointer"
                     >
                         <span>📜</span>
                         <span>{isTamil ? "ஆர்டர் வரலாறு" : "My Orders"}</span>
@@ -449,7 +449,7 @@ export const BuyerCommerceView = ({ language, user, onBack }) => {
                     {onBack && (
                         <button
                             onClick={onBack}
-                            className="px-4 py-2.5 bg-slate-800/90 hover:bg-slate-700 text-gray-200 font-bold rounded-xl text-xs md:text-sm transition-all border border-slate-700 shadow-md flex items-center gap-2 flex-shrink-0 cursor-pointer"
+                            className="px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-xl text-xs md:text-sm transition-all border border-slate-200 shadow-sm flex items-center gap-2 flex-shrink-0 cursor-pointer"
                         >
                             <span>←</span>
                             <span>{isTamil ? "முகப்பு" : "Dashboard"}</span>
@@ -459,10 +459,10 @@ export const BuyerCommerceView = ({ language, user, onBack }) => {
             </div>
 
             {/* ─── TYPING SEARCH BAR & FILTER SECTION ─── */}
-            <div className="w-full bg-gradient-to-b from-[#0F1E3A]/95 to-[#081226]/95 border border-cyan-500/40 rounded-3xl p-6 mb-8 shadow-2xl backdrop-blur-xl">
+            <div className="w-full bg-white border border-slate-200 rounded-3xl p-6 mb-8 shadow-sm">
                 {/* Search Input Bar with Icon, Input, and Action Buttons */}
                 <div className="relative flex items-center w-full mb-4">
-                    <div className="absolute left-4 text-cyan-400 text-xl pointer-events-none">
+                    <div className="absolute left-4 text-blue-600 text-xl pointer-events-none">
                         🔍
                     </div>
 
@@ -480,7 +480,7 @@ export const BuyerCommerceView = ({ language, user, onBack }) => {
                                 ? "பொருளின் பெயர் அல்லது ஊரை தட்டச்சு செய்து தேடவும் (எ.கா: தேன், மஞ்சள்)..." 
                                 : "Type produce name, village, or keyword (e.g., Honey, Turmeric)..."
                         }
-                        className="w-full pl-12 pr-28 py-4 bg-[#050B17] border border-cyan-500/50 rounded-2xl text-white placeholder-gray-400 text-base md:text-lg focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30 transition-all shadow-inner"
+                        className="w-full pl-12 pr-28 py-4 bg-white border-2 border-slate-300 rounded-2xl text-slate-900 placeholder-slate-400 text-base md:text-lg focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all shadow-sm"
                     />
 
                     {/* Right side inside input: Clear button and Search button */}
@@ -488,7 +488,7 @@ export const BuyerCommerceView = ({ language, user, onBack }) => {
                         {searchQuery && (
                             <button
                                 onClick={handleClearSearch}
-                                className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-gray-300 flex items-center justify-center text-sm font-bold transition-colors cursor-pointer"
+                                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-sm font-bold transition-colors cursor-pointer"
                                 title={isTamil ? "அழி" : "Clear"}
                             >
                                 ✕
@@ -497,7 +497,7 @@ export const BuyerCommerceView = ({ language, user, onBack }) => {
                         <button
                             onClick={() => performDeepSearch(searchQuery)}
                             disabled={isSearchingServer}
-                            className="px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-xl text-xs md:text-sm font-bold shadow-md transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
+                            className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs md:text-sm font-bold shadow-sm transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
                         >
                             {isSearchingServer 
                                 ? "..." 
@@ -507,9 +507,9 @@ export const BuyerCommerceView = ({ language, user, onBack }) => {
                 </div>
 
                 {/* Category Filter Pills & Mode Hints */}
-                <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-800/80">
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-100">
                     <div className="flex flex-wrap gap-2 items-center">
-                        <span className="text-xs text-gray-400 font-semibold mr-1">
+                        <span className="text-xs text-slate-600 font-semibold mr-1">
                             {isTamil ? "வடிகட்டி:" : "Filter:"}
                         </span>
 
@@ -517,8 +517,8 @@ export const BuyerCommerceView = ({ language, user, onBack }) => {
                             onClick={() => handleCategoryClick('all')}
                             className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
                                 activeCategory === 'all' && !searchQuery
-                                    ? 'bg-cyan-500 text-slate-950 border-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.4)]'
-                                    : 'bg-slate-800/90 text-gray-300 border-slate-700 hover:border-cyan-500/50'
+                                    ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
+                                    : 'bg-slate-100 text-slate-700 border-slate-200 hover:border-blue-400'
                             }`}
                         >
                             🏷️ {isTamil ? "அனைத்தும்" : "All"} ({allProducts.length})
@@ -528,8 +528,8 @@ export const BuyerCommerceView = ({ language, user, onBack }) => {
                             onClick={() => handleCategoryClick('honey')}
                             className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
                                 activeCategory === 'honey'
-                                    ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.4)]'
-                                    : 'bg-slate-800/90 text-amber-200 border-slate-700 hover:border-amber-500/50'
+                                    ? 'bg-amber-500 text-white border-amber-500 shadow-sm'
+                                    : 'bg-slate-100 text-amber-800 border-slate-200 hover:border-amber-400'
                             }`}
                         >
                             🍯 {isTamil ? "தேன்" : "Honey"}
@@ -539,15 +539,15 @@ export const BuyerCommerceView = ({ language, user, onBack }) => {
                             onClick={() => handleCategoryClick('turmeric')}
                             className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
                                 activeCategory === 'turmeric'
-                                    ? 'bg-yellow-500 text-slate-950 border-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.4)]'
-                                    : 'bg-slate-800/90 text-yellow-200 border-slate-700 hover:border-yellow-500/50'
+                                    ? 'bg-yellow-500 text-white border-yellow-500 shadow-sm'
+                                    : 'bg-slate-100 text-yellow-800 border-slate-200 hover:border-yellow-400'
                             }`}
                         >
                             🌿 {isTamil ? "மஞ்சள்" : "Turmeric"}
                         </button>
                     </div>
 
-                    <div className="flex items-center gap-2 text-xs text-cyan-300/90 bg-cyan-950/40 border border-cyan-800/50 px-3 py-1.5 rounded-xl">
+                    <div className="flex items-center gap-2 text-xs text-blue-900 bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-xl">
                         <span>🎙️ 🛒</span>
                         <span>
                             {isTamil ? "அளவைத் தேர்வு செய்து 'இப்போதே வாங்கு' பொத்தானை தட்டவும்" : "Select quantity & tap Buy Now"}
@@ -557,15 +557,15 @@ export const BuyerCommerceView = ({ language, user, onBack }) => {
 
                 {/* Status Bar */}
                 {statusText && (
-                    <div className="mt-4 pt-3 border-t border-slate-800/60 flex items-center justify-between text-xs text-cyan-200">
+                    <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-blue-900">
                         <div className="flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                            <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
                             <span>{statusText}</span>
                         </div>
                         {(searchQuery || activeCategory !== 'all') && (
                             <button
                                 onClick={handleClearSearch}
-                                className="text-cyan-400 hover:text-cyan-300 underline font-semibold ml-2 cursor-pointer"
+                                className="text-blue-700 hover:text-blue-800 underline font-semibold ml-2 cursor-pointer"
                             >
                                 {isTamil ? "தேடலை மீட்டமை" : "Reset Filter"}
                             </button>
@@ -578,7 +578,7 @@ export const BuyerCommerceView = ({ language, user, onBack }) => {
             <div className="w-full">
                 {/* Catalog Title & Count Bar */}
                 <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                    <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
                         <span>📦</span>
                         <span>
                             {isTamil 
@@ -590,7 +590,7 @@ export const BuyerCommerceView = ({ language, user, onBack }) => {
                     {(searchQuery || activeCategory !== 'all') && (
                         <button 
                             onClick={handleClearSearch}
-                            className="px-4 py-2 bg-slate-800 text-cyan-300 rounded-xl hover:bg-slate-700 font-bold text-xs border border-slate-700 transition-colors shadow-sm cursor-pointer"
+                            className="px-4 py-2 bg-white text-blue-700 rounded-xl hover:bg-slate-50 font-bold text-xs border border-slate-200 transition-colors shadow-sm cursor-pointer"
                         >
                             {isTamil ? "அனைத்தையும் காட்டு" : "Show All Products"}
                         </button>
@@ -600,8 +600,8 @@ export const BuyerCommerceView = ({ language, user, onBack }) => {
                 {/* Loading State */}
                 {isLoading && (
                     <div className="w-full py-20 flex flex-col items-center justify-center text-center">
-                        <div className="w-12 h-12 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-                        <p className="text-cyan-300 font-bold text-lg">
+                        <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+                        <p className="text-blue-700 font-bold text-lg">
                             {isTamil ? "பொருட்கள் ஏற்றப்படுகின்றன..." : "Loading products from database..."}
                         </p>
                     </div>
@@ -609,12 +609,12 @@ export const BuyerCommerceView = ({ language, user, onBack }) => {
 
                 {/* Empty State */}
                 {!isLoading && filteredProducts.length === 0 && (
-                    <div className="w-full bg-[#0B152B]/80 border border-slate-800 rounded-3xl p-12 text-center flex flex-col items-center justify-center shadow-xl">
+                    <div className="w-full bg-white border border-slate-200 rounded-3xl p-12 text-center flex flex-col items-center justify-center shadow-sm">
                         <div className="text-5xl mb-4">🔍</div>
-                        <h3 className="text-xl font-bold text-white mb-2">
+                        <h3 className="text-xl font-bold text-slate-900 mb-2">
                             {isTamil ? "பொருட்கள் எதுவும் கிடைக்கவில்லை" : "No Matching Products Found"}
                         </h3>
-                        <p className="text-gray-400 text-sm max-w-md mb-6">
+                        <p className="text-slate-600 text-sm max-w-md mb-6">
                             {searchQuery 
                                 ? (isTamil 
                                     ? `"${searchQuery}" என்ற தேடலுக்கு தயாரிப்புகள் இல்லை. வேறு வார்த்தையை முயற்சிக்கவும்.` 
@@ -625,7 +625,7 @@ export const BuyerCommerceView = ({ language, user, onBack }) => {
                         </p>
                         <button
                             onClick={handleClearSearch}
-                            className="px-6 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold rounded-xl text-sm shadow-lg transition-all cursor-pointer"
+                            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-xl text-sm shadow-md transition-all cursor-pointer"
                         >
                             {isTamil ? "அனைத்து பொருட்களையும் காட்டு" : "Show All Products"}
                         </button>
@@ -642,46 +642,46 @@ export const BuyerCommerceView = ({ language, user, onBack }) => {
                             return (
                                 <div 
                                     key={item.id} 
-                                    className="bg-[#0B152B]/95 rounded-3xl p-6 border border-slate-700/80 shadow-2xl flex flex-col h-full hover:border-cyan-500/60 transition-all duration-200 hover:-translate-y-1"
+                                    className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col h-full hover:border-blue-400 hover:shadow-md transition-all duration-200 hover:-translate-y-1"
                                 >
                                     {/* Card Header: Title & Unit Price */}
                                     <div className="flex justify-between items-start mb-3 gap-2">
-                                        <h3 className="text-2xl font-black text-amber-400 leading-snug">
+                                        <h3 className="text-2xl font-black text-slate-900 leading-snug">
                                             {translateField(item.title, activeLang)}
                                         </h3>
-                                        <span className="bg-emerald-950/80 text-emerald-400 px-3 py-1.5 rounded-full text-sm font-extrabold border border-emerald-700 flex-shrink-0 shadow-sm">
+                                        <span className="bg-emerald-50 text-emerald-800 px-3 py-1.5 rounded-full text-sm font-extrabold border border-emerald-300 flex-shrink-0 shadow-sm">
                                             ₹{item.price_per_unit} / {translateField(item.unit, activeLang)}
                                         </span>
                                     </div>
                                     
                                     {/* Description */}
-                                    <p className="text-gray-300 mb-5 flex-grow text-sm leading-relaxed">
+                                    <p className="text-slate-600 mb-5 flex-grow text-sm leading-relaxed">
                                         {translateField(item.description, activeLang)}
                                     </p>
                                     
                                     {/* Producer Card */}
-                                    <div className="bg-[#060D1E] p-4 rounded-2xl mb-5 border border-slate-800">
-                                        <div className="flex justify-between items-center text-xs text-gray-400 mb-1">
+                                    <div className="bg-slate-50 p-4 rounded-2xl mb-5 border border-slate-200">
+                                        <div className="flex justify-between items-center text-xs text-slate-500 mb-1">
                                             <span>{isTamil ? "விற்பனையாளர்" : "Seller"}</span>
-                                            <span className="text-cyan-400 font-bold">
+                                            <span className="text-blue-700 font-bold">
                                                 📦 {item.quantity} {translateField(item.unit, activeLang)} {isTamil ? "இருப்பு" : "in stock"}
                                             </span>
                                         </div>
-                                        <p className="text-white font-bold text-base">
+                                        <p className="text-slate-900 font-bold text-base">
                                             {translateField(item.seller_name, activeLang)}
                                         </p>
-                                        <p className="text-gray-400 text-xs mt-0.5">
+                                        <p className="text-slate-500 text-xs mt-0.5">
                                             📍 {translateField(item.seller_village, activeLang)}
                                         </p>
                                     </div>
 
                                     {/* ─── E-COMMERCE QUANTITY SELECTOR (VOICE OR TYPING) ─── */}
-                                    <div className="bg-[#08152B] p-4 rounded-2xl border border-cyan-500/30 mb-5 flex flex-col gap-2">
+                                    <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 mb-5 flex flex-col gap-2">
                                         <div className="flex justify-between items-center text-xs">
-                                            <span className="text-gray-300 font-bold uppercase tracking-wider">
+                                            <span className="text-slate-700 font-bold uppercase tracking-wider">
                                                 {isTamil ? "அளவைத் தேர்வு செய்:" : "Select Quantity:"}
                                             </span>
-                                            <span className="text-gray-400 text-xs">
+                                            <span className="text-slate-500 text-xs">
                                                 (Max: {item.quantity} {translateField(item.unit, activeLang)})
                                             </span>
                                         </div>
@@ -691,22 +691,22 @@ export const BuyerCommerceView = ({ language, user, onBack }) => {
                                             <button
                                                 type="button"
                                                 onClick={() => handleQuantityChange(item.id, curQty - 1, item.quantity)}
-                                                className="w-10 h-10 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 font-black text-xl flex items-center justify-center transition-all border border-slate-700 cursor-pointer active:scale-95"
+                                                className="w-10 h-10 rounded-xl bg-white hover:bg-slate-100 text-slate-900 font-black text-xl flex items-center justify-center transition-all border border-slate-200 cursor-pointer active:scale-95 shadow-sm"
                                             >
                                                 -
                                             </button>
 
                                             {/* Quantity Input Field (Type or Voice) */}
-                                            <div className="flex-1 flex items-center justify-center gap-1.5 bg-[#030814] border border-cyan-500/40 rounded-xl py-2 px-3">
+                                            <div className="flex-1 flex items-center justify-center gap-1.5 bg-white border border-slate-300 rounded-xl py-2 px-3 shadow-sm">
                                                 <input
                                                     type="number"
                                                     min="1"
                                                     max={item.quantity || 100}
                                                     value={curQty}
                                                     onChange={(e) => handleQuantityChange(item.id, e.target.value, item.quantity)}
-                                                    className="w-16 bg-transparent text-center font-black text-lg text-white focus:outline-none"
+                                                    className="w-16 bg-transparent text-center font-black text-lg text-slate-900 focus:outline-none"
                                                 />
-                                                <span className="text-gray-400 font-bold text-sm">
+                                                <span className="text-slate-500 font-bold text-sm">
                                                     {translateField(item.unit, activeLang)}
                                                 </span>
                                             </div>
@@ -715,18 +715,18 @@ export const BuyerCommerceView = ({ language, user, onBack }) => {
                                             <button
                                                 type="button"
                                                 onClick={() => handleQuantityChange(item.id, curQty + 1, item.quantity)}
-                                                className="w-10 h-10 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 font-black text-xl flex items-center justify-center transition-all border border-slate-700 cursor-pointer active:scale-95"
+                                                className="w-10 h-10 rounded-xl bg-white hover:bg-slate-100 text-slate-900 font-black text-xl flex items-center justify-center transition-all border border-slate-200 cursor-pointer active:scale-95 shadow-sm"
                                             >
                                                 +
                                             </button>
                                         </div>
 
                                         {/* Dynamic Total Price Calculation */}
-                                        <div className="flex justify-between items-center pt-2 border-t border-slate-800/80 mt-1">
-                                            <span className="text-xs text-gray-400 font-bold">
+                                        <div className="flex justify-between items-center pt-2 border-t border-slate-200 mt-1">
+                                            <span className="text-xs text-slate-600 font-bold">
                                                 {isTamil ? "மொத்த விலை:" : "Calculated Total:"}
                                             </span>
-                                            <span className="text-base font-black text-amber-400">
+                                            <span className="text-base font-black text-amber-700">
                                                 ₹{totalPrice.toLocaleString()}
                                             </span>
                                         </div>
@@ -736,7 +736,7 @@ export const BuyerCommerceView = ({ language, user, onBack }) => {
                                     <div className="flex gap-3 w-full mt-auto">
                                         <button 
                                             onClick={() => initiateBuyNow(item, curQty)}
-                                            className="flex-1 py-4 bg-gradient-to-r from-emerald-500 via-teal-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-white rounded-2xl font-black text-base text-center shadow-[0_0_25px_rgba(16,185,129,0.4)] transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+                                            className="flex-1 py-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white rounded-2xl font-black text-base text-center shadow-md transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2"
                                         >
                                             <span>🛒</span>
                                             <span>{isTamil ? "இப்போதே வாங்கு" : "Buy Now"} (₹{totalPrice.toLocaleString()})</span>
@@ -745,7 +745,7 @@ export const BuyerCommerceView = ({ language, user, onBack }) => {
                                         {item.seller_phone && (
                                             <a 
                                                 href={`tel:${item.seller_phone}`}
-                                                className="px-4 py-4 bg-slate-800 hover:bg-slate-700 text-white rounded-2xl font-bold text-sm text-center transition-colors flex items-center justify-center border border-slate-700"
+                                                className="px-4 py-4 bg-slate-100 hover:bg-slate-200 text-slate-900 rounded-2xl font-bold text-sm text-center transition-colors flex items-center justify-center border border-slate-200"
                                                 title={isTamil ? "விற்பனையாளரை அழைக்க" : "Call Producer"}
                                             >
                                                 📞
@@ -761,36 +761,36 @@ export const BuyerCommerceView = ({ language, user, onBack }) => {
 
             {/* ─── STEP 4: BUY NOW CONFIRMATION GUARDRAIL MODAL ─── */}
             {guardrailPurchase && (
-                <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-                    <div className="bg-[#0B152B] border-2 border-emerald-400 rounded-3xl p-6 md:p-8 max-w-lg w-full text-center shadow-[0_0_50px_rgba(16,185,129,0.6)] animate-in fade-in zoom-in-95 duration-200">
-                        <div className="w-16 h-16 rounded-full bg-emerald-400/20 border-2 border-emerald-400 text-emerald-400 text-3xl flex items-center justify-center mx-auto mb-4">
+                <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div className="bg-white border-2 border-emerald-500 rounded-3xl p-6 md:p-8 max-w-lg w-full text-center shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+                        <div className="w-16 h-16 rounded-full bg-emerald-50 border-2 border-emerald-500 text-emerald-700 text-3xl flex items-center justify-center mx-auto mb-4 shadow-sm">
                             🛒
                         </div>
 
-                        <h3 className="text-2xl font-black text-white mb-2">
+                        <h3 className="text-2xl font-black text-slate-900 mb-2">
                             {isTamil ? "கொள்முதல் உறுதிப்படுத்தல்" : "Purchase Confirmation"}
                         </h3>
 
-                        <div className="bg-[#070F1E] border border-slate-700 rounded-2xl p-4 my-4 text-left space-y-1.5">
-                            <p className="text-white font-bold text-base">
+                        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 my-4 text-left space-y-1.5">
+                            <p className="text-slate-900 font-bold text-base">
                                 📦 {translateField(guardrailPurchase.item?.title, activeLang)}
                             </p>
-                            <p className="text-gray-300 text-sm">
+                            <p className="text-slate-600 text-sm">
                                 👨‍🌾 {translateField(guardrailPurchase.item?.seller_name, activeLang)} ({translateField(guardrailPurchase.item?.seller_village, activeLang)})
                             </p>
-                            <p className="text-cyan-300 font-bold text-sm">
+                            <p className="text-blue-700 font-bold text-sm">
                                 {isTamil ? "அளவு" : "Quantity"}: {guardrailPurchase.qty} {translateField(guardrailPurchase.item?.unit, activeLang)} @ ₹{guardrailPurchase.item?.price_per_unit}/{translateField(guardrailPurchase.item?.unit, activeLang)}
                             </p>
-                            <div className="border-t border-slate-800 pt-2 flex justify-between items-center">
-                                <span className="text-gray-400 text-xs font-bold uppercase">{isTamil ? "மொத்த தொகை" : "Total Amount"}</span>
-                                <span className="text-amber-400 font-black text-2xl">₹{guardrailPurchase.totalAmount}</span>
+                            <div className="border-t border-slate-200 pt-2 flex justify-between items-center">
+                                <span className="text-slate-500 text-xs font-bold uppercase">{isTamil ? "மொத்த தொகை" : "Total Amount"}</span>
+                                <span className="text-amber-700 font-black text-2xl">₹{guardrailPurchase.totalAmount}</span>
                             </div>
                         </div>
 
-                        <p className="text-cyan-200 font-bold text-sm md:text-base mb-6 leading-relaxed">
+                        <p className="text-slate-800 font-bold text-sm md:text-base mb-6 leading-relaxed">
                             {guardrailPurchase.prompt}
                             <br />
-                            <span className="text-amber-300 text-xs mt-1 block">
+                            <span className="text-amber-700 text-xs mt-1 block">
                                 🎙️ {isTamil ? "உறுதி செய்ய 'ஆம்' அல்லது ரத்து செய்ய 'இல்லை' என்று சொல்லுங்கள்" : "Say 'Yes' to confirm or 'No' to cancel into mic"}
                             </span>
                         </p>
@@ -800,7 +800,7 @@ export const BuyerCommerceView = ({ language, user, onBack }) => {
                                 type="button"
                                 onClick={commitBuyNow}
                                 disabled={isActionProcessing}
-                                className="py-3.5 px-6 rounded-xl font-black text-white bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                                className="py-3.5 px-6 rounded-xl font-black text-white bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 shadow-md active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                             >
                                 <span>✅</span>
                                 <span>{isTamil ? "ஆம் (வாங்கு)" : "Yes (Buy Now)"}</span>
@@ -810,7 +810,7 @@ export const BuyerCommerceView = ({ language, user, onBack }) => {
                                 type="button"
                                 onClick={cancelGuardrail}
                                 disabled={isActionProcessing}
-                                className="py-3.5 px-6 rounded-xl font-bold text-gray-300 bg-slate-800 hover:bg-slate-700 border border-slate-700 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                                className="py-3.5 px-6 rounded-xl font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                             >
                                 <span>❌</span>
                                 <span>{isTamil ? "இல்லை (ரத்து)" : "No (Cancel)"}</span>

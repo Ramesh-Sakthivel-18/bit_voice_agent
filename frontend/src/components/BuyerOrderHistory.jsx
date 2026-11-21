@@ -118,28 +118,28 @@ export const BuyerOrderHistory = ({ language, user, onBack }) => {
         switch (status) {
             case 'order_received':
                 return (
-                    <span className="px-3 py-1 bg-emerald-950/80 border border-emerald-500 text-emerald-300 rounded-full text-xs font-black flex items-center gap-1.5 shadow-sm">
+                    <span className="px-3 py-1 bg-emerald-50 border border-emerald-300 text-emerald-800 rounded-full text-xs font-black flex items-center gap-1.5 shadow-sm">
                         <span>✅</span>
                         <span>{localized || (isTamil ? "ஆர்டர் பெறப்பட்டது" : "Order Received")}</span>
                     </span>
                 );
             case 'package_moving':
                 return (
-                    <span className="px-3 py-1 bg-purple-950/80 border border-purple-500 text-purple-300 rounded-full text-xs font-black flex items-center gap-1.5 animate-pulse shadow-sm">
+                    <span className="px-3 py-1 bg-purple-50 border border-purple-300 text-purple-800 rounded-full text-xs font-black flex items-center gap-1.5 animate-pulse shadow-sm">
                         <span>🚀</span>
                         <span>{localized || (isTamil ? "பார்சல் பயணத்தில் உள்ளது" : "Package Moving")}</span>
                     </span>
                 );
             case 'pickup_scheduled':
                 return (
-                    <span className="px-3 py-1 bg-blue-950/80 border border-blue-500 text-blue-300 rounded-full text-xs font-black flex items-center gap-1.5 shadow-sm">
+                    <span className="px-3 py-1 bg-blue-50 border border-blue-300 text-blue-800 rounded-full text-xs font-black flex items-center gap-1.5 shadow-sm">
                         <span>🚚</span>
                         <span>{localized || (isTamil ? "பிக்-அப் திட்டமிடப்பட்டது" : "Pickup Scheduled")}</span>
                     </span>
                 );
             case 'order_packed':
                 return (
-                    <span className="px-3 py-1 bg-amber-950/80 border border-amber-500 text-amber-300 rounded-full text-xs font-black flex items-center gap-1.5 shadow-sm">
+                    <span className="px-3 py-1 bg-amber-50 border border-amber-300 text-amber-800 rounded-full text-xs font-black flex items-center gap-1.5 shadow-sm">
                         <span>📦</span>
                         <span>{localized || (isTamil ? "ஆர்டர் பேக் செய்யப்பட்டது" : "Order Packed")}</span>
                     </span>
@@ -147,14 +147,14 @@ export const BuyerOrderHistory = ({ language, user, onBack }) => {
             case 'payment_completed':
             case 'order_confirmed':
                 return (
-                    <span className="px-3 py-1 bg-teal-950/80 border border-teal-500 text-teal-300 rounded-full text-xs font-black flex items-center gap-1.5 shadow-sm">
+                    <span className="px-3 py-1 bg-teal-50 border border-teal-300 text-teal-800 rounded-full text-xs font-black flex items-center gap-1.5 shadow-sm">
                         <span>💳</span>
                         <span>{localized || (isTamil ? "கட்டணம் செலுத்தப்பட்டது" : "Payment Done / Processing")}</span>
                     </span>
                 );
             default:
                 return (
-                    <span className="px-3 py-1 bg-slate-800 border border-slate-700 text-gray-300 rounded-full text-xs font-black flex items-center gap-1.5 shadow-sm">
+                    <span className="px-3 py-1 bg-slate-100 border border-slate-200 text-slate-700 rounded-full text-xs font-black flex items-center gap-1.5 shadow-sm">
                         <span>📝</span>
                         <span>{localized || (isTamil ? "ஆர்டர் செய்யப்பட்டது" : "Order Placed")}</span>
                     </span>
@@ -163,15 +163,15 @@ export const BuyerOrderHistory = ({ language, user, onBack }) => {
     };
 
     return (
-        <div className="w-full max-w-4xl mx-auto flex flex-col items-center p-4 md:p-6 pb-36 text-white">
+        <div className="w-full max-w-4xl mx-auto flex flex-col items-center p-4 md:p-6 pb-36 text-slate-900">
             {/* Header */}
             <div className="w-full flex justify-between items-center mb-8 gap-4">
                 <div>
-                    <h1 className="text-3xl md:text-4xl font-black text-white flex items-center gap-3">
+                    <h1 className="text-3xl md:text-4xl font-black text-slate-900 flex items-center gap-3">
                         <span>📜</span>
                         <span>{isTamil ? "என் ஆர்டர் வரலாறு" : "My Order History"}</span>
                     </h1>
-                    <p className="text-gray-400 text-sm mt-1">
+                    <p className="text-slate-600 text-sm mt-1">
                         {isTamil 
                             ? "உங்கள் நேரடி கொள்முதல்கள் மற்றும் டெலிவரி கண்காணிப்பு" 
                             : "Track real-time package dispatch and completed purchases"}
@@ -180,7 +180,7 @@ export const BuyerOrderHistory = ({ language, user, onBack }) => {
                 {onBack && (
                     <button
                         onClick={onBack}
-                        className="px-5 py-2.5 bg-slate-800/90 hover:bg-slate-700 text-gray-200 font-bold rounded-xl text-sm transition-all border border-slate-700 shadow-md flex items-center gap-2 flex-shrink-0"
+                        className="px-5 py-2.5 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-xl text-sm transition-all border border-slate-200 shadow-sm flex items-center gap-2 flex-shrink-0 cursor-pointer"
                     >
                         <span>←</span>
                         <span>{isTamil ? "முகப்பு" : "Dashboard"}</span>
@@ -189,20 +189,20 @@ export const BuyerOrderHistory = ({ language, user, onBack }) => {
             </div>
 
             {/* Total Purchases Summary Card */}
-            <div className="w-full bg-gradient-to-r from-[#0C1E3C] to-[#08152B] border border-cyan-500/30 rounded-3xl p-6 mb-8 shadow-xl flex items-center justify-between">
+            <div className="w-full bg-white border border-slate-200 rounded-3xl p-6 mb-8 shadow-sm flex items-center justify-between">
                 <div>
-                    <p className="text-gray-400 text-xs font-bold uppercase tracking-wider">
+                    <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">
                         {isTamil ? "மொத்த கொள்முதல் செலவு" : "Total Purchases Log"}
                     </p>
-                    <p className="text-3xl md:text-4xl font-black text-amber-400 mt-1">
+                    <p className="text-3xl md:text-4xl font-black text-amber-700 mt-1">
                         ₹{totalSpent.toLocaleString()}
                     </p>
                 </div>
                 <div className="text-right">
-                    <p className="text-gray-400 text-xs font-bold uppercase tracking-wider">
+                    <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">
                         {isTamil ? "மொத்த ஆர்டர்கள்" : "Total Orders"}
                     </p>
-                    <p className="text-3xl font-black text-white mt-1">
+                    <p className="text-3xl font-black text-slate-900 mt-1">
                         {orders.length}
                     </p>
                 </div>
@@ -211,8 +211,8 @@ export const BuyerOrderHistory = ({ language, user, onBack }) => {
             {/* Loading */}
             {isLoading && (
                 <div className="w-full py-16 flex flex-col items-center justify-center">
-                    <div className="w-10 h-10 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mb-3"></div>
-                    <p className="text-cyan-300 font-bold text-sm">
+                    <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-3"></div>
+                    <p className="text-blue-700 font-bold text-sm">
                         {isTamil ? "ஆர்டர் வரலாறு ஏற்றப்படுகிறது..." : "Loading order history..."}
                     </p>
                 </div>
@@ -220,12 +220,12 @@ export const BuyerOrderHistory = ({ language, user, onBack }) => {
 
             {/* Empty State */}
             {!isLoading && orders.length === 0 && (
-                <div className="w-full bg-[#0B152B]/80 border border-slate-800 rounded-3xl p-12 text-center flex flex-col items-center justify-center shadow-xl">
+                <div className="w-full bg-white border border-slate-200 rounded-3xl p-12 text-center flex flex-col items-center justify-center shadow-sm">
                     <span className="text-5xl mb-4">🛒</span>
-                    <h3 className="text-xl font-bold text-white mb-2">
+                    <h3 className="text-xl font-bold text-slate-900 mb-2">
                         {isTamil ? "ஆர்டர்கள் எதுவும் இல்லை" : "No Past Orders"}
                     </h3>
-                    <p className="text-gray-400 text-sm max-w-sm mb-6">
+                    <p className="text-slate-600 text-sm max-w-sm mb-6">
                         {isTamil 
                             ? "நீங்கள் இன்னும் எந்தப் பொருளையும் ஆர்டர் செய்யவில்லை. புதிய இயற்கை தயாரிப்புகளைத் தேடுங்கள்." 
                             : "You have not placed any orders yet. Discover fresh tribal produce now."}
@@ -233,7 +233,7 @@ export const BuyerOrderHistory = ({ language, user, onBack }) => {
                     {onBack && (
                         <button
                             onClick={onBack}
-                            className="px-6 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold rounded-xl text-sm shadow-lg transition-all"
+                            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-xl text-sm shadow-md transition-all cursor-pointer"
                         >
                             {isTamil ? "பொருட்களை வாங்கச் செல்" : "Browse Products"}
                         </button>
@@ -249,15 +249,15 @@ export const BuyerOrderHistory = ({ language, user, onBack }) => {
                         return (
                             <div 
                                 key={order.order_id}
-                                className="bg-[#0B152B]/90 border border-slate-800 rounded-3xl p-6 shadow-2xl flex flex-col gap-4 hover:border-cyan-500/50 transition-all"
+                                className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm flex flex-col gap-4 hover:border-blue-400 hover:shadow-md transition-all"
                             >
                                 {/* Top Row: Order ID, Date, Status */}
-                                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800/80 pb-4">
+                                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
                                     <div className="flex items-center gap-3">
-                                        <span className="font-mono text-cyan-400 font-bold text-sm">
+                                        <span className="font-mono text-blue-700 font-bold text-sm">
                                             #{order.order_id}
                                         </span>
-                                        <span className="text-gray-400 text-xs">
+                                        <span className="text-slate-500 text-xs">
                                             {order.created_at ? new Date(order.created_at).toLocaleDateString() : ''}
                                         </span>
                                     </div>
@@ -269,27 +269,27 @@ export const BuyerOrderHistory = ({ language, user, onBack }) => {
                                 {/* Main Content: Produce, Quantity, Total Amount */}
                                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                                     <div>
-                                        <h3 className="text-2xl font-black text-amber-400">
+                                        <h3 className="text-2xl font-black text-slate-900">
                                             {translateField(order.item_title, activeLang)}
                                         </h3>
-                                        <p className="text-gray-300 text-sm font-semibold mt-1">
-                                            📦 {isTamil ? "அளவு" : "Quantity"}: <span className="text-white font-bold">{order.quantity} {translateField(order.unit, activeLang)}</span>
+                                        <p className="text-slate-600 text-sm font-semibold mt-1">
+                                            📦 {isTamil ? "அளவு" : "Quantity"}: <span className="text-slate-900 font-bold">{order.quantity} {translateField(order.unit, activeLang)}</span>
                                             {order.unit_price > 0 && (
-                                                <span className="text-gray-400 text-xs ml-2">
+                                                <span className="text-slate-500 text-xs ml-2">
                                                     (₹{order.unit_price} / {translateField(order.unit, activeLang)})
                                                 </span>
                                             )}
                                         </p>
-                                        <p className="text-gray-400 text-xs mt-1">
+                                        <p className="text-slate-500 text-xs mt-1">
                                             👨‍🌾 {translateField(order.seller_name, activeLang)} • 📍 {translateField(order.seller_village, activeLang)}
                                         </p>
                                     </div>
 
                                     <div className="text-left md:text-right flex-shrink-0">
-                                        <p className="text-gray-400 text-xs font-bold uppercase tracking-wider">
+                                        <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">
                                             {isTamil ? "செலுத்தப்பட்ட தொகை" : "Paid Amount"}
                                         </p>
-                                        <p className="text-2xl font-black text-emerald-400">
+                                        <p className="text-2xl font-black text-emerald-700">
                                             ₹{order.total_amount}
                                         </p>
                                     </div>
@@ -297,20 +297,20 @@ export const BuyerOrderHistory = ({ language, user, onBack }) => {
 
                                 {/* Logistics / Tracking Bar */}
                                 {(order.delivery_partner || order.tracking_id || order.delivery_time) && (
-                                    <div className="bg-[#050C1A] border border-slate-800 rounded-2xl p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 text-xs">
+                                    <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 text-xs">
                                         <div>
-                                            <p className="text-cyan-400 font-bold flex items-center gap-1.5">
+                                            <p className="text-blue-700 font-bold flex items-center gap-1.5">
                                                 <span>🚚</span>
                                                 <span>{translateField(order.delivery_partner, activeLang) || (isTamil ? "TRIFED கிராமப்புற விநியோகம்" : "TRIFED Rural Logistics Dispatch")}</span>
                                             </p>
                                             {order.tracking_id && (
-                                                <p className="text-gray-400 font-mono mt-0.5">
+                                                <p className="text-slate-500 font-mono mt-0.5">
                                                     ID: {order.tracking_id}
                                                 </p>
                                             )}
                                         </div>
                                         {order.delivery_time && (
-                                            <div className="text-emerald-400 font-bold">
+                                            <div className="text-emerald-700 font-bold">
                                                 ✓ {translateField(order.delivery_time, activeLang)}
                                             </div>
                                         )}
@@ -323,7 +323,7 @@ export const BuyerOrderHistory = ({ language, user, onBack }) => {
                                         <button
                                             onClick={() => handleConfirmReceived(order.order_id)}
                                             disabled={actionOrderId === order.order_id}
-                                            className="w-full md:w-auto px-6 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-black rounded-xl text-sm shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                                            className="w-full md:w-auto px-6 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black rounded-xl text-sm shadow-md transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                                         >
                                             <span>✅</span>
                                             <span>

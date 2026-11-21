@@ -64,16 +64,16 @@ export const SellerListings = ({ language, user, onBack, onNewSale }) => {
     }, [user.user_id]);
 
     return (
-        <div className="w-full max-w-5xl mx-auto flex flex-col items-center p-8 pb-32">
+        <div className="w-full max-w-5xl mx-auto flex flex-col items-center p-8 pb-32 text-slate-900">
             <div className="w-full flex justify-between items-center mb-8 flex-wrap gap-4">
-                <h1 className="text-4xl font-black text-white">
+                <h1 className="text-4xl font-black text-slate-900">
                     {language === 'ta-IN' ? "என் விற்பனைப் பொருட்கள்" : "My Active Listings"}
                 </h1>
                 <div className="flex items-center gap-3">
                     {onNewSale && (
                         <button 
                             onClick={onNewSale}
-                            className="px-5 py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold rounded-xl text-sm transition-all shadow-lg flex items-center gap-2"
+                            className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-xl text-sm transition-all shadow-sm flex items-center gap-2 cursor-pointer"
                         >
                             <span>➕</span>
                             <span>{language === 'ta-IN' ? "புதிய விற்பனை" : "New Sale"}</span>
@@ -82,7 +82,7 @@ export const SellerListings = ({ language, user, onBack, onNewSale }) => {
                     {onBack && (
                         <button 
                             onClick={onBack}
-                            className="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-gray-300 font-bold rounded-xl text-sm transition-colors"
+                            className="px-5 py-2.5 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-xl text-sm transition-colors border border-slate-200 shadow-sm cursor-pointer"
                         >
                             ← {language === 'ta-IN' ? "முகப்பு" : "Dashboard"}
                         </button>
@@ -91,57 +91,57 @@ export const SellerListings = ({ language, user, onBack, onNewSale }) => {
             </div>
 
             {loading ? (
-                <div className="text-2xl text-gray-400 mt-20 animate-pulse">
+                <div className="text-2xl text-slate-500 mt-20 animate-pulse">
                     {language === 'ta-IN' ? "ஏற்றுகிறது..." : "Loading listings..."}
                 </div>
             ) : listings.length === 0 ? (
-                <div className="text-2xl text-gray-400 mt-20">
+                <div className="text-2xl text-slate-500 mt-20">
                     {language === 'ta-IN' ? "தற்போது எந்த பொருட்களும் இல்லை." : "You have no active listings."}
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
                     {listings.map((item) => (
-                        <div key={item.id} className="bg-gray-800/80 rounded-2xl p-6 border border-gray-700 shadow-xl flex flex-col">
+                        <div key={item.id} className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col hover:shadow-md transition-all">
                             <div className="flex justify-between items-start mb-4">
-                                <h3 className="text-2xl font-bold text-brightYellow">{translateField(item.title, language)}</h3>
-                                <span className={`px-3 py-1 rounded-full text-sm font-bold border ${item.status === 'ACTIVE' ? 'bg-green-900/50 text-green-400 border-green-700' : 'bg-gray-900/50 text-gray-400 border-gray-700'}`}>
+                                <h3 className="text-2xl font-bold text-slate-900">{translateField(item.title, language)}</h3>
+                                <span className={`px-3 py-1 rounded-full text-sm font-bold border ${item.status === 'ACTIVE' ? 'bg-emerald-50 text-emerald-800 border-emerald-300' : 'bg-slate-100 text-slate-600 border-slate-200'}`}>
                                     {translateField(item.status, language)}
                                 </span>
                             </div>
                             
-                            <p className="text-gray-300 text-sm mb-6 flex-grow italic">"{translateField(item.description, language)}"</p>
+                            <p className="text-slate-600 text-sm mb-6 flex-grow italic">"{translateField(item.description, language)}"</p>
                             
                             <div className="grid grid-cols-2 gap-4 mt-auto">
-                                <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
-                                    <p className="text-gray-400 text-xs uppercase tracking-wider">{language === 'ta-IN' ? "அளவு" : "Quantity"}</p>
-                                    <p className="text-white font-bold text-lg">{item.quantity} {translateField(item.unit, language)}</p>
+                                <div className="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                                    <p className="text-slate-500 text-xs uppercase tracking-wider">{language === 'ta-IN' ? "அளவு" : "Quantity"}</p>
+                                    <p className="text-slate-900 font-bold text-lg">{item.quantity} {translateField(item.unit, language)}</p>
                                 </div>
-                                <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
-                                    <p className="text-gray-400 text-xs uppercase tracking-wider">{language === 'ta-IN' ? "விலை" : "Price"}</p>
-                                    <p className="text-white font-bold text-lg">₹{item.price_per_unit}/{translateField(item.unit, language)}</p>
+                                <div className="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                                    <p className="text-slate-500 text-xs uppercase tracking-wider">{language === 'ta-IN' ? "விலை" : "Price"}</p>
+                                    <p className="text-slate-900 font-bold text-lg">₹{item.price_per_unit}/{translateField(item.unit, language)}</p>
                                 </div>
                             </div>
                             
-                            <div className="mt-4 p-3 bg-yellow-900/20 border border-yellow-700/50 rounded-lg text-center mb-4">
-                                <p className="text-yellow-500 text-xs uppercase tracking-wider mb-1">{language === 'ta-IN' ? "மொத்த மதிப்பு" : "Total Value"}</p>
-                                <p className="text-yellow-400 font-bold text-2xl">₹{item.total_price}</p>
+                            <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg text-center mb-4">
+                                <p className="text-amber-800 text-xs uppercase tracking-wider mb-1">{language === 'ta-IN' ? "மொத்த மதிப்பு" : "Total Value"}</p>
+                                <p className="text-amber-700 font-bold text-2xl">₹{item.total_price}</p>
                             </div>
                             
                             {item.interested_buyers && item.interested_buyers.length > 0 && (
-                                <div className="mt-2 bg-purple-900/30 border border-purple-500/50 rounded-lg p-4">
-                                    <h4 className="text-purple-300 font-bold text-sm mb-3 border-b border-purple-500/30 pb-2">
+                                <div className="mt-2 bg-purple-50 border border-purple-200 rounded-lg p-4">
+                                    <h4 className="text-purple-900 font-bold text-sm mb-3 border-b border-purple-200 pb-2">
                                         {language === 'ta-IN' ? "ஆர்வமுள்ள வாங்குபவர்கள்" : "Interested Buyers"} ({item.interested_buyers.length})
                                     </h4>
                                     <div className="flex flex-col gap-3">
                                         {item.interested_buyers.map((buyer, idx) => (
-                                            <div key={idx} className="bg-gray-800 p-3 rounded flex justify-between items-center">
+                                            <div key={idx} className="bg-white border border-slate-200 p-3 rounded flex justify-between items-center shadow-sm">
                                                 <div>
-                                                    <p className="text-white font-bold">{translateField(buyer.name, language)}</p>
-                                                    <p className="text-gray-400 text-xs">📍 {translateField(buyer.village, language)}</p>
+                                                    <p className="text-slate-900 font-bold">{translateField(buyer.name, language)}</p>
+                                                    <p className="text-slate-500 text-xs">📍 {translateField(buyer.village, language)}</p>
                                                 </div>
                                                 <a 
                                                     href={`tel:${buyer.phone}`}
-                                                    className="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold rounded flex items-center gap-2 transition-colors"
+                                                    className="px-3 py-1 bg-purple-600 hover:bg-purple-700 text-white text-sm font-bold rounded flex items-center gap-2 transition-colors cursor-pointer"
                                                 >
                                                     📞 {language === 'ta-IN' ? "அழைக்க" : "Call"}
                                                 </a>

@@ -86,18 +86,18 @@ export const RoleSelect = ({ language, onSelect }) => {
 
     return (
         <div className="w-full max-w-3xl text-center flex flex-col items-center p-6 pb-36">
-            <h1 className="text-3xl md:text-5xl font-black text-white mb-3">
+            <h1 className="text-3xl md:text-5xl font-black text-slate-900 mb-3">
                 {language === 'ta-IN' ? "உங்கள் பாத்திரத்தைத் தேர்ந்தெடுக்கவும்" : "Select Your Role"}
             </h1>
-            <p className="text-gray-400 text-sm md:text-base max-w-lg mb-8 leading-relaxed">
+            <p className="text-slate-600 text-sm md:text-base max-w-lg mb-8 leading-relaxed">
                 {language === 'ta-IN'
                     ? "நீங்கள் விளைபொருட்களை விற்க விரும்புகிறீர்களா, அல்லது வாங்க விரும்புகிறீர்களா?"
                     : "Are you here to sell agricultural produce, or purchase directly from producers?"}
             </p>
 
             {/* Status / Feedback Pill (No local mic buttons, no middle mic orbs) */}
-            <div className="w-full max-w-lg bg-[#0B152B]/90 border border-slate-700/80 rounded-2xl px-6 py-4 mb-10 shadow-xl text-center min-h-[56px] flex items-center justify-center">
-                <span className={`text-base font-bold ${selectedRole ? 'text-emerald-400' : 'text-cyan-300'}`}>
+            <div className="w-full max-w-lg bg-white border border-slate-200 rounded-2xl px-6 py-4 mb-10 shadow-sm text-center min-h-[56px] flex items-center justify-center">
+                <span className={`text-base font-bold ${selectedRole ? 'text-emerald-700' : 'text-blue-700'}`}>
                     {statusText || (language === 'ta-IN' ? "கீழே உள்ள மைக்கை இரட்டை தட்டி 'விற்பனை' அல்லது 'வாங்க' என்று சொல்லுங்கள்" : "Double-tap bottom mic & say 'Sell' or 'Buy'")}
                 </span>
             </div>
@@ -108,18 +108,18 @@ export const RoleSelect = ({ language, onSelect }) => {
                 <div 
                     onClick={() => confirmRole('buyer')}
                     className={`
-                    flex flex-col items-center justify-center p-8 rounded-3xl border-2 transition-all duration-300 cursor-pointer hover:scale-[1.02]
+                    flex flex-col items-center justify-center p-8 rounded-3xl border-2 transition-all duration-300 cursor-pointer hover:scale-[1.02] shadow-sm
                     ${selectedRole === 'buyer' 
-                        ? 'bg-amber-500/20 border-amber-400 shadow-[0_0_35px_rgba(245,158,11,0.5)]' 
-                        : 'bg-[#0B152B]/80 border-slate-700 hover:border-amber-400/60'}
+                        ? 'bg-amber-50 border-amber-500 shadow-md' 
+                        : 'bg-white border-slate-200 hover:border-amber-400 hover:shadow-md'}
                     ${selectedRole && selectedRole !== 'buyer' ? 'opacity-30 pointer-events-none' : ''}
                 `}>
-                    <div className="text-7xl mb-4 drop-shadow-md">🛒</div>
-                    <div className="text-2xl font-black text-amber-400">
+                    <div className="text-7xl mb-4 drop-shadow-sm">🛒</div>
+                    <div className="text-2xl font-black text-amber-700">
                         {t.buyerUI || "வாங்குபவர்"}
                     </div>
-                    <div className="text-gray-400 mt-2 text-sm">(Buyer / Wholesale)</div>
-                    <p className="text-gray-400 text-xs mt-3 text-center">
+                    <div className="text-slate-600 mt-2 text-sm">(Buyer / Wholesale)</div>
+                    <p className="text-slate-600 text-xs mt-3 text-center">
                         {language === 'ta-IN' ? "உற்பத்தியாளர்களிடமிருந்து நேரடியாக வாங்க" : "Purchase directly from tribal farmers"}
                     </p>
                 </div>
@@ -128,18 +128,18 @@ export const RoleSelect = ({ language, onSelect }) => {
                 <div 
                     onClick={() => confirmRole('seller')}
                     className={`
-                    flex flex-col items-center justify-center p-8 rounded-3xl border-2 transition-all duration-300 cursor-pointer hover:scale-[1.02]
+                    flex flex-col items-center justify-center p-8 rounded-3xl border-2 transition-all duration-300 cursor-pointer hover:scale-[1.02] shadow-sm
                     ${selectedRole === 'seller' 
-                        ? 'bg-emerald-500/20 border-emerald-400 shadow-[0_0_35px_rgba(16,185,129,0.5)]' 
-                        : 'bg-[#0B152B]/80 border-slate-700 hover:border-emerald-400/60'}
+                        ? 'bg-emerald-50 border-emerald-500 shadow-md' 
+                        : 'bg-white border-slate-200 hover:border-emerald-400 hover:shadow-md'}
                     ${selectedRole && selectedRole !== 'seller' ? 'opacity-30 pointer-events-none' : ''}
                 `}>
-                    <div className="text-7xl mb-4 drop-shadow-md">🌾</div>
-                    <div className="text-2xl font-black text-emerald-400">
+                    <div className="text-7xl mb-4 drop-shadow-sm">🌾</div>
+                    <div className="text-2xl font-black text-emerald-700">
                         {t.sellerUI || "விற்பனையாளர்"}
                     </div>
-                    <div className="text-gray-400 mt-2 text-sm">(Seller / Producer)</div>
-                    <p className="text-gray-400 text-xs mt-3 text-center">
+                    <div className="text-slate-600 mt-2 text-sm">(Seller / Producer)</div>
+                    <p className="text-slate-600 text-xs mt-3 text-center">
                         {language === 'ta-IN' ? "உங்கள் இயற்கை விளைபொருட்களை விற்க" : "Sell honey, turmeric & forest produce"}
                     </p>
                 </div>

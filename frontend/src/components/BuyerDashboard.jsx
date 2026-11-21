@@ -87,12 +87,12 @@ export const BuyerDashboard = ({ language, user }) => {
     }
 
     return (
-        <div className="w-full max-w-4xl mx-auto flex flex-col items-center p-6 text-white pb-36 relative">
+        <div className="w-full max-w-4xl mx-auto flex flex-col items-center p-6 text-slate-900 pb-36 relative">
             {/* Header Actions */}
             <div className="absolute top-6 right-6 flex items-center gap-3">
                 <button
                     onClick={() => setViewMode('history')}
-                    className="px-4 py-2 bg-slate-800/90 hover:bg-slate-700 text-cyan-300 font-bold rounded-xl text-xs shadow-lg transition-colors border border-cyan-500/40 flex items-center gap-1.5 cursor-pointer"
+                    className="px-4 py-2 bg-white hover:bg-slate-100 text-blue-700 font-bold rounded-xl text-xs shadow-sm transition-colors border border-slate-200 flex items-center gap-1.5 cursor-pointer"
                 >
                     <span>📜</span>
                     <span>{language === 'ta-IN' ? "ஆர்டர் வரலாறு" : "My Orders"}</span>
@@ -102,41 +102,41 @@ export const BuyerDashboard = ({ language, user }) => {
                         sessionStorage.clear();
                         window.location.href = '/';
                     }}
-                    className="px-4 py-2 bg-red-600/80 hover:bg-red-500 text-white font-bold rounded-xl text-xs shadow-lg transition-colors border border-red-500/50 cursor-pointer"
+                    className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs shadow-sm transition-colors cursor-pointer"
                 >
                     {language === 'ta-IN' ? "வெளியேறு" : "Logout"}
                 </button>
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-black text-white mb-2 mt-4 text-center">
-                {language === 'ta-IN' ? "வணக்கம்" : "Welcome"}, <span className="text-amber-400">{translateField(user.name, language)}!</span>
+            <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-2 mt-4 text-center">
+                {language === 'ta-IN' ? "வணக்கம்" : "Welcome"}, <span className="text-amber-600">{translateField(user.name, language)}!</span>
             </h1>
-            <p className="text-gray-400 text-sm mb-8 text-center">
+            <p className="text-slate-600 text-sm mb-8 text-center">
                 📍 {translateField(user.village || 'Tamil Nadu', language)} • 🛒 {language === 'ta-IN' ? "வாங்குபவர் டாஷ்போர்டு" : "Buyer Dashboard"}
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 w-full mb-10">
-                <div className="bg-[#0B152B]/80 p-5 rounded-2xl border-l-4 border-purple-500 shadow-xl flex items-center gap-4">
+                <div className="bg-white p-5 rounded-2xl border-l-4 border-purple-500 border border-slate-200 shadow-sm flex items-center gap-4">
                     <div className="text-3xl">🛒</div>
                     <div>
-                        <p className="text-gray-400 text-xs uppercase tracking-wider">Role</p>
-                        <p className="text-white text-lg font-bold capitalize">{user.role}</p>
+                        <p className="text-slate-500 text-xs uppercase tracking-wider font-semibold">Role</p>
+                        <p className="text-slate-900 text-lg font-bold capitalize">{user.role}</p>
                     </div>
                 </div>
                 
-                <div className="bg-[#0B152B]/80 p-5 rounded-2xl border-l-4 border-cyan-500 shadow-xl flex items-center gap-4">
+                <div className="bg-white p-5 rounded-2xl border-l-4 border-blue-500 border border-slate-200 shadow-sm flex items-center gap-4">
                     <div className="text-3xl">📍</div>
                     <div>
-                        <p className="text-gray-400 text-xs uppercase tracking-wider">Location</p>
-                        <p className="text-white text-lg font-bold capitalize">{translateField(user.village || 'N/A', language)}</p>
+                        <p className="text-slate-500 text-xs uppercase tracking-wider font-semibold">Location</p>
+                        <p className="text-slate-900 text-lg font-bold capitalize">{translateField(user.village || 'N/A', language)}</p>
                     </div>
                 </div>
                 
-                <div className="bg-[#0B152B]/80 p-5 rounded-2xl border-l-4 border-emerald-500 shadow-xl flex items-center gap-4">
+                <div className="bg-white p-5 rounded-2xl border-l-4 border-emerald-500 border border-slate-200 shadow-sm flex items-center gap-4">
                     <div className="text-3xl">📞</div>
                     <div>
-                        <p className="text-gray-400 text-xs uppercase tracking-wider">Phone</p>
-                        <p className="text-white text-lg font-bold">{user.phone || 'N/A'}</p>
+                        <p className="text-slate-500 text-xs uppercase tracking-wider font-semibold">Phone</p>
+                        <p className="text-slate-900 text-lg font-bold">{user.phone || 'N/A'}</p>
                     </div>
                 </div>
             </div>
@@ -146,15 +146,15 @@ export const BuyerDashboard = ({ language, user }) => {
                 {/* Search & Buy Products Card */}
                 <div 
                     onClick={() => setViewMode('commerce')}
-                    className="flex flex-col items-center justify-center p-8 bg-gradient-to-b from-[#0C1A3A]/90 to-[#071126]/90 rounded-3xl border border-cyan-500/40 shadow-[0_0_40px_rgba(6,182,212,0.2)] cursor-pointer hover:border-cyan-400 hover:scale-[1.02] transition-all group text-center"
+                    className="flex flex-col items-center justify-center p-8 bg-white rounded-3xl border-2 border-slate-200 shadow-sm hover:shadow-md cursor-pointer hover:border-blue-500 hover:scale-[1.02] transition-all group text-center"
                 >
-                    <div className="w-20 h-20 mb-4 rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 shadow-[0_0_30px_rgba(6,182,212,0.6)] flex items-center justify-center">
+                    <div className="w-20 h-20 mb-4 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 shadow-md flex items-center justify-center">
                         <span className="text-4xl">🔍</span>
                     </div>
-                    <h2 className="text-2xl font-black text-white mb-2">
+                    <h2 className="text-2xl font-black text-slate-900 mb-2">
                         {language === 'ta-IN' ? "பொருட்களை தேடுங்கள்" : "Search & Buy"}
                     </h2>
-                    <p className="text-gray-400 text-xs leading-relaxed">
+                    <p className="text-slate-600 text-xs leading-relaxed">
                         {language === 'ta-IN' 
                             ? "இயற்கை தேன், மஞ்சள், மூலிகைகள் தேடவும், அளவை தேர்வு செய்து வாங்கவும்" 
                             : "Browse forest honey, turmeric & spices direct from tribal farmers"}
@@ -164,15 +164,15 @@ export const BuyerDashboard = ({ language, user }) => {
                 {/* My Orders & Tracking Card */}
                 <div 
                     onClick={() => setViewMode('history')}
-                    className="flex flex-col items-center justify-center p-8 bg-gradient-to-b from-[#0C241B]/90 to-[#071711]/90 rounded-3xl border border-emerald-500/40 shadow-[0_0_40px_rgba(16,185,129,0.2)] cursor-pointer hover:border-emerald-400 hover:scale-[1.02] transition-all group text-center"
+                    className="flex flex-col items-center justify-center p-8 bg-white rounded-3xl border-2 border-slate-200 shadow-sm hover:shadow-md cursor-pointer hover:border-emerald-500 hover:scale-[1.02] transition-all group text-center"
                 >
-                    <div className="w-20 h-20 mb-4 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-600 shadow-[0_0_30px_rgba(16,185,129,0.6)] flex items-center justify-center">
+                    <div className="w-20 h-20 mb-4 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-600 shadow-md flex items-center justify-center">
                         <span className="text-4xl">📜</span>
                     </div>
-                    <h2 className="text-2xl font-black text-white mb-2">
+                    <h2 className="text-2xl font-black text-slate-900 mb-2">
                         {language === 'ta-IN' ? "என் ஆர்டர்கள் & நிலை" : "My Orders & Tracking"}
                     </h2>
-                    <p className="text-gray-400 text-xs leading-relaxed">
+                    <p className="text-slate-600 text-xs leading-relaxed">
                         {language === 'ta-IN' 
                             ? "நேரடி பார்சல் கண்காணிப்பு, பயண நிலை மற்றும் பொருள் வரவு உறுதிப்படுத்தல்" 
                             : "Track real-time package movement and confirm delivery receipt"}

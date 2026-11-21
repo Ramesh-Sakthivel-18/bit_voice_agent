@@ -88,7 +88,7 @@ function App() {
 
     return (
         <SmartVoiceProvider language={language}>
-            <div className={`min-h-screen w-full flex flex-col items-center ${location.pathname !== '/' ? 'justify-start bg-[#0A192F] text-white p-4 pt-6 md:pt-10 pb-56' : 'justify-center'}`}>
+            <div className={`min-h-screen w-full flex flex-col items-center bg-slate-50 text-slate-900 ${location.pathname !== '/' ? 'justify-start p-4 pt-6 md:pt-10 pb-56' : 'justify-center'}`}>
                 
                 <Routes>
                     <Route path="/" element={<LanguageSelect onSelect={handleLanguageSelect} />} />

@@ -161,35 +161,35 @@ export const LanguageSelect = ({ onSelect }) => {
     };
 
     return (
-        <div className="w-full flex flex-col items-center justify-start min-h-screen bg-[#0A192F] text-white p-4 pt-6">
+        <div className="w-full flex flex-col items-center justify-start min-h-screen bg-slate-50 text-slate-900 p-4 pt-6">
             
             {/* ── Status Pill Button ── */}
             <div
                 onClick={() => !isListening && !selectedRef.current && startContinuousListening()}
                 className={`
-                    flex items-center gap-4 px-8 py-4 rounded-full mb-4 transition-all duration-300 select-none
+                    flex items-center gap-4 px-8 py-4 rounded-full mb-4 transition-all duration-300 select-none shadow-sm
                     ${isListening
-                        ? 'bg-emerald-900/80 border-2 border-emerald-500 cursor-default pointer-events-none'
-                        : 'bg-[#152238] border-2 border-blue-500 cursor-pointer hover:border-blue-400 hover:scale-[1.02]'
+                        ? 'bg-emerald-50 border-2 border-emerald-500 cursor-default pointer-events-none'
+                        : 'bg-white border-2 border-blue-600 cursor-pointer hover:border-blue-700 hover:scale-[1.02]'
                     }
                 `}
             >
-                <div className={`w-5 h-5 rounded-full transition-all ${isListening ? 'bg-emerald-500 animate-ping' : 'bg-blue-500'}`} />
-                <div className={`w-5 h-5 rounded-full absolute ${isListening ? 'bg-emerald-500' : 'bg-blue-500'}`} />
+                <div className={`w-5 h-5 rounded-full transition-all ${isListening ? 'bg-emerald-500 animate-ping' : 'bg-blue-600'}`} />
+                <div className={`w-5 h-5 rounded-full absolute ${isListening ? 'bg-emerald-500' : 'bg-blue-600'}`} />
 
                 <div>
-                    <h4 className={`text-base font-bold ${isListening ? 'text-emerald-400' : 'text-white'}`}>
+                    <h4 className={`text-base font-bold ${isListening ? 'text-emerald-700' : 'text-slate-900'}`}>
                         {isListening ? 'Hands-Free Mode Active' : 'Click Once to Start'}
                     </h4>
-                    <p className="text-xs text-gray-400">
+                    <p className={`text-xs ${isListening ? 'text-emerald-600' : 'text-slate-600'}`}>
                         {isListening ? 'Just say a language name out loud!' : 'Required once for mic permission'}
                     </p>
                 </div>
             </div>
 
             {/* ── Live Transcript Box ── */}
-            <div className="w-full max-w-xl bg-black/70 border border-gray-700 rounded-xl px-5 py-3 mb-8 min-h-[52px] flex items-center justify-center text-center">
-                <span className={`text-lg font-semibold ${selectedCode ? 'text-amber-400' : 'text-sky-400'}`}>
+            <div className="w-full max-w-xl bg-white border border-slate-300 rounded-xl px-5 py-3 mb-8 min-h-[52px] flex items-center justify-center text-center shadow-sm">
+                <span className={`text-lg font-semibold ${selectedCode ? 'text-emerald-700' : 'text-blue-700'}`}>
                     {transcript}
                 </span>
             </div>
@@ -205,18 +205,18 @@ export const LanguageSelect = ({ onSelect }) => {
                             onClick={() => !selectedCode && confirmSelection(lang.code)}
                             className={`
                                 relative p-5 rounded-2xl flex flex-col items-center justify-center transition-all duration-200 h-28
-                                border-2
+                                border-2 shadow-sm
                                 ${isSelected
-                                    ? 'bg-blue-900 border-amber-400 shadow-[0_0_25px_rgba(251,191,36,0.6)] scale-105'
-                                    : 'bg-[#131d31] border-[#1f2e4d] hover:border-sky-400 hover:-translate-y-0.5'
+                                    ? 'bg-blue-50 border-blue-600 shadow-md scale-105'
+                                    : 'bg-white border-slate-200 hover:border-blue-500 hover:shadow-md hover:-translate-y-0.5'
                                 }
                                 ${selectedCode && !isSelected ? 'opacity-40 pointer-events-none' : ''}
                             `}
                         >
-                            <span className={`text-3xl font-bold mb-1 ${isSelected ? 'text-amber-400' : 'text-white'}`}>
+                            <span className={`text-3xl font-bold mb-1 ${isSelected ? 'text-blue-700' : 'text-slate-900'}`}>
                                 {lang.native}
                             </span>
-                            <span className={`text-sm ${isSelected ? 'text-amber-300 font-bold' : 'text-gray-400'}`}>
+                            <span className={`text-sm ${isSelected ? 'text-blue-600 font-bold' : 'text-slate-600'}`}>
                                 {lang.english}
                             </span>
                         </button>
